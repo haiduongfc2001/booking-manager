@@ -18,9 +18,12 @@ const Page = () => {
       submit: null,
     },
     validationSchema: Yup.object({
-      email: Yup.string().email("Must be a valid email").max(255).required("Email is required"),
-      name: Yup.string().max(255).required("Name is required"),
-      password: Yup.string().max(255).required("Password is required"),
+      email: Yup.string()
+        .email("Vui lòng nhập địa chỉ email hợp lệ!")
+        .max(255)
+        .required("Vui lòng nhập địa chỉ email!"),
+      name: Yup.string().max(255).required("Vui lòng nhập tên!"),
+      password: Yup.string().max(255).required("Vui lòng nhập mật khẩu!"),
     }),
     onSubmit: async (values, helpers) => {
       try {
@@ -37,7 +40,7 @@ const Page = () => {
   return (
     <>
       <Head>
-        <title>Register | DHD</title>
+        <title>Đăng ký | DHD</title>
       </Head>
       <Box
         sx={{
@@ -57,21 +60,22 @@ const Page = () => {
         >
           <div>
             <Stack spacing={1} sx={{ mb: 3 }}>
-              <Typography variant="h4">Register</Typography>
+              <Typography variant="h4">Đăng ký</Typography>
               <Typography color="text.secondary" variant="body2">
-                Already have an account? &nbsp;
+                Bạn đã có tài khoản? &nbsp;
                 <Link component={NextLink} href="/auth/login" underline="hover" variant="subtitle2">
-                  Log in
+                  Đăng nhập
                 </Link>
               </Typography>
             </Stack>
             <form noValidate onSubmit={formik.handleSubmit}>
               <Stack spacing={3}>
                 <TextField
+                  autoFocus
                   error={!!(formik.touched.name && formik.errors.name)}
                   fullWidth
                   helperText={formik.touched.name && formik.errors.name}
-                  label="Name"
+                  label="Tên"
                   name="name"
                   onBlur={formik.handleBlur}
                   onChange={formik.handleChange}
@@ -81,7 +85,7 @@ const Page = () => {
                   error={!!(formik.touched.email && formik.errors.email)}
                   fullWidth
                   helperText={formik.touched.email && formik.errors.email}
-                  label="Email Address"
+                  label="Email"
                   name="email"
                   onBlur={formik.handleBlur}
                   onChange={formik.handleChange}
@@ -92,7 +96,7 @@ const Page = () => {
                   error={!!(formik.touched.password && formik.errors.password)}
                   fullWidth
                   helperText={formik.touched.password && formik.errors.password}
-                  label="Password"
+                  label="Mật khẩu"
                   name="password"
                   onBlur={formik.handleBlur}
                   onChange={formik.handleChange}
@@ -106,7 +110,7 @@ const Page = () => {
                 </Typography>
               )}
               <Button fullWidth size="large" sx={{ mt: 3 }} type="submit" variant="contained">
-                Continue
+                Tiếp tục
               </Button>
             </form>
           </div>
