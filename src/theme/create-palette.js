@@ -29,6 +29,10 @@ export function createPalette() {
       tertiary: success.main,
       disabled: alpha(neutral[900], 0.38),
     },
+    icon: {
+      primary: success.main,
+      main: indigo.main,
+    },
     border: {
       primary: neutral[400],
     },
