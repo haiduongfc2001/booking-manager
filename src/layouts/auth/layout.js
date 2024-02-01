@@ -38,8 +38,6 @@ export const Layout = (props) => {
             }}
           >
             <Box
-              component={NextLink}
-              href="/"
               sx={{
                 display: "inline-flex",
                 height: 32,
@@ -76,13 +74,13 @@ export const Layout = (props) => {
               }}
               variant="h1"
             >
-              Welcome to{" "}
-              <Box component="a" sx={{ color: "#15B79E" }} target="_blank">
+              Chào mừng bạn đến với{" "}
+              <Box component="a" sx={{ color: "text.tertiary" }} target="_blank">
                 DHD
               </Box>
             </Typography>
             <Typography align="center" sx={{ mb: 3 }} variant="subtitle1">
-              A professional kit that comes with ready-to-use MUI components.
+              Dịch Vụ Đặt Phòng - Nơi Nâng Tầm Chuyến Đi Của Bạn.
             </Typography>
             <img alt="" src="/assets/auth-illustration.svg" />
           </Box>
