@@ -3,13 +3,37 @@ import NextLink from "next/link";
 import { useRouter } from "next/navigation";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { Alert, Box, Button, Link, Stack, Tab, Tabs, TextField, Typography } from "@mui/material";
+import {
+  Alert,
+  Box,
+  Button,
+  Link,
+  Stack,
+  TextField,
+  Typography,
+  InputAdornment,
+  IconButton,
+  Tooltip,
+} from "@mui/material";
 import { useAuth } from "src/hooks/use-auth";
 import { Layout as AuthLayout } from "src/layouts/auth/layout";
+import { useState } from "react";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 const Page = () => {
   const router = useRouter();
   const auth = useAuth();
+
+  const [showPassword, setShowPassword] = useState(false);
+
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault();
+  };
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
   const formik = useFormik({
     initialValues: {
       email: "admin@gmail.com",
@@ -94,8 +118,34 @@ const Page = () => {
                   name="password"
                   onBlur={formik.handleBlur}
                   onChange={formik.handleChange}
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   value={formik.values.password}
+                  InputProps={{
+                    endAdornment: formik.values.password && (
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={togglePasswordVisibility}
+                          onMouseDown={handleMouseDownPassword}
+                          edge="end"
+                          sx={{
+                            color: "icon.main",
+                            mr: 1,
+                          }}
+                        >
+                          {showPassword ? (
+                            <Tooltip title="Ẩn mật khẩu">
+                              <VisibilityOff />
+                            </Tooltip>
+                          ) : (
+                            <Tooltip title="Hiển thị mật khẩu">
+                              <Visibility />
+                            </Tooltip>
+                          )}
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  }}
                 />
               </Stack>
               {formik.errors.submit && (
