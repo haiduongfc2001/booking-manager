@@ -73,31 +73,31 @@ const Page = () => (
                   id: "5ece2c077e39da27658aa8a9",
                   image: "/assets/products/product-1.png",
                   name: "Healthcare Erbology",
-                  updatedAt: subHours(now, 6).getTime(),
+                  updated_at: subHours(now, 6).getTime(),
                 },
                 {
                   id: "5ece2c0d16f70bff2cf86cd8",
                   image: "/assets/products/product-2.png",
                   name: "Makeup Lancome Rouge",
-                  updatedAt: subDays(subHours(now, 8), 2).getTime(),
+                  updated_at: subDays(subHours(now, 8), 2).getTime(),
                 },
                 {
                   id: "b393ce1b09c1254c3a92c827",
                   image: "/assets/products/product-5.png",
                   name: "Skincare Soja CO",
-                  updatedAt: subDays(subHours(now, 1), 1).getTime(),
+                  updated_at: subDays(subHours(now, 1), 1).getTime(),
                 },
                 {
                   id: "a6ede15670da63f49f752c89",
                   image: "/assets/products/product-6.png",
                   name: "Makeup Lipstick",
-                  updatedAt: subDays(subHours(now, 3), 3).getTime(),
+                  updated_at: subDays(subHours(now, 3), 3).getTime(),
                 },
                 {
                   id: "bcad5524fe3a2f8f8620ceda",
                   image: "/assets/products/product-7.png",
                   name: "Healthcare Ritual",
-                  updatedAt: subDays(subHours(now, 5), 6).getTime(),
+                  updated_at: subDays(subHours(now, 5), 6).getTime(),
                 },
               ]}
               sx={{ height: "100%" }}
@@ -113,7 +113,7 @@ const Page = () => (
                   customer: {
                     name: "Ekaterina Tankova",
                   },
-                  createdAt: 1555016400000,
+                  created_at: 1555016400000,
                   status: "pending",
                 },
                 {
@@ -123,7 +123,7 @@ const Page = () => (
                   customer: {
                     name: "Cao Yu",
                   },
-                  createdAt: 1555016400000,
+                  created_at: 1555016400000,
                   status: "delivered",
                 },
                 {
@@ -133,7 +133,7 @@ const Page = () => (
                   customer: {
                     name: "Alexa Richardson",
                   },
-                  createdAt: 1554930000000,
+                  created_at: 1554930000000,
                   status: "refunded",
                 },
                 {
@@ -143,7 +143,7 @@ const Page = () => (
                   customer: {
                     name: "Anje Keizer",
                   },
-                  createdAt: 1554757200000,
+                  created_at: 1554757200000,
                   status: "pending",
                 },
                 {
@@ -153,7 +153,7 @@ const Page = () => (
                   customer: {
                     name: "Clarke Gillebert",
                   },
-                  createdAt: 1554670800000,
+                  created_at: 1554670800000,
                   status: "delivered",
                 },
                 {
@@ -163,7 +163,7 @@ const Page = () => (
                   customer: {
                     name: "Adam Denisov",
                   },
-                  createdAt: 1554670800000,
+                  created_at: 1554670800000,
                   status: "delivered",
                 },
               ]}
