@@ -126,7 +126,10 @@ export const AuthProvider = (props) => {
   };
 
   const signIn = async (email, password) => {
-    if (email !== ACCOUNT_TEST.EMAIL || password !== ACCOUNT_TEST.PASSWORD) {
+    if (
+      (email !== ACCOUNT_TEST.EMAIL_1 || password !== ACCOUNT_TEST.PASSWORD_1) &&
+      (email !== ACCOUNT_TEST.EMAIL_2 || password !== ACCOUNT_TEST.PASSWORD_2)
+    ) {
       throw new Error("Vui lòng kiểm tra email và mật khẩu của bạn!");
     }
 

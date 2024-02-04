@@ -4,8 +4,10 @@ export const appDrawerWidth = 320;
 export const customerAdminServiceV2 = process.env.REACT_APP_CONSUMER_SERVICE;
 
 export const ACCOUNT_TEST = {
-  EMAIL: "admin@gmail.com",
-  PASSWORD: "Password123456",
+  EMAIL_1: "haiduongfc2001@gmail.com",
+  PASSWORD_1: "Password123456",
+  EMAIL_2: "admin@gmail.com",
+  PASSWORD_2: "Password123456",
 };
 
 /**
