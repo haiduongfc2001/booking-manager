@@ -13,9 +13,17 @@ import {
   TablePagination,
   TableRow,
   Typography,
+  Button,
+  SvgIcon,
 } from "@mui/material";
 import { Scrollbar } from "src/components/scrollbar";
 import { getInitials } from "src/utils/get-initials";
+import { PAGE_OPTIONS } from "src/utils/constants";
+import { SeverityPill } from "src/components/severity-pill";
+import TrashIcon from "@heroicons/react/24/solid/TrashIcon";
+import PencilIcon from "@heroicons/react/24/solid/PencilIcon";
+import DeleteCustomer from "./modal-delete";
+import { useState } from "react";
 
 export const CustomersTable = (props) => {
   const {
@@ -32,8 +40,21 @@ export const CustomersTable = (props) => {
     selected = [],
   } = props;
 
+  const [isModalDeleteCustomer, setIsModalDeleteCustomer] = useState(false);
+  const [currentId, setCurrentId] = useState("");
+
   const selectedSome = selected.length > 0 && selected.length < items.length;
   const selectedAll = items.length > 0 && selected.length === items.length;
+
+  const statusMap = {
+    true: "success",
+    false: "error",
+  };
+
+  const handleConfirmDelete = (id) => {
+    setIsModalDeleteCustomer(true);
+    setCurrentId(id);
+  };
 
   return (
     <Card>
@@ -55,11 +76,13 @@ export const CustomersTable = (props) => {
                     }}
                   />
                 </TableCell>
-                <TableCell>Tên</TableCell>
+                <TableCell>Tên người dùng</TableCell>
                 <TableCell>Email</TableCell>
                 <TableCell>Địa chỉ</TableCell>
                 <TableCell>Số điện thoại</TableCell>
+                <TableCell>Trạng thái</TableCell>
                 <TableCell>Ngày đăng ký</TableCell>
+                <TableCell>Hành động</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -84,13 +107,61 @@ export const CustomersTable = (props) => {
                     <TableCell>
                       <Stack alignItems="center" direction="row" spacing={2}>
                         <Avatar src={customer.avatar_url}>{getInitials(customer.full_name)}</Avatar>
-                        <Typography variant="subtitle2">{customer.full_name}</Typography>
+                        <Box>
+                          <Typography variant="subtitle1">{customer.full_name}</Typography>
+                          <Typography
+                            variant="subtitle2"
+                            color="text.secondary"
+                            sx={{ fontStyle: "italic" }}
+                          >
+                            {customer.username}
+                          </Typography>
+                        </Box>
                       </Stack>
                     </TableCell>
                     <TableCell>{customer.email}</TableCell>
                     <TableCell>{customer.address}</TableCell>
                     <TableCell>{customer.phone}</TableCell>
+                    <TableCell>
+                      <SeverityPill color={statusMap[customer.is_verified]}>
+                        {customer.is_verified ? "Đã xác thực" : "Chưa xác thực"}
+                      </SeverityPill>
+                    </TableCell>
                     <TableCell>{created_at}</TableCell>
+                    <TableCell>
+                      <Button
+                        startIcon={
+                          <SvgIcon fontSize="small">
+                            <TrashIcon />
+                          </SvgIcon>
+                        }
+                        size="small"
+                        variant="contained"
+                        color="error"
+                        sx={{
+                          m: 0.5,
+                          "& .MuiButton-startIcon": {
+                            m: 0,
+                          },
+                        }}
+                        onClick={() => handleConfirmDelete(customer.id)}
+                      />
+                      <Button
+                        startIcon={
+                          <SvgIcon fontSize="small">
+                            <PencilIcon />
+                          </SvgIcon>
+                        }
+                        size="small"
+                        variant="contained"
+                        sx={{
+                          m: 0.5,
+                          "& .MuiButton-startIcon": {
+                            m: 0,
+                          },
+                        }}
+                      />
+                    </TableCell>
                   </TableRow>
                 );
               })}
@@ -105,7 +176,13 @@ export const CustomersTable = (props) => {
         onRowsPerPageChange={onRowsPerPageChange}
         page={page}
         rowsPerPage={rowsPerPage}
-        rowsPerPageOptions={[5, 10, 25]}
+        rowsPerPageOptions={PAGE_OPTIONS.ROW_PER_PAGE_OPTIONS}
+      />
+
+      <DeleteCustomer
+        isModalDeleteCustomer={isModalDeleteCustomer}
+        setIsModalDeleteCustomer={setIsModalDeleteCustomer}
+        currentId={currentId}
       />
     </Card>
   );
