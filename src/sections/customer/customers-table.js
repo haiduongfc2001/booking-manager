@@ -15,6 +15,7 @@ import {
   Typography,
   Button,
   SvgIcon,
+  Tooltip,
 } from "@mui/material";
 import { Scrollbar } from "src/components/scrollbar";
 import { getInitials } from "src/utils/get-initials";
@@ -25,6 +26,7 @@ import PencilIcon from "@heroicons/react/24/solid/PencilIcon";
 import DeleteCustomer from "./modal-delete";
 import { useState } from "react";
 import EditCustomer from "./modal-edit";
+import DetailCustomer from "./modal-detail";
 
 export const CustomersTable = (props) => {
   const {
@@ -44,6 +46,7 @@ export const CustomersTable = (props) => {
   const [currentId, setCurrentId] = useState("");
   const [isModalDeleteCustomer, setIsModalDeleteCustomer] = useState(false);
   const [isModalEditCustomer, setIsModalEditCustomer] = useState(false);
+  const [isModalDetailCustomer, setIsModalDetailCustomer] = useState(false);
 
   const selectedSome = selected.length > 0 && selected.length < items.length;
   const selectedAll = items.length > 0 && selected.length === items.length;
@@ -54,13 +57,18 @@ export const CustomersTable = (props) => {
   };
 
   const handleConfirmDelete = (id) => {
-    setIsModalDeleteCustomer(true);
     setCurrentId(id);
+    setIsModalDeleteCustomer(true);
   };
 
   const handleOpenModalEdit = (id) => {
-    setIsModalEditCustomer(true);
     setCurrentId(id);
+    setIsModalEditCustomer(true);
+  };
+
+  const handleOpenModalDetail = (id) => {
+    setCurrentId(id);
+    setIsModalDetailCustomer(true);
   };
 
   return (
@@ -118,7 +126,15 @@ export const CustomersTable = (props) => {
                             {getInitials(customer.full_name)}
                           </Avatar>
                           <Box>
-                            <Typography variant="subtitle1">{customer.full_name}</Typography>
+                            <Tooltip title="Xem chi tiết">
+                              <Typography
+                                variant="subtitle1"
+                                onClick={() => handleOpenModalDetail(customer.id)}
+                                sx={{ cursor: "pointer" }}
+                              >
+                                {customer.full_name}
+                              </Typography>
+                            </Tooltip>
                             <Typography
                               variant="subtitle2"
                               color="text.secondary"
@@ -200,6 +216,12 @@ export const CustomersTable = (props) => {
       <EditCustomer
         isModalEditCustomer={isModalEditCustomer}
         setIsModalEditCustomer={setIsModalEditCustomer}
+        currentId={currentId}
+      />
+
+      <DetailCustomer
+        isModalDetailCustomer={isModalDetailCustomer}
+        setIsModalDetailCustomer={setIsModalDetailCustomer}
         currentId={currentId}
       />
     </>
