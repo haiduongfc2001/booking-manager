@@ -35,10 +35,6 @@ import CustomizedSwitches from "src/pages/test";
 const EditCustomer = (props) => {
   const { isModalEditCustomer, setIsModalEditCustomer, currentId } = props;
 
-  const handleOpenModalEdit = () => {
-    setIsModalEditCustomer(true);
-  };
-
   const handleCloseModalEdit = () => {
     setIsModalEditCustomer(false);
   };
