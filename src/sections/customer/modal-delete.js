@@ -1,6 +1,5 @@
-import React, { useState } from "react";
+import React from "react";
 import { Button, Modal, Box, Typography } from "@mui/material";
-import TrashIcon from "@mui/icons-material/Delete";
 
 const DeleteCustomer = ({ isModalDeleteCustomer, setIsModalDeleteCustomer, currentId }) => {
   const handleCloseModal = () => {
