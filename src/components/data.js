@@ -1,8 +1,8 @@
 export const customerData = [
   {
-    id: 1,
+    id: "1",
     username: "lkalinke0",
-    password: "oD3eIDur_>",
+    password: "Password123456",
     email: "lkalinke0@ovh.net",
     full_name: "Albert Tirrey",
     gender: "Male",
@@ -17,9 +17,9 @@ export const customerData = [
     updated_at: "2024-02-02T04:55:50.979Z",
   },
   {
-    id: 2,
+    id: "2",
     username: "fbeagrie1",
-    password: "pB0c_xsw'R1fO",
+    password: "Password123456",
     email: "fbeagrie1@nyu.edu",
     full_name: "Euell Ingray",
     gender: "Male",
@@ -34,9 +34,9 @@ export const customerData = [
     updated_at: "2024-02-02T04:55:50.979Z",
   },
   {
-    id: 3,
+    id: "3",
     username: "mwornum2",
-    password: "vT8%!!e5",
+    password: "Password123456",
     email: "mwornum2@umich.edu",
     full_name: "Sharron Sibbit",
     gender: "Female",
@@ -51,9 +51,9 @@ export const customerData = [
     updated_at: "2024-02-02T04:55:50.979Z",
   },
   {
-    id: 4,
+    id: "4",
     username: "bblaschek3",
-    password: "yH8hb3&jdSIP}$+.",
+    password: "Password123456",
     email: "bblaschek3@nasa.gov",
     full_name: "Isak Shippey",
     gender: "Male",
@@ -68,9 +68,9 @@ export const customerData = [
     updated_at: "2024-02-02T04:55:50.979Z",
   },
   {
-    id: 5,
+    id: "5",
     username: "econnor4",
-    password: "fK31t7M=gu3xJ?",
+    password: "Password123456",
     email: "econnor4@mit.edu",
     full_name: "Brittne Caldecott",
     gender: "Female",
@@ -85,9 +85,9 @@ export const customerData = [
     updated_at: "2024-02-02T04:55:50.979Z",
   },
   {
-    id: 6,
+    id: "6",
     username: "geplate5",
-    password: "dX3+F?wNr",
+    password: "Password123456",
     email: "geplate5@networksolutions.com",
     full_name: "Nedi O'Murtagh",
     gender: "Female",
@@ -102,9 +102,9 @@ export const customerData = [
     updated_at: "2024-02-02T04:55:50.979Z",
   },
   {
-    id: 7,
+    id: "7",
     username: "kgiovannardi6",
-    password: "qQ7h'<3)k}KKYS",
+    password: "Password123456",
     email: "kgiovannardi6@nature.com",
     full_name: "Vonni Vyse",
     gender: "Female",
@@ -119,9 +119,9 @@ export const customerData = [
     updated_at: "2024-02-02T04:55:50.979Z",
   },
   {
-    id: 8,
+    id: "8",
     username: "dbarlee7",
-    password: "jW3V5M`liNB",
+    password: "Password123456",
     email: "dbarlee7@archive.org",
     full_name: "Hendrick Cadigan",
     gender: "Male",
@@ -136,9 +136,9 @@ export const customerData = [
     updated_at: "2024-02-02T04:55:50.979Z",
   },
   {
-    id: 9,
+    id: "9",
     username: "hjeffers8",
-    password: "oZ7b~(4\\4N",
+    password: "Password123456",
     email: "hjeffers8@earthlink.net",
     full_name: "Archer Penzer",
     gender: "Male",
@@ -153,9 +153,9 @@ export const customerData = [
     updated_at: "2024-02-02T04:55:50.979Z",
   },
   {
-    id: 10,
+    id: "10",
     username: "rwyre9",
-    password: "gE6FcsMJ6",
+    password: "Password123456",
     email: "rwyre9@twitpic.com",
     full_name: "Sayre Mountjoy",
     gender: "Male",
@@ -175,7 +175,7 @@ export const receptionistData = [
   {
     id: 1,
     email: "grilston0@google.cn",
-    password: "lB7,WkM(.>@V>UX",
+    password: "Password123456",
     full_name: "Gearalt Rilston",
     gender: "Male",
     phone: "508-592-5182",
@@ -189,7 +189,7 @@ export const receptionistData = [
   {
     id: 2,
     email: "cdegoey1@mail.ru",
-    password: "xG5&uUIJw.Qzey",
+    password: "Password123456",
     full_name: "Candace Degoey",
     gender: "Female",
     phone: "543-603-9508",
@@ -203,7 +203,7 @@ export const receptionistData = [
   {
     id: 3,
     email: "mdorre2@examiner.com",
-    password: "rF5/e1|#{#uwj/#",
+    password: "Password123456",
     full_name: "Madelina Dorre",
     gender: "Female",
     phone: "772-178-5576",
@@ -217,7 +217,7 @@ export const receptionistData = [
   {
     id: 4,
     email: "nmaleney3@printfriendly.com",
-    password: "nV9/}/7&3P",
+    password: "Password123456",
     full_name: "Nester Maleney",
     gender: "Male",
     phone: "241-347-9290",
@@ -231,7 +231,7 @@ export const receptionistData = [
   {
     id: 5,
     email: "fbranche4@adobe.com",
-    password: 'dZ2"9K"9I0<ira',
+    password: "Password123456",
     full_name: "Fania Branche",
     gender: "Female",
     phone: "447-489-4250",
@@ -245,7 +245,7 @@ export const receptionistData = [
   {
     id: 6,
     email: "mduell5@google.com",
-    password: "wZ0@EHwm5<d@",
+    password: "Password123456",
     full_name: "Marielle Duell",
     gender: "Female",
     phone: "343-690-2913",
@@ -259,7 +259,7 @@ export const receptionistData = [
   {
     id: 7,
     email: "amoan6@tuttocitta.it",
-    password: "dF1\\B=J}",
+    password: "Password123456",
     full_name: "Araldo Moan",
     gender: "Male",
     phone: "260-846-8766",
@@ -273,7 +273,7 @@ export const receptionistData = [
   {
     id: 8,
     email: "prock7@cpanel.net",
-    password: "qO6<OV}AsOCoyt",
+    password: "Password123456",
     full_name: "Pierre Rock",
     gender: "Male",
     phone: "998-764-2215",
@@ -287,7 +287,7 @@ export const receptionistData = [
   {
     id: 9,
     email: "rfatkin8@usgs.gov",
-    password: "sW8@k90%o,T9Y6y",
+    password: "Password123456",
     full_name: "Ruthanne Fatkin",
     gender: "Bigender",
     phone: "965-622-5878",
@@ -301,7 +301,7 @@ export const receptionistData = [
   {
     id: 10,
     email: "fwreak9@earthlink.net",
-    password: 'wJ3<@Ew*eP>"t',
+    password: "Password123456",
     full_name: "Fitzgerald Wreak",
     gender: "Male",
     phone: "381-164-8108",
@@ -318,7 +318,7 @@ export const managerData = [
   {
     id: 1,
     email: "grilston0@google.cn",
-    password: "lB7,WkM(.>@V>UX",
+    password: "Password123456",
     full_name: "Gearalt Rilston",
     gender: "Male",
     phone: "508-592-5182",
@@ -332,7 +332,7 @@ export const managerData = [
   {
     id: 2,
     email: "cdegoey1@mail.ru",
-    password: "xG5&uUIJw.Qzey",
+    password: "Password123456",
     full_name: "Candace Degoey",
     gender: "Female",
     phone: "543-603-9508",
@@ -346,7 +346,7 @@ export const managerData = [
   {
     id: 3,
     email: "mdorre2@examiner.com",
-    password: "rF5/e1|#{#uwj/#",
+    password: "Password123456",
     full_name: "Madelina Dorre",
     gender: "Female",
     phone: "772-178-5576",
@@ -360,7 +360,7 @@ export const managerData = [
   {
     id: 4,
     email: "nmaleney3@printfriendly.com",
-    password: "nV9/}/7&3P",
+    password: "Password123456",
     full_name: "Nester Maleney",
     gender: "Male",
     phone: "241-347-9290",
@@ -374,7 +374,7 @@ export const managerData = [
   {
     id: 5,
     email: "fbranche4@adobe.com",
-    password: 'dZ2"9K"9I0<ira',
+    password: "Password123456",
     full_name: "Fania Branche",
     gender: "Female",
     phone: "447-489-4250",
@@ -388,7 +388,7 @@ export const managerData = [
   {
     id: 6,
     email: "mduell5@google.com",
-    password: "wZ0@EHwm5<d@",
+    password: "Password123456",
     full_name: "Marielle Duell",
     gender: "Female",
     phone: "343-690-2913",
@@ -402,7 +402,7 @@ export const managerData = [
   {
     id: 7,
     email: "amoan6@tuttocitta.it",
-    password: "dF1\\B=J}",
+    password: "Password123456",
     full_name: "Araldo Moan",
     gender: "Male",
     phone: "260-846-8766",
@@ -416,7 +416,7 @@ export const managerData = [
   {
     id: 8,
     email: "prock7@cpanel.net",
-    password: "qO6<OV}AsOCoyt",
+    password: "Password123456",
     full_name: "Pierre Rock",
     gender: "Male",
     phone: "998-764-2215",
@@ -430,7 +430,7 @@ export const managerData = [
   {
     id: 9,
     email: "rfatkin8@usgs.gov",
-    password: "sW8@k90%o,T9Y6y",
+    password: "Password123456",
     full_name: "Ruthanne Fatkin",
     gender: "Bigender",
     phone: "965-622-5878",
@@ -444,7 +444,7 @@ export const managerData = [
   {
     id: 10,
     email: "fwreak9@earthlink.net",
-    password: 'wJ3<@Ew*eP>"t',
+    password: "Password123456",
     full_name: "Fitzgerald Wreak",
     gender: "Male",
     phone: "381-164-8108",
