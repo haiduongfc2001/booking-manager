@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import React, { useEffect, useMemo, useRef } from "react";
+import React from "react";
 import {
   Button,
   Modal,
@@ -61,14 +61,13 @@ const CreateCustomer = (props) => {
     onSubmit: async (values, helpers) => {
       try {
         // await auth.signIn(values.email, values.phone);
-        handleCloseModalCreate();
         console.log(values);
       } catch (err) {
         helpers.setStatus({ success: false });
         helpers.setErrors({ submit: err.message });
         helpers.setSubmitting(false);
       } finally {
-        formik.resetForm();
+        handleCloseModalCreate();
       }
     },
     enableReinitialize: true,
@@ -187,7 +186,6 @@ const CreateCustomer = (props) => {
               onChange={formik.handleChange}
               type="text"
               value={formik.values.avatar_url}
-              required
             />
             <TextField
               error={!!(formik.touched.address && formik.errors.address)}
@@ -199,7 +197,6 @@ const CreateCustomer = (props) => {
               onChange={formik.handleChange}
               type="text"
               value={formik.values.address}
-              required
             />
             <FormControlLabel
               control={
@@ -210,7 +207,7 @@ const CreateCustomer = (props) => {
                   color="primary"
                 />
               }
-              label={formik.values.is_verified ? "Verified" : "Not Verified"}
+              label={formik.values.is_verified ? "Đã xác thực" : "Chưa xác thực"}
             />
           </Stack>
           {formik.errors.submit && (
@@ -220,7 +217,7 @@ const CreateCustomer = (props) => {
           )}
 
           <Box sx={{ mt: 3, display: "flex", justifyContent: "flex-end" }}>
-            <Button type="submit" sx={{ mr: 2 }} variant="contained" color="error">
+            <Button type="submit" sx={{ mr: 2 }} variant="contained" color="success">
               OK
             </Button>
             <Button onClick={handleCloseModalCreate} variant="contained" color="inherit">
