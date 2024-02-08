@@ -1,10 +1,9 @@
 import { useCallback, useMemo, useState } from "react";
 import Head from "next/head";
-import { subDays, subHours } from "date-fns";
 import ArrowDownOnSquareIcon from "@heroicons/react/24/solid/ArrowDownOnSquareIcon";
 import ArrowUpOnSquareIcon from "@heroicons/react/24/solid/ArrowUpOnSquareIcon";
 import PlusIcon from "@heroicons/react/24/solid/PlusIcon";
-import { Box, Button, Container, Stack, SvgIcon, Typography } from "@mui/material";
+import { Box, Button, Container, Stack, SvgIcon, Typography, Card } from "@mui/material";
 import { useSelection } from "src/hooks/use-selection";
 import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
 import { CustomersTable } from "src/sections/customer/customers-table";
@@ -89,9 +88,14 @@ const Page = () => {
                 </Stack>
               </Stack>
             </Stack>
-            <Stack direction="row" justifyContent="space-between" alignItems={"center"} spacing={2}>
-              <CustomersSearch />
-              <div>
+            <Card sx={{ p: 2 }}>
+              <Stack
+                direction={{ xs: "column", sm: "row" }}
+                spacing={2}
+                alignItems="center"
+                justifyContent="space-between"
+              >
+                <CustomersSearch />
                 <Button
                   startIcon={
                     <SvgIcon fontSize="small">
@@ -104,8 +108,8 @@ const Page = () => {
                 >
                   Thêm
                 </Button>
-              </div>
-            </Stack>
+              </Stack>
+            </Card>
             <CustomersTable
               count={customerData.length}
               items={customers}

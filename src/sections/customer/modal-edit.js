@@ -36,6 +36,7 @@ const EditCustomer = (props) => {
 
   const handleCloseModalEdit = () => {
     setIsModalEditCustomer(false);
+    formik.resetForm();
   };
 
   const initialValues = useMemo(
@@ -74,12 +75,13 @@ const EditCustomer = (props) => {
     onSubmit: async (values, helpers) => {
       try {
         // await auth.signIn(values.email, values.phone);
-        handleCloseModalEdit();
         console.log(values);
       } catch (err) {
         helpers.setStatus({ success: false });
         helpers.setErrors({ submit: err.message });
         helpers.setSubmitting(false);
+      } finally {
+        handleCloseModalEdit();
       }
     },
     enableReinitialize: true,
@@ -134,6 +136,7 @@ const EditCustomer = (props) => {
               onChange={formik.handleChange}
               type="email"
               value={formik.values.email}
+              required
             />
 
             <Stack direction={{ xs: "column", sm: "row" }} spacing={3}>
@@ -147,6 +150,7 @@ const EditCustomer = (props) => {
                 onChange={formik.handleChange}
                 type="text"
                 value={formik.values.username}
+                required
               />
 
               <TextField
@@ -159,6 +163,7 @@ const EditCustomer = (props) => {
                 onChange={formik.handleChange}
                 type="text"
                 value={formik.values.full_name}
+                required
               />
             </Stack>
 
@@ -171,6 +176,7 @@ const EditCustomer = (props) => {
                   onBlur={formik.handleBlur}
                   onChange={formik.handleChange}
                   value={formik.values.gender}
+                  required
                 >
                   <MenuItem value="Male">Male</MenuItem>
                   <MenuItem value="Female">Female</MenuItem>
@@ -189,6 +195,7 @@ const EditCustomer = (props) => {
                 onChange={formik.handleChange}
                 type="phone"
                 value={formik.values.phone}
+                required
               />
             </Stack>
 
@@ -238,7 +245,7 @@ const EditCustomer = (props) => {
           )}
 
           <Box sx={{ mt: 3, display: "flex", justifyContent: "flex-end" }}>
-            <Button type="submit" sx={{ mr: 2 }} variant="contained" color="error">
+            <Button type="submit" sx={{ mr: 2 }} variant="contained" color="success">
               OK
             </Button>
             <Button onClick={handleCloseModalEdit} variant="contained" color="inherit">
