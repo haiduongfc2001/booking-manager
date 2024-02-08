@@ -12,6 +12,7 @@ import { CustomersSearch } from "src/sections/customer/customers-search";
 import { applyPagination } from "src/utils/apply-pagination";
 import { customerData } from "src/components/data";
 import { PAGE_OPTIONS } from "src/utils/constants";
+import CreateCustomer from "src/sections/customer/modal-create";
 
 const now = new Date();
 
@@ -33,6 +34,7 @@ const Page = () => {
   const customers = useCustomers(page, rowsPerPage);
   const customersIds = useCustomerIds(customers);
   const customersSelection = useSelection(customersIds);
+  const [isModalCreateCustomer, setIsModalCreateCustomer] = useState(false);
 
   const handlePageChange = useCallback((event, value) => {
     setPage(value);
@@ -41,6 +43,10 @@ const Page = () => {
   const handleRowsPerPageChange = useCallback((event) => {
     setRowsPerPage(event.target.value);
   }, []);
+
+  const handleOpenModalCreate = () => {
+    setIsModalCreateCustomer(true);
+  };
 
   return (
     <>
@@ -82,6 +88,9 @@ const Page = () => {
                   </Button>
                 </Stack>
               </Stack>
+            </Stack>
+            <Stack direction="row" justifyContent="space-between" alignItems={"center"} spacing={2}>
+              <CustomersSearch />
               <div>
                 <Button
                   startIcon={
@@ -91,12 +100,12 @@ const Page = () => {
                   }
                   variant="contained"
                   color="success"
+                  onClick={handleOpenModalCreate}
                 >
                   Thêm
                 </Button>
               </div>
             </Stack>
-            <CustomersSearch />
             <CustomersTable
               count={customerData.length}
               items={customers}
@@ -113,6 +122,11 @@ const Page = () => {
           </Stack>
         </Container>
       </Box>
+
+      <CreateCustomer
+        isModalCreateCustomer={isModalCreateCustomer}
+        setIsModalCreateCustomer={setIsModalCreateCustomer}
+      />
     </>
   );
 };
