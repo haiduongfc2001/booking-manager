@@ -28,6 +28,15 @@ export const items = [
     ),
   },
   {
+    title: "Quản lý khách sạn",
+    path: "/managers",
+    icon: (
+      <SvgIcon fontSize="small">
+        <UserIcon />
+      </SvgIcon>
+    ),
+  },
+  {
     title: "Khách sạn",
     path: "/companies",
     icon: (
