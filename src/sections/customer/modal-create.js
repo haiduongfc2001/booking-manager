@@ -11,50 +11,37 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
-  Grid,
   FormHelperText,
   FormControlLabel,
   Switch,
 } from "@mui/material";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { customerData } from "src/components/data";
 
-// const initialData = {
-//   email: "",
-//   username: "",
-//   full_name: "",
-//   gender: "",
-//   phone: "",
-//   avatar_url: "",
-//   address: "",
-//   is_verified: false,
-// };
+const initialData = {
+  email: "",
+  username: "",
+  full_name: "",
+  gender: "",
+  phone: "",
+  avatar_url: "",
+  address: "",
+  is_verified: false,
+};
 
-const EditCustomer = (props) => {
-  const { isModalEditCustomer, setIsModalEditCustomer, currentId } = props;
+const CreateCustomer = (props) => {
+  const { isModalCreateCustomer, setIsModalCreateCustomer } = props;
 
-  const handleCloseModalEdit = () => {
-    setIsModalEditCustomer(false);
+  const handleCloseModalCreate = () => {
+    setIsModalCreateCustomer(false);
+    formik.resetForm();
   };
 
-  const initialValues = useMemo(
-    () => ({
-      email: customerData[parseInt(currentId) - 1]?.email || "",
-      username: customerData[parseInt(currentId) - 1]?.username || "",
-      full_name: customerData[parseInt(currentId) - 1]?.full_name || "",
-      gender: customerData[parseInt(currentId) - 1]?.gender || "",
-      phone: customerData[parseInt(currentId) - 1]?.phone || "",
-      avatar_url: customerData[parseInt(currentId) - 1]?.avatar_url || "",
-      address: customerData[parseInt(currentId) - 1]?.address || "",
-      is_verified: customerData[parseInt(currentId) - 1]?.is_verified || false,
-      submit: null,
-    }),
-    [currentId]
-  );
-
   const formik = useFormik({
-    initialValues,
+    initialValues: {
+      ...initialData,
+      submit: null,
+    },
     validationSchema: Yup.object({
       email: Yup.string()
         .email("Vui lòng nhập địa chỉ email hợp lệ!")
@@ -74,30 +61,24 @@ const EditCustomer = (props) => {
     onSubmit: async (values, helpers) => {
       try {
         // await auth.signIn(values.email, values.phone);
-        handleCloseModalEdit();
+        handleCloseModalCreate();
         console.log(values);
       } catch (err) {
         helpers.setStatus({ success: false });
         helpers.setErrors({ submit: err.message });
         helpers.setSubmitting(false);
+      } finally {
+        formik.resetForm();
       }
     },
     enableReinitialize: true,
     validateOnBlur: false,
   });
 
-  const emailInputRef = useRef(null);
-
-  useEffect(() => {
-    if (isModalEditCustomer && emailInputRef.current) {
-      emailInputRef.current.focus();
-    }
-  }, [isModalEditCustomer]);
-
   return (
     <Modal
-      open={isModalEditCustomer}
-      onClose={handleCloseModalEdit}
+      open={isModalCreateCustomer}
+      onClose={handleCloseModalCreate}
       aria-labelledby="modal-title"
       aria-describedby="modal-description"
     >
@@ -118,12 +99,11 @@ const EditCustomer = (props) => {
         }}
       >
         <Typography id="modal-title" variant="h5" component="div">
-          Chỉnh sửa tài khoản
+          Tạo tài khoản khách hàng
         </Typography>
         <form noValidate onSubmit={formik.handleSubmit}>
           <Stack spacing={3} sx={{ mt: 3 }}>
             <TextField
-              inputRef={emailInputRef}
               autoFocus
               error={!!(formik.touched.email && formik.errors.email)}
               fullWidth
@@ -134,6 +114,7 @@ const EditCustomer = (props) => {
               onChange={formik.handleChange}
               type="email"
               value={formik.values.email}
+              required
             />
 
             <Stack direction={{ xs: "column", sm: "row" }} spacing={3}>
@@ -147,6 +128,7 @@ const EditCustomer = (props) => {
                 onChange={formik.handleChange}
                 type="text"
                 value={formik.values.username}
+                required
               />
 
               <TextField
@@ -159,6 +141,7 @@ const EditCustomer = (props) => {
                 onChange={formik.handleChange}
                 type="text"
                 value={formik.values.full_name}
+                required
               />
             </Stack>
 
@@ -171,6 +154,7 @@ const EditCustomer = (props) => {
                   onBlur={formik.handleBlur}
                   onChange={formik.handleChange}
                   value={formik.values.gender}
+                  required
                 >
                   <MenuItem value="Male">Male</MenuItem>
                   <MenuItem value="Female">Female</MenuItem>
@@ -189,6 +173,7 @@ const EditCustomer = (props) => {
                 onChange={formik.handleChange}
                 type="phone"
                 value={formik.values.phone}
+                required
               />
             </Stack>
 
@@ -202,6 +187,7 @@ const EditCustomer = (props) => {
               onChange={formik.handleChange}
               type="text"
               value={formik.values.avatar_url}
+              required
             />
             <TextField
               error={!!(formik.touched.address && formik.errors.address)}
@@ -213,12 +199,8 @@ const EditCustomer = (props) => {
               onChange={formik.handleChange}
               type="text"
               value={formik.values.address}
+              required
             />
-            {/* <CustomizedSwitches
-              onChange={formik.handleChange}
-              isChecked={formik.values.is_verified}
-            /> */}
-
             <FormControlLabel
               control={
                 <Switch
@@ -241,7 +223,7 @@ const EditCustomer = (props) => {
             <Button type="submit" sx={{ mr: 2 }} variant="contained" color="error">
               OK
             </Button>
-            <Button onClick={handleCloseModalEdit} variant="contained" color="inherit">
+            <Button onClick={handleCloseModalCreate} variant="contained" color="inherit">
               Hủy
             </Button>
           </Box>
@@ -251,10 +233,9 @@ const EditCustomer = (props) => {
   );
 };
 
-export default EditCustomer;
+export default CreateCustomer;
 
-EditCustomer.propTypes = {
-  isModalEditCustomer: PropTypes.bool.isRequired,
-  setIsModalEditCustomer: PropTypes.func.isRequired,
-  currentId: PropTypes.string.isRequired,
+CreateCustomer.propTypes = {
+  isModalCreateCustomer: PropTypes.bool.isRequired,
+  setIsModalCreateCustomer: PropTypes.func.isRequired,
 };
