@@ -139,7 +139,8 @@ export const SideNav = (props) => {
     return (
       <Drawer
         anchor="left"
-        open
+        onClose={onClose}
+        open={open}
         PaperProps={{
           sx: {
             backgroundColor: "neutral.800",
@@ -147,7 +148,9 @@ export const SideNav = (props) => {
             width: 280,
           },
         }}
-        variant="permanent"
+        variant="persistent"
+        ModalProps={{ keepMounted: true }}
+        color="inherit"
       >
         {content}
       </Drawer>
