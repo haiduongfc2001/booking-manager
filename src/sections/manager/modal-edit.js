@@ -17,9 +17,12 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { managerData } from "src/components/data";
 import { SeverityPill } from "src/components/severity-pill";
+import { ModalStyle } from "src/components/modal-style";
 
 const EditManager = (props) => {
   const { isModalEditManager, setIsModalEditManager, currentId } = props;
+
+  const manager = managerData.find((manager) => manager.id === currentId);
 
   const handleCloseModalEdit = () => {
     setIsModalEditManager(false);
@@ -28,13 +31,12 @@ const EditManager = (props) => {
 
   const initialValues = useMemo(
     () => ({
-      email: managerData[parseInt(currentId) - 1]?.email || "",
-      username: managerData[parseInt(currentId) - 1]?.username || "",
-      full_name: managerData[parseInt(currentId) - 1]?.full_name || "",
-      gender: managerData[parseInt(currentId) - 1]?.gender || "",
-      phone: managerData[parseInt(currentId) - 1]?.phone || "",
-      hotel_id: managerData[parseInt(currentId) - 1]?.hotel_id || "",
-      avatar_url: managerData[parseInt(currentId) - 1]?.avatar_url || "",
+      email: manager?.email || "",
+      full_name: manager?.full_name || "",
+      gender: manager?.gender || "",
+      phone: manager?.phone || "",
+      hotel_id: manager?.hotel_id || "",
+      avatar_url: manager?.avatar_url || "",
       submit: null,
     }),
     [currentId]
@@ -47,7 +49,6 @@ const EditManager = (props) => {
         .email("Vui lòng nhập địa chỉ email hợp lệ!")
         .max(255)
         .required("Vui lòng nhập địa chỉ email!"),
-      username: Yup.string().max(20).required("Vui lòng nhập tên người dùng!"),
       full_name: Yup.string().max(20).required("Vui lòng nhập tên!"),
       gender: Yup.mixed()
         .oneOf(["Male", "Female"])
@@ -73,14 +74,6 @@ const EditManager = (props) => {
     validateOnBlur: false,
   });
 
-  const emailInputRef = useRef(null);
-
-  useEffect(() => {
-    if (isModalEditManager && emailInputRef.current) {
-      emailInputRef.current.focus();
-    }
-  }, [isModalEditManager]);
-
   return (
     <Modal
       open={isModalEditManager}
@@ -88,22 +81,7 @@ const EditManager = (props) => {
       aria-labelledby="modal-title"
       aria-describedby="modal-description"
     >
-      <Box
-        sx={{
-          position: "absolute",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          width: "50%",
-          maxWidth: "55%",
-          maxHeight: "85%",
-          overflowY: "auto",
-          bgcolor: "white",
-          boxShadow: 24,
-          p: 4,
-          borderRadius: 2,
-        }}
-      >
+      <Box sx={ModalStyle({ width: 50, maxWidth: 55, maxHeight: 85 })}>
         <Typography id="modal-title" variant="h5" component="div">
           Chỉnh sửa tài khoản
         </Typography>
@@ -111,8 +89,6 @@ const EditManager = (props) => {
           <Stack spacing={3} sx={{ mt: 3 }}>
             <Stack direction={{ xs: "column", sm: "row" }} spacing={3}>
               <TextField
-                inputRef={emailInputRef}
-                autoFocus
                 error={!!(formik.touched.email && formik.errors.email)}
                 fullWidth
                 helperText={formik.touched.email && formik.errors.email}
@@ -222,5 +198,5 @@ export default EditManager;
 EditManager.propTypes = {
   isModalEditManager: PropTypes.bool.isRequired,
   setIsModalEditManager: PropTypes.func.isRequired,
-  currentId: PropTypes.string.isRequired,
+  currentId: PropTypes.number.isRequired,
 };

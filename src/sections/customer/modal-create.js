@@ -17,6 +17,7 @@ import {
 } from "@mui/material";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { ModalStyle } from "src/components/modal-style";
 
 const initialData = {
   email: "",
@@ -81,22 +82,7 @@ const CreateCustomer = (props) => {
       aria-labelledby="modal-title"
       aria-describedby="modal-description"
     >
-      <Box
-        sx={{
-          position: "absolute",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          width: "50%",
-          maxWidth: "55%",
-          maxHeight: "85%",
-          overflowY: "auto",
-          bgcolor: "white",
-          boxShadow: 24,
-          p: 4,
-          borderRadius: 2,
-        }}
-      >
+      <Box sx={ModalStyle({ width: 50, maxWidth: 55, maxHeight: 85 })}>
         <Typography id="modal-title" variant="h5" component="div">
           Tạo tài khoản khách hàng
         </Typography>

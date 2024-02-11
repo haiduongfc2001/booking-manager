@@ -31,7 +31,7 @@ const DeleteCustomer = ({ isModalDeleteCustomer, setIsModalDeleteCustomer, curre
         }}
       >
         <Typography id="modal-title" variant="h5" component="div">
-          Xóa khách hàng
+          Xóa tài khoản
         </Typography>
         <Typography id="modal-description" sx={{ mt: 2 }}>
           Bạn có chắc bạn muốn xóa tài khoản này?
