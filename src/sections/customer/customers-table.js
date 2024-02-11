@@ -210,19 +210,19 @@ export const CustomersTable = (props) => {
       <DeleteCustomer
         isModalDeleteCustomer={isModalDeleteCustomer}
         setIsModalDeleteCustomer={setIsModalDeleteCustomer}
-        currentId={currentId}
+        currentId={parseInt(currentId)}
       />
 
       <EditCustomer
         isModalEditCustomer={isModalEditCustomer}
         setIsModalEditCustomer={setIsModalEditCustomer}
-        currentId={currentId}
+        currentId={parseInt(currentId)}
       />
 
       <DetailCustomer
         isModalDetailCustomer={isModalDetailCustomer}
         setIsModalDetailCustomer={setIsModalDetailCustomer}
-        currentId={currentId}
+        currentId={parseInt(currentId)}
       />
     </>
   );

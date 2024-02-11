@@ -1,6 +1,6 @@
 export const customerData = [
   {
-    id: "1",
+    id: 1,
     username: "lkalinke0",
     password: "Password123456",
     email: "lkalinke0@ovh.net",
@@ -17,7 +17,7 @@ export const customerData = [
     updated_at: "2024-02-02T04:55:50.979Z",
   },
   {
-    id: "2",
+    id: 2,
     username: "fbeagrie1",
     password: "Password123456",
     email: "fbeagrie1@nyu.edu",
@@ -34,7 +34,7 @@ export const customerData = [
     updated_at: "2024-02-02T04:55:50.979Z",
   },
   {
-    id: "3",
+    id: 3,
     username: "mwornum2",
     password: "Password123456",
     email: "mwornum2@umich.edu",
@@ -51,7 +51,7 @@ export const customerData = [
     updated_at: "2024-02-02T04:55:50.979Z",
   },
   {
-    id: "4",
+    id: 4,
     username: "bblaschek3",
     password: "Password123456",
     email: "bblaschek3@nasa.gov",
@@ -68,7 +68,7 @@ export const customerData = [
     updated_at: "2024-02-02T04:55:50.979Z",
   },
   {
-    id: "5",
+    id: 5,
     username: "econnor4",
     password: "Password123456",
     email: "econnor4@mit.edu",
@@ -85,7 +85,7 @@ export const customerData = [
     updated_at: "2024-02-02T04:55:50.979Z",
   },
   {
-    id: "6",
+    id: 6,
     username: "geplate5",
     password: "Password123456",
     email: "geplate5@networksolutions.com",
@@ -102,7 +102,7 @@ export const customerData = [
     updated_at: "2024-02-02T04:55:50.979Z",
   },
   {
-    id: "7",
+    id: 7,
     username: "kgiovannardi6",
     password: "Password123456",
     email: "kgiovannardi6@nature.com",
@@ -119,7 +119,7 @@ export const customerData = [
     updated_at: "2024-02-02T04:55:50.979Z",
   },
   {
-    id: "8",
+    id: 8,
     username: "dbarlee7",
     password: "Password123456",
     email: "dbarlee7@archive.org",
@@ -136,7 +136,7 @@ export const customerData = [
     updated_at: "2024-02-02T04:55:50.979Z",
   },
   {
-    id: "9",
+    id: 9,
     username: "hjeffers8",
     password: "Password123456",
     email: "hjeffers8@earthlink.net",
@@ -153,7 +153,7 @@ export const customerData = [
     updated_at: "2024-02-02T04:55:50.979Z",
   },
   {
-    id: "10",
+    id: 10,
     username: "rwyre9",
     password: "Password123456",
     email: "rwyre9@twitpic.com",

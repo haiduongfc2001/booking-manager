@@ -16,10 +16,10 @@ import {
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { SeverityPill } from "src/components/severity-pill";
+import { ModalStyle } from "src/components/modal-style";
 
 const initialData = {
   email: "",
-  username: "",
   full_name: "",
   gender: "",
   phone: "",
@@ -45,7 +45,6 @@ const CreateManager = (props) => {
         .email("Vui lòng nhập địa chỉ email hợp lệ!")
         .max(255)
         .required("Vui lòng nhập địa chỉ email!"),
-      username: Yup.string().max(20).required("Vui lòng nhập tên người dùng!"),
       full_name: Yup.string().max(20).required("Vui lòng nhập tên!"),
       gender: Yup.mixed()
         .oneOf(["Male", "Female"])
@@ -78,55 +77,26 @@ const CreateManager = (props) => {
       aria-labelledby="modal-title"
       aria-describedby="modal-description"
     >
-      <Box
-        sx={{
-          position: "absolute",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          width: "50%",
-          maxWidth: "55%",
-          maxHeight: "85%",
-          overflowY: "auto",
-          bgcolor: "white",
-          boxShadow: 24,
-          p: 4,
-          borderRadius: 2,
-        }}
-      >
+      <Box sx={ModalStyle({ width: 50, maxWidth: 55, maxHeight: 85 })}>
         <Typography id="modal-title" variant="h5" component="div">
           Tạo tài khoản quản lý
         </Typography>
         <form noValidate onSubmit={formik.handleSubmit}>
           <Stack spacing={3} sx={{ mt: 3 }}>
-            <TextField
-              autoFocus
-              error={!!(formik.touched.email && formik.errors.email)}
-              fullWidth
-              helperText={formik.touched.email && formik.errors.email}
-              label="Email"
-              name="email"
-              onBlur={formik.handleBlur}
-              onChange={formik.handleChange}
-              type="email"
-              value={formik.values.email}
-              required
-            />
-
             <Stack direction={{ xs: "column", sm: "row" }} spacing={3}>
               <TextField
-                error={!!(formik.touched.username && formik.errors.username)}
+                autoFocus
+                error={!!(formik.touched.email && formik.errors.email)}
                 fullWidth
-                helperText={formik.touched.username && formik.errors.username}
-                label="Tên người dùng"
-                name="username"
+                helperText={formik.touched.email && formik.errors.email}
+                label="Email"
+                name="email"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
-                type="text"
-                value={formik.values.username}
+                type="email"
+                value={formik.values.email}
                 required
               />
-
               <TextField
                 error={!!(formik.touched.full_name && formik.errors.full_name)}
                 fullWidth

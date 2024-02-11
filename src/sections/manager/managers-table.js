@@ -51,11 +51,6 @@ export const ManagersTable = (props) => {
   const selectedSome = selected.length > 0 && selected.length < items.length;
   const selectedAll = items.length > 0 && selected.length === items.length;
 
-  const statusMap = {
-    true: "success",
-    false: "error",
-  };
-
   const handleConfirmDelete = (id) => {
     setCurrentId(id);
     setIsModalDeleteManager(true);
@@ -202,19 +197,19 @@ export const ManagersTable = (props) => {
       <DeleteManager
         isModalDeleteManager={isModalDeleteManager}
         setIsModalDeleteManager={setIsModalDeleteManager}
-        currentId={currentId}
+        currentId={parseInt(currentId)}
       />
 
       <EditManager
         isModalEditManager={isModalEditManager}
         setIsModalEditManager={setIsModalEditManager}
-        currentId={currentId}
+        currentId={parseInt(currentId)}
       />
 
       <DetailManager
         isModalDetailManager={isModalDetailManager}
         setIsModalDetailManager={setIsModalDetailManager}
-        currentId={currentId}
+        currentId={parseInt(currentId)}
       />
     </>
   );

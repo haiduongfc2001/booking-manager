@@ -11,7 +11,6 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
-  Grid,
   FormHelperText,
   FormControlLabel,
   Switch,
@@ -19,20 +18,12 @@ import {
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { customerData } from "src/components/data";
-
-// const initialData = {
-//   email: "",
-//   username: "",
-//   full_name: "",
-//   gender: "",
-//   phone: "",
-//   avatar_url: "",
-//   address: "",
-//   is_verified: false,
-// };
+import { ModalStyle } from "src/components/modal-style";
 
 const EditCustomer = (props) => {
   const { isModalEditCustomer, setIsModalEditCustomer, currentId } = props;
+
+  const customer = customerData.find((customer) => customer.id === currentId);
 
   const handleCloseModalEdit = () => {
     setIsModalEditCustomer(false);
@@ -41,14 +32,14 @@ const EditCustomer = (props) => {
 
   const initialValues = useMemo(
     () => ({
-      email: customerData[parseInt(currentId) - 1]?.email || "",
-      username: customerData[parseInt(currentId) - 1]?.username || "",
-      full_name: customerData[parseInt(currentId) - 1]?.full_name || "",
-      gender: customerData[parseInt(currentId) - 1]?.gender || "",
-      phone: customerData[parseInt(currentId) - 1]?.phone || "",
-      avatar_url: customerData[parseInt(currentId) - 1]?.avatar_url || "",
-      address: customerData[parseInt(currentId) - 1]?.address || "",
-      is_verified: customerData[parseInt(currentId) - 1]?.is_verified || false,
+      email: customer?.email || "",
+      username: customer?.username || "",
+      full_name: customer?.full_name || "",
+      gender: customer?.gender || "",
+      phone: customer?.phone || "",
+      avatar_url: customer?.avatar_url || "",
+      address: customer?.address || "",
+      is_verified: customer?.is_verified || false,
       submit: null,
     }),
     [currentId]
@@ -88,14 +79,6 @@ const EditCustomer = (props) => {
     validateOnBlur: false,
   });
 
-  const emailInputRef = useRef(null);
-
-  useEffect(() => {
-    if (isModalEditCustomer && emailInputRef.current) {
-      emailInputRef.current.focus();
-    }
-  }, [isModalEditCustomer]);
-
   return (
     <Modal
       open={isModalEditCustomer}
@@ -103,30 +86,13 @@ const EditCustomer = (props) => {
       aria-labelledby="modal-title"
       aria-describedby="modal-description"
     >
-      <Box
-        sx={{
-          position: "absolute",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          width: "50%",
-          maxWidth: "55%",
-          maxHeight: "85%",
-          overflowY: "auto",
-          bgcolor: "white",
-          boxShadow: 24,
-          p: 4,
-          borderRadius: 2,
-        }}
-      >
+      <Box sx={ModalStyle({ width: 50, maxWidth: 55, maxHeight: 85 })}>
         <Typography id="modal-title" variant="h5" component="div">
           Chỉnh sửa tài khoản
         </Typography>
         <form noValidate onSubmit={formik.handleSubmit}>
           <Stack spacing={3} sx={{ mt: 3 }}>
             <TextField
-              inputRef={emailInputRef}
-              autoFocus
               error={!!(formik.touched.email && formik.errors.email)}
               fullWidth
               helperText={formik.touched.email && formik.errors.email}
@@ -263,5 +229,5 @@ export default EditCustomer;
 EditCustomer.propTypes = {
   isModalEditCustomer: PropTypes.bool.isRequired,
   setIsModalEditCustomer: PropTypes.func.isRequired,
-  currentId: PropTypes.string.isRequired,
+  currentId: PropTypes.number.isRequired,
 };
