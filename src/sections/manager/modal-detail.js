@@ -10,14 +10,14 @@ const DetailManager = (props) => {
 
   const manager = managerData.find((manager) => manager.id === currentId);
 
-  const handleCloseModalDetail = () => {
+  const handleCloseModal = () => {
     setIsModalDetailManager(false);
   };
 
   return (
     <Modal
       open={isModalDetailManager}
-      onClose={handleCloseModalDetail}
+      onClose={handleCloseModal}
       aria-labelledby="modal-title"
       aria-describedby="modal-description"
     >
@@ -48,7 +48,7 @@ const DetailManager = (props) => {
         </Stack>
 
         <Box sx={{ mt: 3, display: "flex", justifyContent: "flex-end" }}>
-          <Button onClick={handleCloseModalDetail} variant="contained" color="inherit">
+          <Button onClick={handleCloseModal} variant="contained" color="inherit">
             Đóng
           </Button>
         </Box>

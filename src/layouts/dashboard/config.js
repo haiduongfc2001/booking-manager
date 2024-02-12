@@ -38,7 +38,7 @@ export const items = [
   },
   {
     title: "Khách sạn",
-    path: "/companies",
+    path: "/hotels",
     icon: (
       <SvgIcon fontSize="small">
         <HotelIcon />
