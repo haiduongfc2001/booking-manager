@@ -28,19 +28,15 @@ export const Layout = withAuthGuard((props) => {
   const pathname = usePathname();
   const [openNav, setOpenNav] = useState(true);
 
-  // const handlePathnameChange = useCallback(() => {
-  //   if (openNav) {
-  //     setOpenNav(false);
-  //   }
-  // }, [openNav]);
+  const handlePathnameChange = useCallback(() => {
+    if (openNav) {
+      setOpenNav(false);
+    }
+  }, [openNav]);
 
-  // useEffect(
-  //   () => {
-  //     handlePathnameChange();
-  //   },
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  //   [pathname]
-  // );
+  useEffect(() => {
+    handlePathnameChange();
+  }, [pathname]);
 
   return (
     <>
