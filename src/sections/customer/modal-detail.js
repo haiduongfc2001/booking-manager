@@ -15,14 +15,14 @@ const DetailCustomer = (props) => {
     false: "error",
   };
 
-  const handleCloseModalDetail = () => {
+  const handleCloseModal = () => {
     setIsModalDetailCustomer(false);
   };
 
   return (
     <Modal
       open={isModalDetailCustomer}
-      onClose={handleCloseModalDetail}
+      onClose={handleCloseModal}
       aria-labelledby="modal-title"
       aria-describedby="modal-description"
     >
@@ -62,7 +62,7 @@ const DetailCustomer = (props) => {
         </Stack>
 
         <Box sx={{ mt: 3, display: "flex", justifyContent: "flex-end" }}>
-          <Button onClick={handleCloseModalDetail} variant="contained" color="inherit">
+          <Button onClick={handleCloseModal} variant="contained" color="inherit">
             Đóng
           </Button>
         </Box>

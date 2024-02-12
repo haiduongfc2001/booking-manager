@@ -6,32 +6,32 @@ import PlusIcon from "@heroicons/react/24/solid/PlusIcon";
 import { Box, Button, Container, Stack, SvgIcon, Typography, Card } from "@mui/material";
 import { useSelection } from "src/hooks/use-selection";
 import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
-import { CustomersTable } from "src/sections/customer/customers-table";
-import { CustomersSearch } from "src/sections/customer/customers-search";
+import { HotelsTable } from "src/sections/hotel/hotels-table";
+import { HotelsSearch } from "src/sections/hotel/hotels-search";
 import { applyPagination } from "src/utils/apply-pagination";
-import { customerData } from "src/components/data";
+import { hotelData } from "src/components/data";
 import { PAGE_OPTIONS } from "src/utils/constants";
-import CreateCustomer from "src/sections/customer/modal-create";
+import CreateHotel from "src/sections/hotel/modal-create";
 
-const useCustomers = (page, rowsPerPage) => {
+const useHotels = (page, rowsPerPage) => {
   return useMemo(() => {
-    return applyPagination(customerData, page, rowsPerPage);
+    return applyPagination(hotelData, page, rowsPerPage);
   }, [page, rowsPerPage]);
 };
 
-const useCustomerIds = (customers) => {
+const useHotelIds = (hotels) => {
   return useMemo(() => {
-    return customers.map((customer) => customer.id);
-  }, [customers]);
+    return hotels.map((hotel) => hotel.hotel_id);
+  }, [hotels]);
 };
 
 const Page = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(PAGE_OPTIONS.ROW_PER_PAGE);
-  const customers = useCustomers(page, rowsPerPage);
-  const customersIds = useCustomerIds(customers);
-  const customersSelection = useSelection(customersIds);
-  const [isModalCreateCustomer, setIsModalCreateCustomer] = useState(false);
+  const hotels = useHotels(page, rowsPerPage);
+  const hotelsIds = useHotelIds(hotels);
+  const hotelsSelection = useSelection(hotelsIds);
+  const [isModalCreateHotel, setIsModalCreateHotel] = useState(false);
 
   const handlePageChange = useCallback((event, value) => {
     setPage(value);
@@ -42,13 +42,13 @@ const Page = () => {
   }, []);
 
   const handleOpenModalCreate = () => {
-    setIsModalCreateCustomer(true);
+    setIsModalCreateHotel(true);
   };
 
   return (
     <>
       <Head>
-        <title>Customers | DHD</title>
+        <title>Hotels | DHD</title>
       </Head>
       <Box
         component="main"
@@ -61,7 +61,7 @@ const Page = () => {
           <Stack spacing={3}>
             <Stack direction="row" justifyContent="space-between" spacing={4}>
               <Stack spacing={1}>
-                <Typography variant="h4">Khách hàng</Typography>
+                <Typography variant="h4">Khách sạn</Typography>
                 <Stack alignItems="center" direction="row" spacing={1}>
                   <Button
                     color="inherit"
@@ -93,7 +93,7 @@ const Page = () => {
                 alignItems="center"
                 justifyContent="space-between"
               >
-                <CustomersSearch />
+                <HotelsSearch />
                 <Button
                   startIcon={
                     <SvgIcon fontSize="small">
@@ -108,26 +108,26 @@ const Page = () => {
                 </Button>
               </Stack>
             </Card>
-            <CustomersTable
-              count={customerData.length}
-              items={customers}
-              onDeselectAll={customersSelection.handleDeselectAll}
-              onDeselectOne={customersSelection.handleDeselectOne}
+            <HotelsTable
+              count={hotelData.length}
+              items={hotels}
+              onDeselectAll={hotelsSelection.handleDeselectAll}
+              onDeselectOne={hotelsSelection.handleDeselectOne}
               onPageChange={handlePageChange}
               onRowsPerPageChange={handleRowsPerPageChange}
-              onSelectAll={customersSelection.handleSelectAll}
-              onSelectOne={customersSelection.handleSelectOne}
+              onSelectAll={hotelsSelection.handleSelectAll}
+              onSelectOne={hotelsSelection.handleSelectOne}
               page={page}
               rowsPerPage={rowsPerPage}
-              selected={customersSelection.selected}
+              selected={hotelsSelection.selected}
             />
           </Stack>
         </Container>
       </Box>
 
-      <CreateCustomer
-        isModalCreateCustomer={isModalCreateCustomer}
-        setIsModalCreateCustomer={setIsModalCreateCustomer}
+      <CreateHotel
+        isModalCreateHotel={isModalCreateHotel}
+        setIsModalCreateHotel={setIsModalCreateHotel}
       />
     </>
   );

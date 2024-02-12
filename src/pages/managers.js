@@ -13,8 +13,6 @@ import { managerData } from "src/components/data";
 import { PAGE_OPTIONS } from "src/utils/constants";
 import CreateManager from "src/sections/manager/modal-create";
 
-const now = new Date();
-
 const useManagers = (page, rowsPerPage) => {
   return useMemo(() => {
     return applyPagination(managerData, page, rowsPerPage);

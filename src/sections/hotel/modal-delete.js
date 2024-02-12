@@ -1,19 +1,19 @@
 import React from "react";
 import { Button, Modal, Box, Typography } from "@mui/material";
 
-const DeleteCustomer = ({ isModalDeleteCustomer, setIsModalDeleteCustomer, currentId }) => {
+const DeleteHotel = ({ isModalDeleteHotel, setIsModalDeleteHotel, currentId }) => {
   const handleCloseModal = () => {
-    setIsModalDeleteCustomer(false);
+    setIsModalDeleteHotel(false);
   };
 
   const handleDelete = () => {
-    if (isModalDeleteCustomer) console.log("customer id: ", currentId);
+    if (isModalDeleteHotel) console.log("hotel id: ", currentId);
     handleCloseModal();
   };
 
   return (
     <Modal
-      open={isModalDeleteCustomer}
+      open={isModalDeleteHotel}
       onClose={handleCloseModal}
       aria-labelledby="modal-title"
       aria-describedby="modal-description"
@@ -32,10 +32,10 @@ const DeleteCustomer = ({ isModalDeleteCustomer, setIsModalDeleteCustomer, curre
         }}
       >
         <Typography id="modal-title" variant="h5" component="div">
-          Xóa tài khoản
+          Xóa khách sạn
         </Typography>
         <Typography id="modal-description" sx={{ mt: 2 }}>
-          Bạn có chắc bạn muốn xóa tài khoản này?
+          Bạn có chắc bạn muốn xóa khách sạn này?
         </Typography>
         <Box sx={{ mt: 3, display: "flex", justifyContent: "flex-end" }}>
           <Button onClick={handleDelete} sx={{ mr: 2 }} variant="contained" color="error">
@@ -50,4 +50,4 @@ const DeleteCustomer = ({ isModalDeleteCustomer, setIsModalDeleteCustomer, curre
   );
 };
 
-export default DeleteCustomer;
+export default DeleteHotel;

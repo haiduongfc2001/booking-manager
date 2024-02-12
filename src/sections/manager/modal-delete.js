@@ -8,6 +8,7 @@ const DeleteManager = ({ isModalDeleteManager, setIsModalDeleteManager, currentI
 
   const handleDelete = () => {
     if (isModalDeleteManager) console.log("manager id: ", currentId);
+    handleCloseModal();
   };
 
   return (
