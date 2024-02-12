@@ -135,28 +135,6 @@ export const SideNav = (props) => {
     </Scrollbar>
   );
 
-  if (lgUp) {
-    return (
-      <Drawer
-        anchor="left"
-        onClose={onClose}
-        open={open}
-        PaperProps={{
-          sx: {
-            backgroundColor: "neutral.800",
-            color: "common.white",
-            width: 280,
-          },
-        }}
-        variant="persistent"
-        ModalProps={{ keepMounted: true }}
-        color="inherit"
-      >
-        {content}
-      </Drawer>
-    );
-  }
-
   return (
     <Drawer
       anchor="left"
@@ -169,8 +147,10 @@ export const SideNav = (props) => {
           width: 280,
         },
       }}
-      sx={{ zIndex: (theme) => theme.zIndex.appBar + 100 }}
-      variant="temporary"
+      variant={lgUp ? "persistent" : "temporary"}
+      ModalProps={{ keepMounted: true }}
+      sx={lgUp ? undefined : { zIndex: (theme) => theme.zIndex.appBar + 100 }}
+      color="inherit"
     >
       {content}
     </Drawer>
