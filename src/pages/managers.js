@@ -10,7 +10,7 @@ import { ManagersTable } from "src/sections/manager/managers-table";
 import { ManagersSearch } from "src/sections/manager/managers-search";
 import { applyPagination } from "src/utils/apply-pagination";
 import { managerData } from "src/components/data";
-import { PAGE_OPTIONS } from "src/utils/constants";
+import { PAGE_OPTIONS } from "src/constant/constants";
 import CreateManager from "src/sections/manager/modal-create";
 
 const useManagers = (page, rowsPerPage) => {

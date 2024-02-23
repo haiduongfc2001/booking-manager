@@ -1,210 +1,72 @@
 import PropTypes from "prop-types";
-import { format } from "date-fns";
-import {
-  Avatar,
-  Box,
-  Card,
-  Checkbox,
-  Stack,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TablePagination,
-  TableRow,
-  Typography,
-  Button,
-  SvgIcon,
-  Tooltip,
-} from "@mui/material";
-import { Scrollbar } from "src/components/scrollbar";
-import { getInitials } from "src/utils/get-initials";
-import { PAGE_OPTIONS } from "src/utils/constants";
-import { SeverityPill } from "src/components/severity-pill";
-import TrashIcon from "@heroicons/react/24/solid/TrashIcon";
-import PencilIcon from "@heroicons/react/24/solid/PencilIcon";
-import DeleteCustomer from "./modal-delete";
+import { Box, Card } from "@mui/material";
+import { DataGrid } from "@mui/x-data-grid";
 import { useState } from "react";
+import DeleteCustomer from "./modal-delete";
 import EditCustomer from "./modal-edit";
 import DetailCustomer from "./modal-detail";
+import LoadingData from "src/layouts/loading/loading-data";
+import { PAGE_OPTIONS } from "src/constant/constants";
+import { Scrollbar } from "src/components/scrollbar";
+import { columns } from "./columns";
 
 export const CustomersTable = (props) => {
-  const {
-    count = 0,
-    items = [],
-    onDeselectAll,
-    onDeselectOne,
-    onPageChange = () => {},
-    onRowsPerPageChange,
-    onSelectAll,
-    onSelectOne,
-    page = 0,
-    rowsPerPage = 0,
-    selected = [],
-  } = props;
+  const { items = [], loading = false } = props;
 
   const [currentId, setCurrentId] = useState("");
   const [isModalDeleteCustomer, setIsModalDeleteCustomer] = useState(false);
   const [isModalEditCustomer, setIsModalEditCustomer] = useState(false);
   const [isModalDetailCustomer, setIsModalDetailCustomer] = useState(false);
 
-  const selectedSome = selected.length > 0 && selected.length < items.length;
-  const selectedAll = items.length > 0 && selected.length === items.length;
-
-  const statusMap = {
-    true: "success",
-    false: "error",
-  };
-
-  const handleConfirmDelete = (id) => {
-    setCurrentId(id);
-    setIsModalDeleteCustomer(true);
-  };
-
-  const handleOpenModalEdit = (id) => {
-    setCurrentId(id);
-    setIsModalEditCustomer(true);
-  };
-
-  const handleOpenModalDetail = (id) => {
-    setCurrentId(id);
-    setIsModalDetailCustomer(true);
-  };
-
   return (
     <>
       <Card>
         <Scrollbar>
           <Box sx={{ minWidth: 800 }}>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell padding="checkbox">
-                    <Checkbox
-                      checked={selectedAll}
-                      indeterminate={selectedSome}
-                      onChange={(event) => {
-                        if (event.target.checked) {
-                          onSelectAll?.();
-                        } else {
-                          onDeselectAll?.();
-                        }
-                      }}
-                    />
-                  </TableCell>
-                  <TableCell>Tên người dùng</TableCell>
-                  <TableCell>Email</TableCell>
-                  <TableCell>Địa chỉ</TableCell>
-                  <TableCell>Số điện thoại</TableCell>
-                  <TableCell>Trạng thái</TableCell>
-                  <TableCell>Ngày đăng ký</TableCell>
-                  <TableCell>Hành động</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {items.map((customer) => {
-                  const isSelected = selected.includes(customer.id);
-                  const created_at = format(new Date(customer.created_at), "hh:mm:ss dd/MM/yyyy");
+            {loading ? (
+              <LoadingData />
+            ) : (
+              <DataGrid
+                rows={items}
+                columns={columns.map((column) => ({
+                  ...column,
+                  headerName: column.headerName.toUpperCase(),
+                  headerClassName: "super-app-theme--header",
+                }))}
+                // pagination
+                // rowCount={count}
+                // onPageChange={onPageChange}
+                // rowsPerPageOptions={PAGE_OPTIONS.ROW_PER_PAGE_OPTIONS}
+                // onPageSizeChange={onRowsPerPageChange}
+                // checkboxSelection
+                // selectionModel={selected}
+                // onSelectionModelChange={(newSelection) => {
+                //   if (newSelection.selectionModel) {
+                //     onSelectAll?.();
+                //   } else {
+                //     onDeselectAll?.();
+                //   }
+                // }}
 
-                  return (
-                    <TableRow hover key={customer.id} selected={isSelected}>
-                      <TableCell padding="checkbox">
-                        <Checkbox
-                          checked={isSelected}
-                          onChange={(event) => {
-                            if (event.target.checked) {
-                              onSelectOne?.(customer.id);
-                            } else {
-                              onDeselectOne?.(customer.id);
-                            }
-                          }}
-                        />
-                      </TableCell>
-                      <TableCell>
-                        <Stack alignItems="center" direction="row" spacing={2}>
-                          <Avatar src={customer.avatar_url}>
-                            {getInitials(customer.full_name)}
-                          </Avatar>
-                          <Box>
-                            <Tooltip title="Xem chi tiết">
-                              <Typography
-                                variant="subtitle1"
-                                onClick={() => handleOpenModalDetail(customer.id)}
-                                sx={{ cursor: "pointer" }}
-                              >
-                                {customer.full_name}
-                              </Typography>
-                            </Tooltip>
-                            <Typography
-                              variant="subtitle2"
-                              color="text.secondary"
-                              sx={{ fontStyle: "italic" }}
-                            >
-                              {customer.username}
-                            </Typography>
-                          </Box>
-                        </Stack>
-                      </TableCell>
-                      <TableCell>{customer.email}</TableCell>
-                      <TableCell>{customer.address}</TableCell>
-                      <TableCell>{customer.phone}</TableCell>
-                      <TableCell>
-                        <SeverityPill color={statusMap[customer.is_verified]}>
-                          {customer.is_verified ? "Đã xác thực" : "Chưa xác thực"}
-                        </SeverityPill>
-                      </TableCell>
-                      <TableCell>{created_at}</TableCell>
-                      <TableCell>
-                        <Button
-                          startIcon={
-                            <SvgIcon fontSize="small">
-                              <TrashIcon />
-                            </SvgIcon>
-                          }
-                          size="small"
-                          variant="contained"
-                          color="error"
-                          sx={{
-                            m: 0.5,
-                            "& .MuiButton-startIcon": {
-                              m: 0,
-                            },
-                          }}
-                          onClick={() => handleConfirmDelete(customer.id)}
-                        />
-                        <Button
-                          startIcon={
-                            <SvgIcon fontSize="small">
-                              <PencilIcon />
-                            </SvgIcon>
-                          }
-                          size="small"
-                          variant="contained"
-                          sx={{
-                            m: 0.5,
-                            "& .MuiButton-startIcon": {
-                              m: 0,
-                            },
-                          }}
-                          onClick={() => handleOpenModalEdit(customer.id)}
-                        />
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
-              </TableBody>
-            </Table>
+                initialState={{
+                  pagination: {
+                    paginationModel: {
+                      pageSize: PAGE_OPTIONS.ROW_PER_PAGE,
+                    },
+                  },
+                }}
+                pageSizeOptions={PAGE_OPTIONS.ROW_PER_PAGE_OPTIONS}
+                sx={{
+                  height: 360,
+                  width: "100%",
+                  "& .super-app-theme--header": {
+                    backgroundColor: "rgb(248, 249, 250)",
+                  },
+                }}
+              />
+            )}
           </Box>
         </Scrollbar>
-        <TablePagination
-          component="div"
-          count={count}
-          onPageChange={onPageChange}
-          onRowsPerPageChange={onRowsPerPageChange}
-          page={page}
-          rowsPerPage={rowsPerPage}
-          rowsPerPageOptions={PAGE_OPTIONS.ROW_PER_PAGE_OPTIONS}
-        />
       </Card>
 
       <DeleteCustomer
@@ -212,13 +74,11 @@ export const CustomersTable = (props) => {
         setIsModalDeleteCustomer={setIsModalDeleteCustomer}
         currentId={parseInt(currentId)}
       />
-
       <EditCustomer
         isModalEditCustomer={isModalEditCustomer}
         setIsModalEditCustomer={setIsModalEditCustomer}
         currentId={parseInt(currentId)}
       />
-
       <DetailCustomer
         isModalDetailCustomer={isModalDetailCustomer}
         setIsModalDetailCustomer={setIsModalDetailCustomer}

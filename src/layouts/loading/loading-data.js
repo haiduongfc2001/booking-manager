@@ -1,12 +1,6 @@
-/**
- * © Copyright OpenWay VietNam
- * @author duongdh
- * @create date 2023-11-22 11:48:31
- * @desc Component Loading while waiting for data returned from the server
- */
 import { Box, CircularProgress, Grid, Typography } from "@mui/material";
-import FontSize from "../layouts/FontSize";
-import { TableStyle } from "./TableStyle";
+import { TableStyle } from "../TableStyle";
+import FontSize from "../FontSize";
 
 // LoadingData component
 function LoadingData() {
@@ -23,9 +17,7 @@ function LoadingData() {
         }}
       >
         <CircularProgress size={60} />
-        <Typography sx={{ ml: 2, fontSize: FontSize.VeryNormal }}>
-          Loading...
-        </Typography>
+        <Typography sx={{ ml: 2, fontSize: FontSize.VeryNormal }}>Loading...</Typography>
       </Grid>
     </Box>
   );

@@ -19,7 +19,7 @@ import {
 } from "@mui/material";
 import { Scrollbar } from "src/components/scrollbar";
 import { getInitials } from "src/utils/get-initials";
-import { PAGE_OPTIONS } from "src/utils/constants";
+import { PAGE_OPTIONS } from "src/constant/constants";
 import TrashIcon from "@heroicons/react/24/solid/TrashIcon";
 import PencilIcon from "@heroicons/react/24/solid/PencilIcon";
 import DeleteHotel from "./modal-delete";

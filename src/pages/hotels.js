@@ -10,7 +10,7 @@ import { HotelsTable } from "src/sections/hotel/hotels-table";
 import { HotelsSearch } from "src/sections/hotel/hotels-search";
 import { applyPagination } from "src/utils/apply-pagination";
 import { hotelData } from "src/components/data";
-import { PAGE_OPTIONS } from "src/utils/constants";
+import { PAGE_OPTIONS } from "src/constant/constants";
 import CreateHotel from "src/sections/hotel/modal-create";
 
 const useHotels = (page, rowsPerPage) => {

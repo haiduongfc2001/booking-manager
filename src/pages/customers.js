@@ -1,45 +1,49 @@
-import { useCallback, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import Head from "next/head";
 import ArrowDownOnSquareIcon from "@heroicons/react/24/solid/ArrowDownOnSquareIcon";
 import ArrowUpOnSquareIcon from "@heroicons/react/24/solid/ArrowUpOnSquareIcon";
 import PlusIcon from "@heroicons/react/24/solid/PlusIcon";
 import { Box, Button, Container, Stack, SvgIcon, Typography, Card } from "@mui/material";
-import { useSelection } from "src/hooks/use-selection";
 import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
 import { CustomersTable } from "src/sections/customer/customers-table";
 import { CustomersSearch } from "src/sections/customer/customers-search";
-import { applyPagination } from "src/utils/apply-pagination";
-import { customerData } from "src/components/data";
-import { PAGE_OPTIONS } from "src/utils/constants";
+import { STATUS_CODE } from "src/constant/constants";
 import CreateCustomer from "src/sections/customer/modal-create";
+import * as CustomerService from "../services/CustomerService";
+import { API } from "src/constant/constants";
 
-const useCustomers = (page, rowsPerPage) => {
-  return useMemo(() => {
-    return applyPagination(customerData, page, rowsPerPage);
-  }, [page, rowsPerPage]);
-};
+const useCustomers = (setLoading) => {
+  const [customerData, setCustomerData] = useState([]);
 
-const useCustomerIds = (customers) => {
-  return useMemo(() => {
-    return customers.map((customer) => customer.id);
-  }, [customers]);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+
+        const response = await CustomerService[API.GET_ALL_CUSTOMERS]();
+
+        if (response?.status !== STATUS_CODE.UNAUTHORIZED) {
+          setCustomerData(response.data);
+        } else {
+          // dispatch(showCommonAlert(TOAST_KIND.ERROR, response.data.error));
+        }
+      } catch (error) {
+        // dispatch(showCommonAlert(TOAST_KIND.ERROR, TOAST_MESSAGE.FILTER_ERROR));
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  return customerData;
 };
 
 const Page = () => {
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(PAGE_OPTIONS.ROW_PER_PAGE);
-  const customers = useCustomers(page, rowsPerPage);
-  const customersIds = useCustomerIds(customers);
-  const customersSelection = useSelection(customersIds);
+  const [loading, setLoading] = useState([]);
+  const customers = useCustomers(setLoading);
   const [isModalCreateCustomer, setIsModalCreateCustomer] = useState(false);
-
-  const handlePageChange = useCallback((event, value) => {
-    setPage(value);
-  }, []);
-
-  const handleRowsPerPageChange = useCallback((event) => {
-    setRowsPerPage(event.target.value);
-  }, []);
 
   const handleOpenModalCreate = () => {
     setIsModalCreateCustomer(true);
@@ -108,19 +112,7 @@ const Page = () => {
                 </Button>
               </Stack>
             </Card>
-            <CustomersTable
-              count={customerData.length}
-              items={customers}
-              onDeselectAll={customersSelection.handleDeselectAll}
-              onDeselectOne={customersSelection.handleDeselectOne}
-              onPageChange={handlePageChange}
-              onRowsPerPageChange={handleRowsPerPageChange}
-              onSelectAll={customersSelection.handleSelectAll}
-              onSelectOne={customersSelection.handleSelectOne}
-              page={page}
-              rowsPerPage={rowsPerPage}
-              selected={customersSelection.selected}
-            />
+            <CustomersTable items={customers} loading={loading} />
           </Stack>
         </Container>
       </Box>

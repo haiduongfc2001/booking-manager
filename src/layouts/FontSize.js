@@ -1,0 +1,28 @@
+const FontSize = {
+  ExtraTiny: "10px",
+  VeryTiny: "12px",
+  Tiny: "14px",
+  ExtraSmall: "16px",
+  VerySmall: "18px",
+  Small: "20px",
+  ExtraMedium: "22px",
+  VeryMedium: "24px",
+  Medium: "26px",
+  ExtraNormal: "28px",
+  VeryNormal: "30px",
+  Normal: "32px",
+  ExtraBig: "34px",
+  VeryBig: "36px",
+  Big: "38px",
+  ExtraLarge: "40px",
+  VeryLarge: "42px",
+  Large: "44px",
+  ExtraHuge: "46px",
+  VeryHuge: "48px",
+  Huge: "50px",
+  ExtraGigantic: "52px",
+  VeryGigantic: "56px",
+  Gigantic: "60px",
+};
+
+export default FontSize;
