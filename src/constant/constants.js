@@ -62,7 +62,7 @@ export const STATUS_CODE = {
 /**
  * Table Paging
  */
-export const PAGE = {
-  PAGE_SIZE: 50,
-  PAGE_SIZE_OPTIONS: [10, 25, 50, 75, 100],
+export const PAGE_OPTIONS = {
+  ROW_PER_PAGE: 5,
+  ROW_PER_PAGE_OPTIONS: [5, 10, 25],
 };
