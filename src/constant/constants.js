@@ -42,7 +42,10 @@ export const SCREEN_TITLE = {};
 /**
  * Screen API
  */
-export const API = {};
+export const API = {
+  // CUSTOMER
+  GET_ALL_CUSTOMERS: "GetAllCustomers",
+};
 
 /**
  * Status code of API Response

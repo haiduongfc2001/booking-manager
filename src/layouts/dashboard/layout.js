@@ -38,6 +38,11 @@ export const Layout = withAuthGuard((props) => {
     handlePathnameChange();
   }, [pathname]);
 
+  useEffect(() => {
+    // Set openNav to false whenever pathname changes
+    setOpenNav(false);
+  }, [pathname]);
+
   return (
     <>
       <TopNav onNavOpen={() => setOpenNav(true)} onClose={() => setOpenNav(false)} open={openNav} />
