@@ -12,8 +12,10 @@ import CreateCustomer from "src/sections/customer/CreateCustomer";
 import * as CustomerService from "../services/CustomerService";
 import { API } from "src/constant/Constants";
 
-const useCustomers = (setLoading) => {
+const Page = () => {
+  const [loading, setLoading] = useState(false);
   const [customersData, setCustomersData] = useState([]);
+  const [isModalCreateCustomer, setIsModalCreateCustomer] = useState(false);
 
   const fetchData = async () => {
     if (fetchData.current) {
@@ -43,14 +45,6 @@ const useCustomers = (setLoading) => {
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  return customersData;
-};
-
-const Page = () => {
-  const [loading, setLoading] = useState(false);
-  const customers = useCustomers(setLoading);
-  const [isModalCreateCustomer, setIsModalCreateCustomer] = useState(false);
 
   const handleOpenModalCreate = () => {
     setIsModalCreateCustomer(true);
@@ -119,7 +113,7 @@ const Page = () => {
                 </Button>
               </Stack>
             </Card>
-            <CustomersTable items={customers} loading={loading} />
+            <CustomersTable items={customersData} loading={loading} />
           </Stack>
         </Container>
       </Box>
@@ -127,6 +121,7 @@ const Page = () => {
       <CreateCustomer
         isModalCreateCustomer={isModalCreateCustomer}
         setIsModalCreateCustomer={setIsModalCreateCustomer}
+        fetchData={fetchData}
       />
     </>
   );

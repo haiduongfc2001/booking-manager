@@ -46,6 +46,7 @@ export const API = {
   CUSTOMER: {
     GET_ALL_CUSTOMERS: "GetAllCustomers",
     GET_CUSTOMER_BY_ID: "GetCustomerById",
+    CREATE_CUSTOMER: "CreateCustomer",
   },
 };
 

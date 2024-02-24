@@ -1,9 +1,12 @@
 import PropTypes from "prop-types";
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import {
   Button,
-  Modal,
-  Box,
+  Dialog,
+  IconButton,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
   Typography,
   Stack,
   TextField,
@@ -15,9 +18,11 @@ import {
   FormControlLabel,
   Switch,
 } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { ModalStyle } from "src/components/ModalStyle";
+import * as CustomerService from "../../services/CustomerService";
+import { API } from "src/constant/Constants";
 
 const initialData = {
   email: "",
@@ -31,7 +36,7 @@ const initialData = {
 };
 
 const CreateCustomer = (props) => {
-  const { isModalCreateCustomer, setIsModalCreateCustomer } = props;
+  const { isModalCreateCustomer, setIsModalCreateCustomer, fetchData } = props;
 
   const handleCloseModalCreate = () => {
     setIsModalCreateCustomer(false);
@@ -49,10 +54,10 @@ const CreateCustomer = (props) => {
         .max(255)
         .required("Vui lòng nhập địa chỉ email!"),
       username: Yup.string().max(20).required("Vui lòng nhập tên người dùng!"),
-      full_name: Yup.string().max(20).required("Vui lòng nhập tên!"),
+      full_name: Yup.string().max(20).required("Vui lòng nhập họ và tên!"),
       gender: Yup.mixed()
-        .oneOf(["Male", "Female"])
-        .required("Vui lòng nhập địa chỉ tên người dùng!"),
+        .oneOf(["male", "female", "other"])
+        .required("Vui lòng nhập giới tính người dùng!"),
       phone: Yup.string().max(12).required("Vui lòng nhập số điện thoại!"),
       avatar_url: Yup.string(),
       address: Yup.string(),
@@ -61,8 +66,17 @@ const CreateCustomer = (props) => {
 
     onSubmit: async (values, helpers) => {
       try {
-        // await auth.signIn(values.email, values.phone);
-        console.log(values);
+        await CustomerService[API.CUSTOMER.CREATE_CUSTOMER]({
+          email: values.email,
+          username: values.username,
+          full_name: values.full_name,
+          gender: values.gender,
+          phone: values.phone,
+          avatar_url: values.avatar_url,
+          address: values.address,
+        });
+
+        fetchData();
       } catch (err) {
         helpers.setStatus({ success: false });
         helpers.setErrors({ submit: err.message });
@@ -75,18 +89,46 @@ const CreateCustomer = (props) => {
     validateOnBlur: false,
   });
 
+  const descriptionElementRef = useRef(null);
+  useEffect(() => {
+    if (isModalCreateCustomer) {
+      const { current: descriptionElement } = descriptionElementRef;
+      if (descriptionElement !== null) {
+        descriptionElement.focus();
+      }
+    }
+  }, [isModalCreateCustomer]);
+
   return (
-    <Modal
+    <Dialog
       open={isModalCreateCustomer}
       onClose={handleCloseModalCreate}
-      aria-labelledby="modal-title"
-      aria-describedby="modal-description"
+      aria-labelledby="scroll-dialog-title"
+      aria-describedby="scroll-dialog-description"
+      maxWidth="md"
+      fullWidth
+      PaperProps={{
+        sx: {
+          maxHeight: "80vh",
+          height: "auto",
+        },
+      }}
     >
-      <Box sx={ModalStyle({ width: 50, maxWidth: 55, maxHeight: 85 })}>
-        <Typography id="modal-title" variant="h5" component="div">
-          Tạo tài khoản khách hàng
-        </Typography>
-        <form noValidate onSubmit={formik.handleSubmit}>
+      <DialogTitle id="scroll-dialog-title">Tạo tài khoản khách hàng</DialogTitle>
+      <IconButton
+        aria-label="close"
+        onClick={handleCloseModalCreate}
+        sx={{
+          position: "absolute",
+          right: 8,
+          top: 8,
+          color: (theme) => theme.palette.grey[500],
+        }}
+      >
+        <CloseIcon />
+      </IconButton>
+      <form noValidate onSubmit={formik.handleSubmit}>
+        <DialogContent dividers>
           <Stack spacing={3} sx={{ mt: 3 }}>
             <TextField
               autoFocus
@@ -141,8 +183,9 @@ const CreateCustomer = (props) => {
                   value={formik.values.gender}
                   required
                 >
-                  <MenuItem value="Male">Male</MenuItem>
-                  <MenuItem value="Female">Female</MenuItem>
+                  <MenuItem value="male">Nam</MenuItem>
+                  <MenuItem value="female">Nữ</MenuItem>
+                  <MenuItem value="other">Khác</MenuItem>
                 </Select>
                 {formik.touched.gender && formik.errors.gender && (
                   <FormHelperText>{formik.errors.gender}</FormHelperText>
@@ -184,7 +227,7 @@ const CreateCustomer = (props) => {
               type="text"
               value={formik.values.address}
             />
-            <FormControlLabel
+            {/* <FormControlLabel
               control={
                 <Switch
                   checked={formik.values.is_verified}
@@ -194,25 +237,24 @@ const CreateCustomer = (props) => {
                 />
               }
               label={formik.values.is_verified ? "Đã xác thực" : "Chưa xác thực"}
-            />
+            /> */}
           </Stack>
           {formik.errors.submit && (
             <Typography color="error" sx={{ mt: 3 }} variant="body2">
               {formik.errors.submit}
             </Typography>
           )}
-
-          <Box sx={{ mt: 3, display: "flex", justifyContent: "flex-end" }}>
-            <Button type="submit" sx={{ mr: 2 }} variant="contained" color="success">
-              OK
-            </Button>
-            <Button onClick={handleCloseModalCreate} variant="contained" color="inherit">
-              Hủy
-            </Button>
-          </Box>
-        </form>
-      </Box>
-    </Modal>
+        </DialogContent>
+        <DialogActions sx={{ my: 3, mr: 3, display: "flex", justifyContent: "flex-end" }}>
+          <Button type="submit" sx={{ mr: 2 }} variant="contained" color="success">
+            OK
+          </Button>
+          <Button onClick={handleCloseModalCreate} variant="contained" color="inherit">
+            Hủy
+          </Button>
+        </DialogActions>
+      </form>
+    </Dialog>
   );
 };
 
@@ -221,4 +263,5 @@ export default CreateCustomer;
 CreateCustomer.propTypes = {
   isModalCreateCustomer: PropTypes.bool.isRequired,
   setIsModalCreateCustomer: PropTypes.func.isRequired,
+  fetchData: PropTypes.func,
 };

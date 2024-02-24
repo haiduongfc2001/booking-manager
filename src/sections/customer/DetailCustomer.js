@@ -1,8 +1,17 @@
 import PropTypes from "prop-types";
-import React, { useEffect, useState } from "react";
-import { Button, Modal, Box, Typography, Stack, TextField } from "@mui/material";
+import React, { useEffect, useRef, useState } from "react";
+import {
+  Button,
+  Dialog,
+  IconButton,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Stack,
+  TextField,
+} from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
 import { SeverityPill } from "src/components/SeverityPill";
-import { ModalStyle } from "src/components/ModalStyle";
 import { StatusMap } from "src/components/StatusMap";
 import { API, STATUS_CODE } from "src/constant/Constants";
 import LoadingData from "src/layouts/loading/LoadingData";
@@ -44,17 +53,45 @@ const DetailCustomer = (props) => {
     setIsModalDetailCustomer(false);
   };
 
+  const descriptionElementRef = useRef(null);
+  useEffect(() => {
+    if (isModalDetailCustomer) {
+      const { current: descriptionElement } = descriptionElementRef;
+      if (descriptionElement !== null) {
+        descriptionElement.focus();
+      }
+    }
+  }, [isModalDetailCustomer]);
+
   return (
-    <Modal
+    <Dialog
       open={isModalDetailCustomer}
       onClose={handleCloseModal}
-      aria-labelledby="modal-title"
-      aria-describedby="modal-description"
+      aria-labelledby="scroll-dialog-title"
+      aria-describedby="scroll-dialog-description"
+      maxWidth="md"
+      fullWidth
+      PaperProps={{
+        sx: {
+          maxHeight: "80vh",
+          height: "auto",
+        },
+      }}
     >
-      <Box sx={ModalStyle({ width: 50, maxWidth: 55, maxHeight: 85 })}>
-        <Typography id="modal-title" variant="h5" component="div">
-          Thông tin chi tiết
-        </Typography>
+      <DialogTitle id="scroll-dialog-title">Thông tin chi tiết</DialogTitle>
+      <IconButton
+        aria-label="close"
+        onClick={handleCloseModal}
+        sx={{
+          position: "absolute",
+          right: 8,
+          top: 8,
+          color: (theme) => theme.palette.grey[500],
+        }}
+      >
+        <CloseIcon />
+      </IconButton>
+      <DialogContent dividers>
         {loading ? (
           <LoadingData />
         ) : (
@@ -99,16 +136,15 @@ const DetailCustomer = (props) => {
                 {customerData?.is_verified ? "Đã xác thực" : "Chưa xác thực"}
               </SeverityPill>
             </Stack>
-
-            <Box sx={{ mt: 3, display: "flex", justifyContent: "flex-end" }}>
-              <Button onClick={handleCloseModal} variant="contained" color="inherit">
-                Đóng
-              </Button>
-            </Box>
           </>
         )}
-      </Box>
-    </Modal>
+      </DialogContent>
+      <DialogActions sx={{ my: 3, mr: 3, display: "flex", justifyContent: "flex-end" }}>
+        <Button variant="contained" color="inherit" onClick={handleCloseModal}>
+          Đóng
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 };
 
