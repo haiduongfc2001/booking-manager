@@ -10,7 +10,7 @@ import { ManagersTable } from "src/sections/manager/managers-table";
 import { ManagersSearch } from "src/sections/manager/managers-search";
 import { applyPagination } from "src/utils/apply-pagination";
 import { managerData } from "src/components/data";
-import { PAGE_OPTIONS } from "src/constant/constants";
+import { DATAGRID_OPTIONS } from "src/constant/constants";
 import CreateManager from "src/sections/manager/modal-create";
 
 const useManagers = (page, rowsPerPage) => {
@@ -27,7 +27,7 @@ const useManagerIds = (managers) => {
 
 const Page = () => {
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(PAGE_OPTIONS.ROW_PER_PAGE);
+  const [rowsPerPage, setRowsPerPage] = useState(DATAGRID_OPTIONS.PAGE_SIZE);
   const managers = useManagers(page, rowsPerPage);
   const managersIds = useManagerIds(managers);
   const managersSelection = useSelection(managersIds);

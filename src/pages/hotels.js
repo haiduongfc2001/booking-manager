@@ -10,7 +10,7 @@ import { HotelsTable } from "src/sections/hotel/hotels-table";
 import { HotelsSearch } from "src/sections/hotel/hotels-search";
 import { applyPagination } from "src/utils/apply-pagination";
 import { hotelData } from "src/components/data";
-import { PAGE_OPTIONS } from "src/constant/constants";
+import { DATAGRID_OPTIONS } from "src/constant/constants";
 import CreateHotel from "src/sections/hotel/modal-create";
 
 const useHotels = (page, rowsPerPage) => {
@@ -27,7 +27,7 @@ const useHotelIds = (hotels) => {
 
 const Page = () => {
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(PAGE_OPTIONS.ROW_PER_PAGE);
+  const [rowsPerPage, setRowsPerPage] = useState(DATAGRID_OPTIONS.PAGE_SIZE);
   const hotels = useHotels(page, rowsPerPage);
   const hotelsIds = useHotelIds(hotels);
   const hotelsSelection = useSelection(hotelsIds);

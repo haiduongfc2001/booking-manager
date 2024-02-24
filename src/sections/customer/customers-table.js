@@ -6,7 +6,7 @@ import DeleteCustomer from "./modal-delete";
 import EditCustomer from "./modal-edit";
 import DetailCustomer from "./modal-detail";
 import LoadingData from "src/layouts/loading/loading-data";
-import { PAGE_OPTIONS } from "src/constant/constants";
+import { DATAGRID_OPTIONS } from "src/constant/constants";
 import { Scrollbar } from "src/components/scrollbar";
 import { columns } from "./columns";
 
@@ -18,6 +18,11 @@ export const CustomersTable = (props) => {
   const [isModalEditCustomer, setIsModalEditCustomer] = useState(false);
   const [isModalDetailCustomer, setIsModalDetailCustomer] = useState(false);
 
+  const handleOpenModalDetail = (id) => {
+    setCurrentId(id);
+    setIsModalDetailCustomer(true);
+  };
+
   return (
     <>
       <Card>
@@ -28,15 +33,39 @@ export const CustomersTable = (props) => {
             ) : (
               <DataGrid
                 rows={items}
-                columns={columns.map((column) => ({
+                columns={columns({ handleOpenModalDetail }).map((column) => ({
                   ...column,
                   headerName: column.headerName.toUpperCase(),
                   headerClassName: "super-app-theme--header",
                 }))}
+                initialState={{
+                  pagination: {
+                    paginationModel: {
+                      pageSize: DATAGRID_OPTIONS.PAGE_SIZE,
+                    },
+                  },
+                }}
+                pageSizeOptions={DATAGRID_OPTIONS.PAGE_SIZE_OPTIONS}
+                rowHeight={DATAGRID_OPTIONS.ROW_HEIGHT}
+                sx={{
+                  height: DATAGRID_OPTIONS.TABLE_HEIGHT,
+                  width: "100%",
+                  "& .super-app-theme--header": {
+                    backgroundColor: "rgb(248, 249, 250)",
+                  },
+                  boxShadow: 2,
+                  // border: 2,
+                  // borderColor: "text.tertiary",
+                  // borderRadius: "8px",
+                  "& .MuiDataGrid-cell:hover": {
+                    color: "text.tertiary",
+                  },
+                }}
+                hideFooterSelectedRowCount
                 // pagination
                 // rowCount={count}
                 // onPageChange={onPageChange}
-                // rowsPerPageOptions={PAGE_OPTIONS.ROW_PER_PAGE_OPTIONS}
+                // rowsPerPageOptions={DATAGRID_OPTIONS.PAGE_SIZE_OPTIONS}
                 // onPageSizeChange={onRowsPerPageChange}
                 // checkboxSelection
                 // selectionModel={selected}
@@ -47,22 +76,6 @@ export const CustomersTable = (props) => {
                 //     onDeselectAll?.();
                 //   }
                 // }}
-
-                initialState={{
-                  pagination: {
-                    paginationModel: {
-                      pageSize: PAGE_OPTIONS.ROW_PER_PAGE,
-                    },
-                  },
-                }}
-                pageSizeOptions={PAGE_OPTIONS.ROW_PER_PAGE_OPTIONS}
-                sx={{
-                  height: 360,
-                  width: "100%",
-                  "& .super-app-theme--header": {
-                    backgroundColor: "rgb(248, 249, 250)",
-                  },
-                }}
               />
             )}
           </Box>
@@ -89,15 +102,6 @@ export const CustomersTable = (props) => {
 };
 
 CustomersTable.propTypes = {
-  count: PropTypes.number,
   items: PropTypes.array,
-  onDeselectAll: PropTypes.func,
-  onDeselectOne: PropTypes.func,
-  onPageChange: PropTypes.func,
-  onRowsPerPageChange: PropTypes.func,
-  onSelectAll: PropTypes.func,
-  onSelectOne: PropTypes.func,
-  page: PropTypes.number,
-  rowsPerPage: PropTypes.number,
-  selected: PropTypes.array,
+  loading: PropTypes.bool,
 };

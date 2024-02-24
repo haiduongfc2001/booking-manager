@@ -13,17 +13,17 @@ import * as CustomerService from "../services/CustomerService";
 import { API } from "src/constant/constants";
 
 const useCustomers = (setLoading) => {
-  const [customerData, setCustomerData] = useState([]);
+  const [customersData, setCustomersData] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
 
-        const response = await CustomerService[API.GET_ALL_CUSTOMERS]();
+        const response = await CustomerService[API.CUSTOMER.GET_ALL_CUSTOMERS]();
 
         if (response?.status !== STATUS_CODE.UNAUTHORIZED) {
-          setCustomerData(response.data);
+          setCustomersData(response.data);
         } else {
           // dispatch(showCommonAlert(TOAST_KIND.ERROR, response.data.error));
         }
@@ -37,11 +37,11 @@ const useCustomers = (setLoading) => {
     fetchData();
   }, []);
 
-  return customerData;
+  return customersData;
 };
 
 const Page = () => {
-  const [loading, setLoading] = useState([]);
+  const [loading, setLoading] = useState(false);
   const customers = useCustomers(setLoading);
   const [isModalCreateCustomer, setIsModalCreateCustomer] = useState(false);
 
