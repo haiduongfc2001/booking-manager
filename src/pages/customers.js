@@ -13,35 +13,40 @@ import * as CustomerService from "../services/CustomerService";
 import { API } from "src/constant/constants";
 
 const useCustomers = (setLoading) => {
-  const [customerData, setCustomerData] = useState([]);
+  const [customersData, setCustomersData] = useState([]);
+
+  const fetchData = async () => {
+    if (fetchData.current) {
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      const response = await CustomerService[API.CUSTOMER.GET_ALL_CUSTOMERS]();
+
+      if (response?.status !== STATUS_CODE.UNAUTHORIZED) {
+        setCustomersData(response.data);
+      } else {
+        // dispatch(showCommonAlert(TOAST_KIND.ERROR, response.data.error));
+      }
+    } catch (error) {
+      // dispatch(showCommonAlert(TOAST_KIND.ERROR, TOAST_MESSAGE.FILTER_ERROR));
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-
-        const response = await CustomerService[API.GET_ALL_CUSTOMERS]();
-
-        if (response?.status !== STATUS_CODE.UNAUTHORIZED) {
-          setCustomerData(response.data);
-        } else {
-          // dispatch(showCommonAlert(TOAST_KIND.ERROR, response.data.error));
-        }
-      } catch (error) {
-        // dispatch(showCommonAlert(TOAST_KIND.ERROR, TOAST_MESSAGE.FILTER_ERROR));
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return customerData;
+  return customersData;
 };
 
 const Page = () => {
-  const [loading, setLoading] = useState([]);
+  const [loading, setLoading] = useState(false);
   const customers = useCustomers(setLoading);
   const [isModalCreateCustomer, setIsModalCreateCustomer] = useState(false);
 

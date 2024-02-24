@@ -19,7 +19,7 @@ import {
 } from "@mui/material";
 import { Scrollbar } from "src/components/scrollbar";
 import { getInitials } from "src/utils/get-initials";
-import { PAGE_OPTIONS } from "src/constant/constants";
+import { DATAGRID_OPTIONS } from "src/constant/constants";
 import TrashIcon from "@heroicons/react/24/solid/TrashIcon";
 import PencilIcon from "@heroicons/react/24/solid/PencilIcon";
 import DeleteManager from "./modal-delete";
@@ -190,7 +190,7 @@ export const ManagersTable = (props) => {
           onRowsPerPageChange={onRowsPerPageChange}
           page={page}
           rowsPerPage={rowsPerPage}
-          rowsPerPageOptions={PAGE_OPTIONS.ROW_PER_PAGE_OPTIONS}
+          rowsPerPageOptions={DATAGRID_OPTIONS.PAGE_SIZE_OPTIONS}
         />
       </Card>
 

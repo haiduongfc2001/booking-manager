@@ -43,8 +43,10 @@ export const SCREEN_TITLE = {};
  * Screen API
  */
 export const API = {
-  // CUSTOMER
-  GET_ALL_CUSTOMERS: "GetAllCustomers",
+  CUSTOMER: {
+    GET_ALL_CUSTOMERS: "GetAllCustomers",
+    GET_CUSTOMER_BY_ID: "GetCustomerById",
+  },
 };
 
 /**
@@ -62,7 +64,9 @@ export const STATUS_CODE = {
 /**
  * Table Paging
  */
-export const PAGE_OPTIONS = {
-  ROW_PER_PAGE: 5,
-  ROW_PER_PAGE_OPTIONS: [5, 10, 25],
+export const DATAGRID_OPTIONS = {
+  PAGE_SIZE: 5,
+  PAGE_SIZE_OPTIONS: [5, 10, 25],
+  ROW_HEIGHT: 60,
+  TABLE_HEIGHT: 420,
 };
