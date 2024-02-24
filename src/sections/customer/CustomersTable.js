@@ -2,13 +2,13 @@ import PropTypes from "prop-types";
 import { Box, Card } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { useState } from "react";
-import DeleteCustomer from "./modal-delete";
-import EditCustomer from "./modal-edit";
-import DetailCustomer from "./modal-detail";
-import LoadingData from "src/layouts/loading/loading-data";
-import { DATAGRID_OPTIONS } from "src/constant/constants";
-import { Scrollbar } from "src/components/scrollbar";
-import { columns } from "./columns";
+import DeleteCustomer from "./DeleteCustomer";
+import EditCustomer from "./EditCustomer";
+import DetailCustomer from "./DetailCustomer";
+import LoadingData from "src/layouts/loading/LoadingData";
+import { DATAGRID_OPTIONS } from "src/constant/Constants";
+import { Scrollbar } from "src/components/ScrollBar";
+import { columns } from "./Columns";
 
 export const CustomersTable = (props) => {
   const { items = [], loading = false } = props;

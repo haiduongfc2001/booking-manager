@@ -17,15 +17,15 @@ import {
   SvgIcon,
   Tooltip,
 } from "@mui/material";
-import { Scrollbar } from "src/components/scrollbar";
-import { getInitials } from "src/utils/get-initials";
-import { DATAGRID_OPTIONS } from "src/constant/constants";
+import { Scrollbar } from "src/components/ScrollBar";
+import { getInitials } from "src/utils/GetInitials";
+import { DATAGRID_OPTIONS } from "src/constant/Constants";
 import TrashIcon from "@heroicons/react/24/solid/TrashIcon";
 import PencilIcon from "@heroicons/react/24/solid/PencilIcon";
-import DeleteHotel from "./modal-delete";
+import DeleteHotel from "./DeleteHotel";
 import { useState } from "react";
-import EditHotel from "./modal-edit";
-import DetailHotel from "./modal-detail";
+import EditHotel from "./EditHotel";
+import DetailHotel from "./DetailHotel";
 
 // The table displays the list of hotels
 export const HotelsTable = (props) => {

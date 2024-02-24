@@ -17,7 +17,7 @@ import {
 } from "@mui/material";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { ModalStyle } from "src/components/modal-style";
+import { ModalStyle } from "src/components/ModalStyle";
 
 const initialData = {
   email: "",

@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useReducer, useRef } from "react";
 import PropTypes from "prop-types";
-import { ACCOUNT_TEST } from "src/constant/constants";
+import { ACCOUNT_TEST } from "src/constant/Constants";
 
 const HANDLERS = {
   INITIALIZE: "INITIALIZE",

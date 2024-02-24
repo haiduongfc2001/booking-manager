@@ -1,11 +1,11 @@
 import PropTypes from "prop-types";
 import React, { useEffect, useState } from "react";
 import { Button, Modal, Box, Typography, Stack, TextField } from "@mui/material";
-import { SeverityPill } from "src/components/severity-pill";
-import { ModalStyle } from "src/components/modal-style";
-import { statusMap } from "src/components/status-map";
-import { API, STATUS_CODE } from "src/constant/constants";
-import LoadingData from "src/layouts/loading/loading-data";
+import { SeverityPill } from "src/components/SeverityPill";
+import { ModalStyle } from "src/components/ModalStyle";
+import { StatusMap } from "src/components/StatusMap";
+import { API, STATUS_CODE } from "src/constant/Constants";
+import LoadingData from "src/layouts/loading/LoadingData";
 import * as CustomerService from "../../services/CustomerService";
 
 const DetailCustomer = (props) => {
@@ -95,7 +95,7 @@ const DetailCustomer = (props) => {
               />
 
               <TextField fullWidth label="Địa chỉ" name="address" value={customerData?.address} />
-              <SeverityPill color={statusMap[customerData?.is_verified]}>
+              <SeverityPill color={StatusMap[customerData?.is_verified]}>
                 {customerData?.is_verified ? "Đã xác thực" : "Chưa xác thực"}
               </SeverityPill>
             </Stack>

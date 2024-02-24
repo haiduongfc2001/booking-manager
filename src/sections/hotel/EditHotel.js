@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import React from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 import {
   Button,
   Modal,
@@ -15,29 +15,33 @@ import {
 } from "@mui/material";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { SeverityPill } from "src/components/severity-pill";
-import { ModalStyle } from "src/components/modal-style";
+import { hotelData } from "src/components/Data";
+import { SeverityPill } from "src/components/SeverityPill";
+import { ModalStyle } from "src/components/ModalStyle";
 
-const initialData = {
-  hotel_name: "",
-  image: "",
-  address: "",
-  description: "",
-};
+const EditHotel = (props) => {
+  const { isModalEditHotel, setIsModalEditHotel, currentId } = props;
 
-const CreateHotel = (props) => {
-  const { isModalCreateHotel, setIsModalCreateHotel } = props;
+  const hotel = hotelData.find((hotel) => hotel.hotel_id === currentId);
 
-  const handleCloseModalCreate = () => {
-    setIsModalCreateHotel(false);
+  const handleCloseModalEdit = () => {
+    setIsModalEditHotel(false);
     formik.resetForm();
   };
 
-  const formik = useFormik({
-    initialValues: {
-      ...initialData,
+  const initialValues = useMemo(
+    () => ({
+      hotel_name: hotel?.hotel_name || "",
+      image: hotel?.image || "",
+      address: hotel?.address || "",
+      description: hotel?.description || "",
       submit: null,
-    },
+    }),
+    [currentId]
+  );
+
+  const formik = useFormik({
+    initialValues,
     validationSchema: Yup.object({
       hotel_name: Yup.string().max(255).required("Vui lòng nhập tên khách sạn!"),
       image: Yup.string().max(255).required("Vui lòng nhập ảnh!"),
@@ -54,7 +58,7 @@ const CreateHotel = (props) => {
         helpers.setErrors({ submit: err.message });
         helpers.setSubmitting(false);
       } finally {
-        handleCloseModalCreate();
+        handleCloseModalEdit();
       }
     },
     enableReinitialize: true,
@@ -63,19 +67,18 @@ const CreateHotel = (props) => {
 
   return (
     <Modal
-      open={isModalCreateHotel}
-      onClose={handleCloseModalCreate}
+      open={isModalEditHotel}
+      onClose={handleCloseModalEdit}
       aria-labelledby="modal-title"
       aria-describedby="modal-description"
     >
       <Box sx={ModalStyle({ width: 50, maxWidth: 55, maxHeight: 85 })}>
         <Typography id="modal-title" variant="h5" component="div">
-          Tạo tài khoản quản lý
+          Chỉnh sửa thông tin khách sạn
         </Typography>
         <form noValidate onSubmit={formik.handleSubmit}>
           <Stack spacing={3} sx={{ mt: 3 }}>
             <TextField
-              autoFocus
               error={!!(formik.touched.hotel_name && formik.errors.hotel_name)}
               fullWidth
               helperText={formik.touched.hotel_name && formik.errors.hotel_name}
@@ -99,7 +102,6 @@ const CreateHotel = (props) => {
               value={formik.values.image}
               required
             />
-
             <TextField
               error={!!(formik.touched.address && formik.errors.address)}
               fullWidth
@@ -108,11 +110,10 @@ const CreateHotel = (props) => {
               name="address"
               onBlur={formik.handleBlur}
               onChange={formik.handleChange}
-              type="text"
+              type="address"
               value={formik.values.address}
               required
             />
-
             <TextField
               error={!!(formik.touched.description && formik.errors.description)}
               fullWidth
@@ -136,7 +137,7 @@ const CreateHotel = (props) => {
             <Button type="submit" sx={{ mr: 2 }} variant="contained" color="success">
               OK
             </Button>
-            <Button onClick={handleCloseModalCreate} variant="contained" color="inherit">
+            <Button onClick={handleCloseModalEdit} variant="contained" color="inherit">
               Hủy
             </Button>
           </Box>
@@ -146,9 +147,10 @@ const CreateHotel = (props) => {
   );
 };
 
-export default CreateHotel;
+export default EditHotel;
 
-CreateHotel.propTypes = {
-  isModalCreateHotel: PropTypes.bool.isRequired,
-  setIsModalCreateHotel: PropTypes.func.isRequired,
+EditHotel.propTypes = {
+  isModalEditHotel: PropTypes.bool.isRequired,
+  setIsModalEditHotel: PropTypes.func.isRequired,
+  currentId: PropTypes.number.isRequired,
 };

@@ -2,9 +2,9 @@ import { format } from "date-fns";
 import { Avatar, Box, Button, Stack, Typography, Tooltip, SvgIcon } from "@mui/material";
 import TrashIcon from "@heroicons/react/24/solid/TrashIcon";
 import PencilIcon from "@heroicons/react/24/solid/PencilIcon";
-import { SeverityPill } from "src/components/severity-pill";
-import { getInitials } from "src/utils/get-initials";
-import { statusMap } from "src/components/status-map";
+import { SeverityPill } from "src/components/SeverityPill";
+import { getInitials } from "src/utils/GetInitials";
+import { StatusMap } from "src/components/StatusMap";
 
 export const columns = ({ handleOpenModalDetail }) => {
   return [
@@ -57,7 +57,7 @@ export const columns = ({ handleOpenModalDetail }) => {
       flex: 0.125,
       align: "center",
       renderCell: (params) => (
-        <SeverityPill color={statusMap[params.row.is_verified]}>
+        <SeverityPill color={StatusMap[params.row.is_verified]}>
           {params.row.is_verified ? "Đã xác thực" : "Chưa xác thực"}
         </SeverityPill>
       ),

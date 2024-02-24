@@ -1,9 +1,9 @@
 import PropTypes from "prop-types";
 import React from "react";
 import { Button, Modal, Box, Typography, Stack, TextField } from "@mui/material";
-import { hotelData } from "src/components/data";
-import { SeverityPill } from "src/components/severity-pill";
-import { ModalStyle } from "src/components/modal-style";
+import { hotelData } from "src/components/Data";
+import { SeverityPill } from "src/components/SeverityPill";
+import { ModalStyle } from "src/components/ModalStyle";
 
 const DetailHotel = (props) => {
   const { isModalDetailHotel, setIsModalDetailHotel, currentId } = props;

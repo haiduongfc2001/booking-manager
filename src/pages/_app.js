@@ -4,10 +4,10 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { CssBaseline } from "@mui/material";
 import { ThemeProvider } from "@mui/material/styles";
-import { AuthConsumer, AuthProvider } from "src/contexts/auth-context";
-import { useNProgress } from "src/hooks/use-nprogress";
+import { AuthConsumer, AuthProvider } from "src/contexts/AuthContext";
+import { useNProgress } from "src/hooks/UseNprogress";
 import { createTheme } from "src/theme";
-import { createEmotionCache } from "src/utils/create-emotion-cache";
+import { createEmotionCache } from "src/utils/CreateEmotionCache";
 import "simplebar-react/dist/simplebar.min.css";
 
 const clientSideEmotionCache = createEmotionCache();

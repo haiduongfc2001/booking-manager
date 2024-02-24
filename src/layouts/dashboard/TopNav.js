@@ -14,8 +14,8 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import { alpha } from "@mui/material/styles";
-import { usePopover } from "src/hooks/use-popover";
-import { AccountPopover } from "./account-popover";
+import { usePopover } from "src/hooks/UsePopover";
+import { AccountPopover } from "./AccountPopover";
 
 const SIDE_NAV_WIDTH = 280;
 const TOP_NAV_HEIGHT = 64;

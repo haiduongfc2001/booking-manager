@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import React from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 import {
   Button,
   Modal,
@@ -15,31 +15,35 @@ import {
 } from "@mui/material";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { SeverityPill } from "src/components/severity-pill";
-import { ModalStyle } from "src/components/modal-style";
+import { managerData } from "src/components/Data";
+import { SeverityPill } from "src/components/SeverityPill";
+import { ModalStyle } from "src/components/ModalStyle";
 
-const initialData = {
-  email: "",
-  full_name: "",
-  gender: "",
-  phone: "",
-  hotel_id: "",
-  avatar_url: "",
-};
+const EditManager = (props) => {
+  const { isModalEditManager, setIsModalEditManager, currentId } = props;
 
-const CreateManager = (props) => {
-  const { isModalCreateManager, setIsModalCreateManager } = props;
+  const manager = managerData.find((manager) => manager.id === currentId);
 
-  const handleCloseModalCreate = () => {
-    setIsModalCreateManager(false);
+  const handleCloseModalEdit = () => {
+    setIsModalEditManager(false);
     formik.resetForm();
   };
 
-  const formik = useFormik({
-    initialValues: {
-      ...initialData,
+  const initialValues = useMemo(
+    () => ({
+      email: manager?.email || "",
+      full_name: manager?.full_name || "",
+      gender: manager?.gender || "",
+      phone: manager?.phone || "",
+      hotel_id: manager?.hotel_id || "",
+      avatar_url: manager?.avatar_url || "",
       submit: null,
-    },
+    }),
+    [currentId]
+  );
+
+  const formik = useFormik({
+    initialValues,
     validationSchema: Yup.object({
       email: Yup.string()
         .email("Vui lòng nhập địa chỉ email hợp lệ!")
@@ -63,7 +67,7 @@ const CreateManager = (props) => {
         helpers.setErrors({ submit: err.message });
         helpers.setSubmitting(false);
       } finally {
-        handleCloseModalCreate();
+        handleCloseModalEdit();
       }
     },
     enableReinitialize: true,
@@ -72,20 +76,19 @@ const CreateManager = (props) => {
 
   return (
     <Modal
-      open={isModalCreateManager}
-      onClose={handleCloseModalCreate}
+      open={isModalEditManager}
+      onClose={handleCloseModalEdit}
       aria-labelledby="modal-title"
       aria-describedby="modal-description"
     >
       <Box sx={ModalStyle({ width: 50, maxWidth: 55, maxHeight: 85 })}>
         <Typography id="modal-title" variant="h5" component="div">
-          Tạo tài khoản quản lý
+          Chỉnh sửa tài khoản
         </Typography>
         <form noValidate onSubmit={formik.handleSubmit}>
           <Stack spacing={3} sx={{ mt: 3 }}>
             <Stack direction={{ xs: "column", sm: "row" }} spacing={3}>
               <TextField
-                autoFocus
                 error={!!(formik.touched.email && formik.errors.email)}
                 fullWidth
                 helperText={formik.touched.email && formik.errors.email}
@@ -147,7 +150,7 @@ const CreateManager = (props) => {
               error={!!(formik.touched.hotel_id && formik.errors.hotel_id)}
               fullWidth
               helperText={formik.touched.hotel_id && formik.errors.hotel_id}
-              label="Khách sạn quản lý"
+              label="Địa chỉ"
               name="hotel_id"
               onBlur={formik.handleBlur}
               onChange={formik.handleChange}
@@ -167,6 +170,7 @@ const CreateManager = (props) => {
               type="text"
               value={formik.values.avatar_url}
             />
+
             <SeverityPill color="primary">Quản lý khách sạn</SeverityPill>
           </Stack>
           {formik.errors.submit && (
@@ -179,7 +183,7 @@ const CreateManager = (props) => {
             <Button type="submit" sx={{ mr: 2 }} variant="contained" color="success">
               OK
             </Button>
-            <Button onClick={handleCloseModalCreate} variant="contained" color="inherit">
+            <Button onClick={handleCloseModalEdit} variant="contained" color="inherit">
               Hủy
             </Button>
           </Box>
@@ -189,9 +193,10 @@ const CreateManager = (props) => {
   );
 };
 
-export default CreateManager;
+export default EditManager;
 
-CreateManager.propTypes = {
-  isModalCreateManager: PropTypes.bool.isRequired,
-  setIsModalCreateManager: PropTypes.func.isRequired,
+EditManager.propTypes = {
+  isModalEditManager: PropTypes.bool.isRequired,
+  setIsModalEditManager: PropTypes.func.isRequired,
+  currentId: PropTypes.number.isRequired,
 };

@@ -4,12 +4,12 @@ import PropTypes from "prop-types";
 import LogoutIcon from "@mui/icons-material/Logout";
 import ChevronUpDownIcon from "@heroicons/react/24/solid/ChevronUpDownIcon";
 import { Box, Divider, Drawer, Stack, SvgIcon, Typography, useMediaQuery } from "@mui/material";
-import { Logo } from "src/components/logo";
-import { Scrollbar } from "src/components/scrollbar";
-import { items } from "./config";
-import { SideNavItem } from "./side-nav-item";
+import { Logo } from "src/components/Logo";
+import { Scrollbar } from "src/components/ScrollBar";
+import { items } from "./Config";
+import { SideNavItem } from "./SideNavItem";
 import { useRouter } from "next/router";
-import { useAuth } from "src/hooks/use-auth";
+import { useAuth } from "src/hooks/UseAuth";
 
 export const SideNav = (props) => {
   const { open, onClose } = props;

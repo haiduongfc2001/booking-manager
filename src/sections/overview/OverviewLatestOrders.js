@@ -15,10 +15,10 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import { Scrollbar } from "src/components/scrollbar";
-import { SeverityPill } from "src/components/severity-pill";
+import { Scrollbar } from "src/components/ScrollBar";
+import { SeverityPill } from "src/components/SeverityPill";
 
-const statusMap = {
+const StatusMap = {
   pending: "warning",
   delivered: "success",
   refunded: "error",
@@ -51,7 +51,7 @@ export const OverviewLatestOrders = (props) => {
                     <TableCell>{order.customer.name}</TableCell>
                     <TableCell>{created_at}</TableCell>
                     <TableCell>
-                      <SeverityPill color={statusMap[order.status]}>{order.status}</SeverityPill>
+                      <SeverityPill color={StatusMap[order.status]}>{order.status}</SeverityPill>
                     </TableCell>
                   </TableRow>
                 );

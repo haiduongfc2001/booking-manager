@@ -17,15 +17,15 @@ import {
   SvgIcon,
   Tooltip,
 } from "@mui/material";
-import { Scrollbar } from "src/components/scrollbar";
-import { getInitials } from "src/utils/get-initials";
-import { DATAGRID_OPTIONS } from "src/constant/constants";
+import { Scrollbar } from "src/components/ScrollBar";
+import { getInitials } from "src/utils/GetInitials";
+import { DATAGRID_OPTIONS } from "src/constant/Constants";
 import TrashIcon from "@heroicons/react/24/solid/TrashIcon";
 import PencilIcon from "@heroicons/react/24/solid/PencilIcon";
-import DeleteManager from "./modal-delete";
+import DeleteManager from "./DeleteManager";
 import { useState } from "react";
-import EditManager from "./modal-edit";
-import DetailManager from "./modal-detail";
+import EditManager from "./EditManager";
+import DetailManager from "./DetailManager";
 
 // The table displays the list of managers
 export const ManagersTable = (props) => {

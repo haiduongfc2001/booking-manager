@@ -4,13 +4,13 @@ import ArrowDownOnSquareIcon from "@heroicons/react/24/solid/ArrowDownOnSquareIc
 import ArrowUpOnSquareIcon from "@heroicons/react/24/solid/ArrowUpOnSquareIcon";
 import PlusIcon from "@heroicons/react/24/solid/PlusIcon";
 import { Box, Button, Container, Stack, SvgIcon, Typography, Card } from "@mui/material";
-import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
-import { CustomersTable } from "src/sections/customer/customers-table";
-import { CustomersSearch } from "src/sections/customer/customers-search";
-import { STATUS_CODE } from "src/constant/constants";
-import CreateCustomer from "src/sections/customer/modal-create";
+import { Layout as DashboardLayout } from "src/layouts/dashboard/Layout";
+import { CustomersTable } from "src/sections/customer/CustomersTable";
+import { CustomersSearch } from "src/sections/customer/CustomersSearch";
+import { STATUS_CODE } from "src/constant/Constants";
+import CreateCustomer from "src/sections/customer/CreateCustomer";
 import * as CustomerService from "../services/CustomerService";
-import { API } from "src/constant/constants";
+import { API } from "src/constant/Constants";
 
 const useCustomers = (setLoading) => {
   const [customersData, setCustomersData] = useState([]);

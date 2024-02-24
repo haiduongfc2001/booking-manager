@@ -1,9 +1,9 @@
 import PropTypes from "prop-types";
 import React from "react";
 import { Button, Modal, Box, Typography, Stack, TextField } from "@mui/material";
-import { managerData } from "src/components/data";
-import { SeverityPill } from "src/components/severity-pill";
-import { ModalStyle } from "src/components/modal-style";
+import { managerData } from "src/components/Data";
+import { SeverityPill } from "src/components/SeverityPill";
+import { ModalStyle } from "src/components/ModalStyle";
 
 const DetailManager = (props) => {
   const { isModalDetailManager, setIsModalDetailManager, currentId } = props;

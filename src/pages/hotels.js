@@ -4,14 +4,14 @@ import ArrowDownOnSquareIcon from "@heroicons/react/24/solid/ArrowDownOnSquareIc
 import ArrowUpOnSquareIcon from "@heroicons/react/24/solid/ArrowUpOnSquareIcon";
 import PlusIcon from "@heroicons/react/24/solid/PlusIcon";
 import { Box, Button, Container, Stack, SvgIcon, Typography, Card } from "@mui/material";
-import { useSelection } from "src/hooks/use-selection";
-import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
-import { HotelsTable } from "src/sections/hotel/hotels-table";
-import { HotelsSearch } from "src/sections/hotel/hotels-search";
-import { applyPagination } from "src/utils/apply-pagination";
-import { hotelData } from "src/components/data";
-import { DATAGRID_OPTIONS } from "src/constant/constants";
-import CreateHotel from "src/sections/hotel/modal-create";
+import { useSelection } from "src/hooks/UseSelection";
+import { Layout as DashboardLayout } from "src/layouts/dashboard/Layout";
+import { HotelsTable } from "src/sections/hotel/HotelsTable";
+import { HotelsSearch } from "src/sections/hotel/HotelsSearch";
+import { applyPagination } from "src/utils/ApplyPagination";
+import { hotelData } from "src/components/Data";
+import { DATAGRID_OPTIONS } from "src/constant/Constants";
+import CreateHotel from "src/sections/hotel/CreateHotel";
 
 const useHotels = (page, rowsPerPage) => {
   return useMemo(() => {

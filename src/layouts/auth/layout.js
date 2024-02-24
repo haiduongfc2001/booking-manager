@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import NextLink from "next/link";
 import { Box, Typography, Unstable_Grid2 as Grid } from "@mui/material";
-import { Logo } from "src/components/logo";
+import { Logo } from "src/components/Logo";
 import FontSize from "../FontSize";
 
 // TODO: Change subtitle text
