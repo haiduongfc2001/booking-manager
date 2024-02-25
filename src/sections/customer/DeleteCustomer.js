@@ -1,14 +1,34 @@
 import React from "react";
 import { Button, Modal, Box, Typography } from "@mui/material";
+import { API, STATUS_CODE } from "src/constant/Constants";
+import * as CustomerService from "../../services/CustomerService";
 
-const DeleteCustomer = ({ isModalDeleteCustomer, setIsModalDeleteCustomer, currentId }) => {
+const DeleteCustomer = ({
+  isModalDeleteCustomer,
+  setIsModalDeleteCustomer,
+  currentId,
+  fetchData,
+}) => {
   const handleCloseModal = () => {
     setIsModalDeleteCustomer(false);
   };
 
-  const handleDelete = () => {
-    if (isModalDeleteCustomer) console.log("customer id: ", currentId);
-    handleCloseModal();
+  const handleDelete = async () => {
+    try {
+      const response = await CustomerService[API.CUSTOMER.DELETE_CUSTOMER]({
+        customerId: currentId,
+      });
+
+      if (response?.status === STATUS_CODE.OK) {
+        fetchData();
+      } else {
+        // dispatch(showCommonAlert(TOAST_KIND.ERROR, response.data.error));
+      }
+    } catch (error) {
+      // dispatch(showCommonAlert(TOAST_KIND.ERROR, TOAST_MESSAGE.FILTER_ERROR));
+    } finally {
+      handleCloseModal();
+    }
   };
 
   return (

@@ -113,7 +113,7 @@ const Page = () => {
                 </Button>
               </Stack>
             </Card>
-            <CustomersTable items={customersData} loading={loading} />
+            <CustomersTable items={customersData} loading={loading} fetchData={fetchData} />
           </Stack>
         </Container>
       </Box>

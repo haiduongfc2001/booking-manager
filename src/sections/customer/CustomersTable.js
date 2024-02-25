@@ -10,7 +10,7 @@ import { columns } from "./Columns";
 import CustomDataGrid from "src/components/data-grid/CustomDataGrid";
 
 export const CustomersTable = (props) => {
-  const { items = [], loading = false } = props;
+  const { items = [], loading = false, fetchData = () => {} } = props;
 
   const [currentId, setCurrentId] = useState("");
   const [isModalDeleteCustomer, setIsModalDeleteCustomer] = useState(false);
@@ -22,6 +22,11 @@ export const CustomersTable = (props) => {
     setIsModalDetailCustomer(true);
   };
 
+  const handleOpenModalDelete = (id) => {
+    setCurrentId(id);
+    setIsModalDeleteCustomer(true);
+  };
+
   return (
     <>
       <Card>
@@ -30,7 +35,10 @@ export const CustomersTable = (props) => {
             {loading ? (
               <LoadingData />
             ) : items && items.length > 0 ? (
-              <CustomDataGrid items={items} columns={columns({ handleOpenModalDetail })} />
+              <CustomDataGrid
+                items={items}
+                columns={columns({ handleOpenModalDetail, handleOpenModalDelete })}
+              />
             ) : (
               <p>No data available</p>
             )}
@@ -42,6 +50,7 @@ export const CustomersTable = (props) => {
         isModalDeleteCustomer={isModalDeleteCustomer}
         setIsModalDeleteCustomer={setIsModalDeleteCustomer}
         currentId={parseInt(currentId)}
+        fetchData={fetchData}
       />
       <EditCustomer
         isModalEditCustomer={isModalEditCustomer}

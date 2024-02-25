@@ -19,6 +19,12 @@ export const post = async (path, data, options = {}) => {
   return response.data;
 };
 
+// Create Base DELETE method
+export const _delete = async (path, data, options = {}) => {
+  const response = await commonService.delete(path, data, options);
+  return response.data;
+};
+
 // common get request handler
 export const getRequest = async (endpoint) => {
   try {
@@ -37,6 +43,20 @@ export const getRequest = async (endpoint) => {
 export const postRequest = async (endpoint, data) => {
   try {
     const res = await post(endpoint, data, {
+      headers: {
+        Authorization: "Bearer " + "ewqeeqeyqueqyeieyqwiequiye",
+      },
+    });
+    return res;
+  } catch (error) {
+    console.error("Error occurred:", error);
+  }
+};
+
+// common delete request handler
+export const deleteRequest = async (endpoint, data) => {
+  try {
+    const res = await _delete(endpoint, data, {
       headers: {
         Authorization: "Bearer " + "ewqeeqeyqueqyeieyqwiequiye",
       },

@@ -6,7 +6,7 @@ import { SeverityPill } from "src/components/SeverityPill";
 import { getInitials } from "src/utils/GetInitials";
 import { StatusMap } from "src/components/StatusMap";
 
-export const columns = ({ handleOpenModalDetail }) => {
+export const columns = ({ handleOpenModalDetail, handleOpenModalDelete }) => {
   return [
     {
       field: "id",
@@ -89,7 +89,7 @@ export const columns = ({ handleOpenModalDetail }) => {
             sx={{
               "& .MuiButton-startIcon": { m: 0 },
             }}
-            onClick={() => handleConfirmDelete(params.row.id)}
+            onClick={() => handleOpenModalDelete(params.row.id)}
           />
           <Button
             startIcon={

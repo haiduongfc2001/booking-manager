@@ -30,3 +30,7 @@ export const CreateCustomer = async ({
     address,
   });
 };
+
+export const DeleteCustomer = async ({ customerId }) => {
+  return CommonService.deleteRequest(`${prePath}/${customerId}`, {});
+};

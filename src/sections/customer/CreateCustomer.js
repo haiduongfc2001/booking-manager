@@ -15,14 +15,12 @@ import {
   FormControl,
   InputLabel,
   FormHelperText,
-  FormControlLabel,
-  Switch,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import * as CustomerService from "../../services/CustomerService";
-import { API } from "src/constant/Constants";
+import { API, STATUS_CODE } from "src/constant/Constants";
 
 const initialData = {
   email: "",
@@ -58,7 +56,11 @@ const CreateCustomer = (props) => {
       gender: Yup.mixed()
         .oneOf(["male", "female", "other"])
         .required("Vui lòng nhập giới tính người dùng!"),
-      phone: Yup.string().max(12).required("Vui lòng nhập số điện thoại!"),
+      phone: Yup.string()
+        .matches(/^[0-9]{10}$/, "Số điện thoại chỉ gồm 10 số!")
+        .required("Vui lòng nhập số điện thoại!")
+        .min(10, "Số điện thoại phải dài chính xác 10 ký tự!")
+        .max(10, "Số điện thoại phải dài chính xác 10 ký tự!"),
       avatar_url: Yup.string(),
       address: Yup.string(),
       is_verified: Yup.boolean(),
@@ -66,7 +68,7 @@ const CreateCustomer = (props) => {
 
     onSubmit: async (values, helpers) => {
       try {
-        await CustomerService[API.CUSTOMER.CREATE_CUSTOMER]({
+        const response = await CustomerService[API.CUSTOMER.CREATE_CUSTOMER]({
           email: values.email,
           username: values.username,
           full_name: values.full_name,
@@ -76,7 +78,9 @@ const CreateCustomer = (props) => {
           address: values.address,
         });
 
-        fetchData();
+        if (response && response.status === STATUS_CODE.CREATED) {
+          fetchData();
+        }
       } catch (err) {
         helpers.setStatus({ success: false });
         helpers.setErrors({ submit: err.message });
