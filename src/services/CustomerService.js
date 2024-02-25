@@ -34,3 +34,25 @@ export const CreateCustomer = async ({
 export const DeleteCustomer = async ({ customerId }) => {
   return CommonService.deleteRequest(`${prePath}/${customerId}`, {});
 };
+
+export const EditCustomer = async ({
+  customerId,
+  email,
+  username,
+  full_name,
+  gender,
+  phone,
+  avatar_url,
+  address,
+}) => {
+  return CommonService.patchRequest(`${prePath}/${customerId}`, {
+    email,
+    password: "Uua9D5ba",
+    username,
+    full_name,
+    gender,
+    phone,
+    avatar_url,
+    address,
+  });
+};

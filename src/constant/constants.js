@@ -48,6 +48,7 @@ export const API = {
     GET_CUSTOMER_BY_ID: "GetCustomerById",
     CREATE_CUSTOMER: "CreateCustomer",
     DELETE_CUSTOMER: "DeleteCustomer",
+    EDIT_CUSTOMER: "EditCustomer",
   },
 };
 

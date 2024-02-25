@@ -6,7 +6,7 @@ import { SeverityPill } from "src/components/SeverityPill";
 import { getInitials } from "src/utils/GetInitials";
 import { StatusMap } from "src/components/StatusMap";
 
-export const columns = ({ handleOpenModalDetail, handleOpenModalDelete }) => {
+export const columns = ({ handleOpenModalDetail, handleOpenModalDelete, handleOpenModalEdit }) => {
   return [
     {
       field: "id",

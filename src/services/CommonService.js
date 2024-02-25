@@ -25,6 +25,12 @@ export const _delete = async (path, data, options = {}) => {
   return response.data;
 };
 
+// Create Base PATCH method
+export const patch = async (path, data, options = {}) => {
+  const response = await commonService.patch(path, data, options);
+  return response.data;
+};
+
 // common get request handler
 export const getRequest = async (endpoint) => {
   try {
@@ -57,6 +63,20 @@ export const postRequest = async (endpoint, data) => {
 export const deleteRequest = async (endpoint, data) => {
   try {
     const res = await _delete(endpoint, data, {
+      headers: {
+        Authorization: "Bearer " + "ewqeeqeyqueqyeieyqwiequiye",
+      },
+    });
+    return res;
+  } catch (error) {
+    console.error("Error occurred:", error);
+  }
+};
+
+// common patch request handler
+export const patchRequest = async (endpoint, data) => {
+  try {
+    const res = await patch(endpoint, data, {
       headers: {
         Authorization: "Bearer " + "ewqeeqeyqueqyeieyqwiequiye",
       },

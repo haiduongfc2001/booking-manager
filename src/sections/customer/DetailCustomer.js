@@ -63,6 +63,17 @@ const DetailCustomer = (props) => {
     }
   }, [isModalDetailCustomer]);
 
+  const getGenderLabel = (gender) => {
+    switch (gender) {
+      case "male":
+        return "Nam";
+      case "female":
+        return "Nữ";
+      default:
+        return "Khác";
+    }
+  };
+
   return (
     <Dialog
       open={isModalDetailCustomer}
@@ -115,7 +126,12 @@ const DetailCustomer = (props) => {
               </Stack>
 
               <Stack direction={{ xs: "column", sm: "row" }} spacing={3}>
-                <TextField fullWidth label="Giới tính" name="gender" value={customerData?.gender} />
+                <TextField
+                  fullWidth
+                  label="Giới tính"
+                  name="gender"
+                  value={getGenderLabel(customerData?.gender)}
+                />
                 <TextField
                   fullWidth
                   label="Số điện thoại"
