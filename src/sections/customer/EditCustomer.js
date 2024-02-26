@@ -28,7 +28,7 @@ import { showCommonAlert } from "src/utils/ToastMessage";
 import { useDispatch } from "react-redux";
 
 const EditCustomer = (props) => {
-  const { isModalEditCustomer, setIsModalEditCustomer, currentId, fetchData } = props;
+  const { isModalEditCustomer, setIsModalEditCustomer, currentId, onRefresh } = props;
 
   const [customerData, setCustomerData] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -40,7 +40,7 @@ const EditCustomer = (props) => {
       setLoading(true);
 
       const response = await CustomerService[API.CUSTOMER.GET_CUSTOMER_BY_ID]({
-        customerId: currentId,
+        customerId: String(currentId).trim(),
       });
 
       if (response?.status === STATUS_CODE.OK) {
@@ -111,19 +111,19 @@ const EditCustomer = (props) => {
     onSubmit: async (values, helpers) => {
       try {
         const response = await CustomerService[API.CUSTOMER.EDIT_CUSTOMER]({
-          customerId: currentId,
-          email: values.email,
-          username: values.username,
-          full_name: values.full_name,
-          gender: values.gender,
-          phone: values.phone,
-          avatar_url: values.avatar_url,
-          address: values.address,
+          customerId: String(currentId).trim(),
+          email: values.email.trim(),
+          username: values.username.trim(),
+          full_name: values.full_name.trim(),
+          gender: values.gender.trim(),
+          phone: values.phone.trim(),
+          avatar_url: values.avatar_url.trim(),
+          address: values.address.trim(),
         });
 
         if (response?.status === STATUS_CODE.OK) {
           dispatch(showCommonAlert(TOAST_KIND.SUCCESS, response.message));
-          fetchData();
+          onRefresh();
         }
       } catch (err) {
         helpers.setStatus({ success: false });

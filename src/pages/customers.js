@@ -3,7 +3,8 @@ import Head from "next/head";
 import ArrowDownOnSquareIcon from "@heroicons/react/24/solid/ArrowDownOnSquareIcon";
 import ArrowUpOnSquareIcon from "@heroicons/react/24/solid/ArrowUpOnSquareIcon";
 import PlusIcon from "@heroicons/react/24/solid/PlusIcon";
-import { Box, Button, Container, Stack, SvgIcon, Typography, Card } from "@mui/material";
+import ArrowPathIcon from "@heroicons/react/24/solid/ArrowPathIcon";
+import { Box, Button, Container, Stack, SvgIcon, Typography, Card, Grid } from "@mui/material";
 import { Layout as DashboardLayout } from "src/layouts/dashboard/Layout";
 import { CustomersTable } from "src/sections/customer/CustomersTable";
 import { CustomersSearch } from "src/sections/customer/CustomersSearch";
@@ -43,7 +44,6 @@ const Page = () => {
 
   useEffect(() => {
     fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleOpenModalCreate = () => {
@@ -113,15 +113,32 @@ const Page = () => {
                 </Button>
               </Stack>
             </Card>
-            <CustomersTable items={customersData} loading={loading} fetchData={fetchData} />
+
+            <Grid container justifyContent="flex-end">
+              <Grid item xs={3} sx={{ display: "flex", justifyContent: "inherit", pr: 2 }}>
+                <Button
+                  startIcon={
+                    <SvgIcon fontSize="small">
+                      <ArrowPathIcon />
+                    </SvgIcon>
+                  }
+                  variant="contained"
+                  color="secondary"
+                  onClick={fetchData}
+                >
+                  Làm mới
+                </Button>
+              </Grid>
+            </Grid>
+
+            <CustomersTable items={customersData} loading={loading} onRefresh={fetchData} />
           </Stack>
         </Container>
       </Box>
-
       <CreateCustomer
         isModalCreateCustomer={isModalCreateCustomer}
         setIsModalCreateCustomer={setIsModalCreateCustomer}
-        fetchData={fetchData}
+        onRefresh={fetchData}
       />
     </>
   );

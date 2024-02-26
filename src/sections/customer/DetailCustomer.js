@@ -23,12 +23,12 @@ const DetailCustomer = (props) => {
   const [customerData, setCustomerData] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const fetchData = async () => {
+  const getCustomer = async () => {
     try {
       setLoading(true);
 
       const response = await CustomerService[API.CUSTOMER.GET_CUSTOMER_BY_ID]({
-        customerId: currentId,
+        customerId: String(currentId).trim(),
       });
 
       if (response?.status !== STATUS_CODE.UNAUTHORIZED) {
@@ -45,7 +45,7 @@ const DetailCustomer = (props) => {
 
   useEffect(() => {
     if (isModalDetailCustomer && currentId) {
-      fetchData();
+      getCustomer();
     }
   }, [isModalDetailCustomer, currentId]);
 

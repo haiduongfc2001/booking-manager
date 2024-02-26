@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import { Box, Card } from "@mui/material";
+import { Box, Card, Typography } from "@mui/material";
 import { useState } from "react";
 import DeleteCustomer from "./DeleteCustomer";
 import EditCustomer from "./EditCustomer";
@@ -8,9 +8,11 @@ import LoadingData from "src/layouts/loading/LoadingData";
 import { Scrollbar } from "src/components/ScrollBar";
 import { columns } from "./Columns";
 import CustomDataGrid from "src/components/data-grid/CustomDataGrid";
+import { ErrorOutline } from "@mui/icons-material";
+import { neutral } from "src/theme/Colors";
 
 export const CustomersTable = (props) => {
-  const { items = [], loading = false, fetchData = () => {} } = props;
+  const { items = [], loading = false, onRefresh = () => {} } = props;
 
   const [currentId, setCurrentId] = useState("");
   const [isModalDeleteCustomer, setIsModalDeleteCustomer] = useState(false);
@@ -49,7 +51,20 @@ export const CustomersTable = (props) => {
                 })}
               />
             ) : (
-              <p>No data available</p>
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  height: "100%",
+                  p: 2,
+                }}
+              >
+                <ErrorOutline sx={{ mr: 1 }} />
+                <Typography variant="body1" color="neutral.900">
+                  No data available
+                </Typography>
+              </Box>
             )}
           </Box>
         </Scrollbar>
@@ -59,13 +74,13 @@ export const CustomersTable = (props) => {
         isModalDeleteCustomer={isModalDeleteCustomer}
         setIsModalDeleteCustomer={setIsModalDeleteCustomer}
         currentId={parseInt(currentId)}
-        fetchData={fetchData}
+        onRefresh={onRefresh}
       />
       <EditCustomer
         isModalEditCustomer={isModalEditCustomer}
         setIsModalEditCustomer={setIsModalEditCustomer}
         currentId={parseInt(currentId)}
-        fetchData={fetchData}
+        onRefresh={onRefresh}
       />
       <DetailCustomer
         isModalDetailCustomer={isModalDetailCustomer}
@@ -79,5 +94,5 @@ export const CustomersTable = (props) => {
 CustomersTable.propTypes = {
   items: PropTypes.array,
   loading: PropTypes.bool,
-  fetchData: PropTypes.func,
+  onRefresh: PropTypes.func,
 };

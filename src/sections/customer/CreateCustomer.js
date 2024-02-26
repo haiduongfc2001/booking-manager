@@ -36,7 +36,7 @@ const initialData = {
 };
 
 const CreateCustomer = (props) => {
-  const { isModalCreateCustomer, setIsModalCreateCustomer, fetchData } = props;
+  const { isModalCreateCustomer, setIsModalCreateCustomer, onRefresh } = props;
 
   const dispatch = useDispatch();
 
@@ -73,17 +73,17 @@ const CreateCustomer = (props) => {
     onSubmit: async (values, helpers) => {
       try {
         const response = await CustomerService[API.CUSTOMER.CREATE_CUSTOMER]({
-          email: values.email,
-          username: values.username,
-          full_name: values.full_name,
-          gender: values.gender,
-          phone: values.phone,
-          avatar_url: values.avatar_url,
-          address: values.address,
+          email: values.email.trim(),
+          username: values.username.trim(),
+          full_name: values.full_name.trim(),
+          gender: values.gender.trim(),
+          phone: values.phone.trim(),
+          avatar_url: values.avatar_url.trim(),
+          address: values.address.trim(),
         });
 
         if (response?.status === STATUS_CODE.CREATED) {
-          fetchData();
+          onRefresh();
           dispatch(showCommonAlert(TOAST_KIND.SUCCESS, response.message));
         } else {
           dispatch(showCommonAlert(TOAST_KIND.ERROR, response.message));
@@ -274,5 +274,5 @@ export default CreateCustomer;
 CreateCustomer.propTypes = {
   isModalCreateCustomer: PropTypes.bool.isRequired,
   setIsModalCreateCustomer: PropTypes.func.isRequired,
-  fetchData: PropTypes.func,
+  onRefresh: PropTypes.func,
 };

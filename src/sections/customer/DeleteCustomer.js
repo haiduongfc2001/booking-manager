@@ -9,7 +9,7 @@ const DeleteCustomer = ({
   isModalDeleteCustomer,
   setIsModalDeleteCustomer,
   currentId,
-  fetchData,
+  onRefresh,
 }) => {
   const dispatch = useDispatch();
 
@@ -20,12 +20,11 @@ const DeleteCustomer = ({
   const handleDelete = async () => {
     try {
       const response = await CustomerService[API.CUSTOMER.DELETE_CUSTOMER]({
-        customerId: currentId,
+        customerId: String(currentId).trim(),
       });
-      console.log(response);
 
       if (response?.status === STATUS_CODE.OK) {
-        fetchData();
+        onRefresh();
         dispatch(showCommonAlert(TOAST_KIND.SUCCESS, response.message));
       }
     } catch (error) {
