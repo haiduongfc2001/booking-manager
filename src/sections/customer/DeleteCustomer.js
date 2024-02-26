@@ -1,7 +1,9 @@
 import React from "react";
 import { Button, Modal, Box, Typography } from "@mui/material";
-import { API, STATUS_CODE } from "src/constant/Constants";
+import { API, STATUS_CODE, TOAST_KIND } from "src/constant/Constants";
 import * as CustomerService from "../../services/CustomerService";
+import { useDispatch } from "react-redux";
+import { showCommonAlert } from "src/utils/ToastMessage";
 
 const DeleteCustomer = ({
   isModalDeleteCustomer,
@@ -9,6 +11,8 @@ const DeleteCustomer = ({
   currentId,
   fetchData,
 }) => {
+  const dispatch = useDispatch();
+
   const handleCloseModal = () => {
     setIsModalDeleteCustomer(false);
   };
@@ -18,11 +22,11 @@ const DeleteCustomer = ({
       const response = await CustomerService[API.CUSTOMER.DELETE_CUSTOMER]({
         customerId: currentId,
       });
+      console.log(response);
 
       if (response?.status === STATUS_CODE.OK) {
         fetchData();
-      } else {
-        // dispatch(showCommonAlert(TOAST_KIND.ERROR, response.data.error));
+        dispatch(showCommonAlert(TOAST_KIND.SUCCESS, response.message));
       }
     } catch (error) {
       // dispatch(showCommonAlert(TOAST_KIND.ERROR, TOAST_MESSAGE.FILTER_ERROR));

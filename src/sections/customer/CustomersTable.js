@@ -79,4 +79,5 @@ export const CustomersTable = (props) => {
 CustomersTable.propTypes = {
   items: PropTypes.array,
   loading: PropTypes.bool,
+  fetchData: PropTypes.func,
 };

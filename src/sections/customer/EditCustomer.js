@@ -7,7 +7,6 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
-  Box,
   Typography,
   Stack,
   TextField,
@@ -22,15 +21,19 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { API, STATUS_CODE } from "src/constant/Constants";
+import { API, STATUS_CODE, TOAST_KIND } from "src/constant/Constants";
 import * as CustomerService from "../../services/CustomerService";
 import LoadingData from "src/layouts/loading/LoadingData";
+import { showCommonAlert } from "src/utils/ToastMessage";
+import { useDispatch } from "react-redux";
 
 const EditCustomer = (props) => {
   const { isModalEditCustomer, setIsModalEditCustomer, currentId, fetchData } = props;
 
   const [customerData, setCustomerData] = useState([]);
   const [loading, setLoading] = useState(false);
+
+  const dispatch = useDispatch();
 
   const getCustomer = async () => {
     try {
@@ -118,7 +121,8 @@ const EditCustomer = (props) => {
           address: values.address,
         });
 
-        if (response && response.status === STATUS_CODE.OK) {
+        if (response?.status === STATUS_CODE.OK) {
+          dispatch(showCommonAlert(TOAST_KIND.SUCCESS, response.message));
           fetchData();
         }
       } catch (err) {
@@ -132,6 +136,16 @@ const EditCustomer = (props) => {
     enableReinitialize: true,
     validateOnBlur: false,
   });
+
+  const descriptionElementRef = useRef(null);
+  useEffect(() => {
+    if (isModalEditCustomer) {
+      const { current: descriptionElement } = descriptionElementRef;
+      if (descriptionElement !== null) {
+        descriptionElement.focus();
+      }
+    }
+  }, [isModalEditCustomer]);
 
   return (
     <Dialog

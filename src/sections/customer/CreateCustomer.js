@@ -20,7 +20,9 @@ import CloseIcon from "@mui/icons-material/Close";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import * as CustomerService from "../../services/CustomerService";
-import { API, STATUS_CODE } from "src/constant/Constants";
+import { API, STATUS_CODE, TOAST_KIND } from "src/constant/Constants";
+import { useDispatch } from "react-redux";
+import { showCommonAlert } from "src/utils/ToastMessage";
 
 const initialData = {
   email: "",
@@ -35,6 +37,8 @@ const initialData = {
 
 const CreateCustomer = (props) => {
   const { isModalCreateCustomer, setIsModalCreateCustomer, fetchData } = props;
+
+  const dispatch = useDispatch();
 
   const handleCloseModalCreate = () => {
     setIsModalCreateCustomer(false);
@@ -78,8 +82,11 @@ const CreateCustomer = (props) => {
           address: values.address,
         });
 
-        if (response && response.status === STATUS_CODE.CREATED) {
+        if (response?.status === STATUS_CODE.CREATED) {
           fetchData();
+          dispatch(showCommonAlert(TOAST_KIND.SUCCESS, response.message));
+        } else {
+          dispatch(showCommonAlert(TOAST_KIND.ERROR, response.message));
         }
       } catch (err) {
         helpers.setStatus({ success: false });
