@@ -13,6 +13,7 @@ import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import { persistor, store } from "src/redux/store/Store";
 import AlertModal from "src/layouts/alert/AlertModal";
+import Loading from "src/layouts/loading/Loading";
 
 const clientSideEmotionCache = createEmotionCache();
 
@@ -30,6 +31,7 @@ const App = (props) => {
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
+        <Loading></Loading>
         <CacheProvider value={emotionCache}>
           <Head>
             <title>DHD</title>

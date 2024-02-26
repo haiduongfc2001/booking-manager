@@ -19,10 +19,13 @@ import { useAuth } from "src/hooks/UseAuth";
 import { Layout as AuthLayout } from "src/layouts/auth/Layout";
 import { useState } from "react";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { closeLoadingApi, openLoadingApi } from "src/redux/create-actions/LoadingAction";
+import { useDispatch } from "react-redux";
 
 const Page = () => {
   const router = useRouter();
   const auth = useAuth();
+  const dispatch = useDispatch();
 
   const [showPassword, setShowPassword] = useState(false);
 
@@ -49,12 +52,15 @@ const Page = () => {
     }),
     onSubmit: async (values, helpers) => {
       try {
+        dispatch(openLoadingApi());
         await auth.signIn(values.email, values.password);
         router.push("/");
       } catch (err) {
         helpers.setStatus({ success: false });
         helpers.setErrors({ submit: err.message });
         helpers.setSubmitting(false);
+      } finally {
+        dispatch(closeLoadingApi());
       }
     },
   });

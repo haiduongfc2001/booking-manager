@@ -7,7 +7,7 @@ import Reducer from "../reducers/Reducer";
 // ==============================|| REDUX - MAIN STORE ||============================== //
 
 const persistConfig = {
-  key: "root",
+  key: "__next",
   storage,
 };
 
