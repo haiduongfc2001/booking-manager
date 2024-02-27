@@ -68,8 +68,8 @@ export const STATUS_CODE = {
  * Table Paging
  */
 export const DATAGRID_OPTIONS = {
-  PAGE_SIZE: 5,
-  PAGE_SIZE_OPTIONS: [5, 10, 25],
+  PAGE_SIZE: 10,
+  PAGE_SIZE_OPTIONS: [10, 25, 50, 100],
   ROW_HEIGHT: 60,
-  TABLE_HEIGHT: 420,
+  TABLE_HEIGHT: 720,
 };

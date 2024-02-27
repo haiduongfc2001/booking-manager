@@ -2,22 +2,15 @@ import React from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import { DATAGRID_OPTIONS } from "src/constant/Constants";
 
-const CustomDataGrid = ({ items = [], columns = [] }) => {
+const CustomDataGrid = ({ rows = [], columns = [], tableState }) => {
   return (
     <DataGrid
-      rows={items}
+      rows={rows}
       columns={columns.map((column) => ({
         ...column,
         headerName: column.headerName.toUpperCase(),
         headerClassName: "super-app-theme--header",
       }))}
-      initialState={{
-        pagination: {
-          paginationModel: {
-            pageSize: DATAGRID_OPTIONS.PAGE_SIZE,
-          },
-        },
-      }}
       pageSizeOptions={DATAGRID_OPTIONS.PAGE_SIZE_OPTIONS}
       rowHeight={DATAGRID_OPTIONS.ROW_HEIGHT}
       sx={{
@@ -35,6 +28,15 @@ const CustomDataGrid = ({ items = [], columns = [] }) => {
         },
       }}
       hideFooterSelectedRowCount
+      apiRef={tableState.apiRef}
+      initialState={{
+        ...tableState.selectedState,
+        pagination: {
+          paginationModel: {
+            pageSize: DATAGRID_OPTIONS.PAGE_SIZE,
+          },
+        },
+      }}
       // pagination
       // rowCount={count}
       // onPageChange={onPageChange}

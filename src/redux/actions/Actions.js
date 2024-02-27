@@ -7,3 +7,6 @@ export const LOGIN = "LOGIN";
 export const LOGOUT = "LOGOUT";
 export const OPEN_LOADING_API = "OPEN_LOADING_API";
 export const CLOSE_LOADING_API = "CLOSE_LOADING_API";
+
+// ----------------------------------------------------------------SAVE STATE TABLE ---------------------------------------------------------------- //
+export const SET_ALL_CUSTOMERS = "SET_ALL_CUSTOMERS";

@@ -7,9 +7,10 @@ import DetailCustomer from "./DetailCustomer";
 import LoadingData from "src/layouts/loading/LoadingData";
 import { Scrollbar } from "src/components/ScrollBar";
 import { columns } from "./Columns";
-import CustomDataGrid from "src/components/data-grid/CustomDataGrid";
 import { ErrorOutline } from "@mui/icons-material";
-import { neutral } from "src/theme/Colors";
+import CustomDataGrid from "src/components/data-grid/CustomDataGrid";
+import useSaveGridState from "src/utils/TableState";
+import { setAllCustomers } from "src/redux/create-actions/TableAction";
 
 export const CustomersTable = (props) => {
   const { items = [], loading = false, onRefresh = () => {} } = props;
@@ -34,6 +35,11 @@ export const CustomersTable = (props) => {
     setIsModalEditCustomer(true);
   };
 
+  const allCustomersState = useSaveGridState(
+    (state) => state.table?.customer?.allCustomers,
+    setAllCustomers
+  );
+
   return (
     <>
       <Card>
@@ -43,12 +49,13 @@ export const CustomersTable = (props) => {
               <LoadingData />
             ) : items && items.length > 0 ? (
               <CustomDataGrid
-                items={items}
+                rows={items}
                 columns={columns({
                   handleOpenModalDetail,
                   handleOpenModalDelete,
                   handleOpenModalEdit,
                 })}
+                tableState={allCustomersState}
               />
             ) : (
               <Box
