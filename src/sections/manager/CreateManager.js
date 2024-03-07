@@ -24,7 +24,7 @@ const initialData = {
   gender: "",
   phone: "",
   hotel_id: "",
-  avatar_url: "",
+  avatar: "",
 };
 
 const CreateManager = (props) => {
@@ -51,7 +51,7 @@ const CreateManager = (props) => {
         .required("Vui lòng nhập địa chỉ tên người dùng!"),
       hotel_id: Yup.string().required("Vui lòng nhập tên khách sạn mà người này quản lý!"),
       phone: Yup.string().max(12).required("Vui lòng nhập số điện thoại!"),
-      avatar_url: Yup.string(),
+      avatar: Yup.string(),
     }),
 
     onSubmit: async (values, helpers) => {
@@ -157,15 +157,15 @@ const CreateManager = (props) => {
             />
 
             <TextField
-              error={!!(formik.touched.avatar_url && formik.errors.avatar_url)}
+              error={!!(formik.touched.avatar && formik.errors.avatar)}
               fullWidth
-              helperText={formik.touched.avatar_url && formik.errors.avatar_url}
+              helperText={formik.touched.avatar && formik.errors.avatar}
               label="Ảnh đại diện"
-              name="avatar_url"
+              name="avatar"
               onBlur={formik.handleBlur}
               onChange={formik.handleChange}
               type="text"
-              value={formik.values.avatar_url}
+              value={formik.values.avatar}
             />
             <SeverityPill color="primary">Quản lý khách sạn</SeverityPill>
           </Stack>

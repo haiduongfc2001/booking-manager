@@ -21,7 +21,7 @@ export const columns = ({ handleOpenModalDetail, handleOpenModalDelete, handleOp
       align: "left",
       renderCell: (params) => (
         <Stack align="center" direction="row" spacing={2}>
-          <Avatar src={params.row.avatar_url}>{getInitials(params.row.full_name)}</Avatar>
+          <Avatar src={params.row.avatar}>{getInitials(params.row.full_name)}</Avatar>
           <Box sx={{ display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
             <Tooltip title="Xem chi tiết">
               <Typography

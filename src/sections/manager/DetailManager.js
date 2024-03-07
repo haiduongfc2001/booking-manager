@@ -43,7 +43,7 @@ const DetailManager = (props) => {
             value={manager?.hotel_id}
           />
 
-          <TextField fullWidth label="Ảnh đại diện" name="avatar_url" value={manager?.avatar_url} />
+          <TextField fullWidth label="Ảnh đại diện" name="avatar" value={manager?.avatar} />
           <SeverityPill color="primary">Quản lý khách sạn</SeverityPill>
         </Stack>
 

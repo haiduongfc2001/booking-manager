@@ -23,6 +23,10 @@ import * as CustomerService from "../../services/CustomerService";
 import { API, STATUS_CODE, TOAST_KIND } from "src/constant/Constants";
 import { useDispatch } from "react-redux";
 import { showCommonAlert } from "src/utils/ToastMessage";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import dayjs from "dayjs";
 
 const initialData = {
   email: "",
@@ -30,9 +34,9 @@ const initialData = {
   full_name: "",
   gender: "",
   phone: "",
-  avatar_url: "",
+  avatar: "",
   address: "",
-  is_verified: false,
+  dob: "01/01/2001",
 };
 
 const CreateCustomer = (props) => {
@@ -65,21 +69,23 @@ const CreateCustomer = (props) => {
         .required("Vui lòng nhập số điện thoại!")
         .min(10, "Số điện thoại phải dài chính xác 10 ký tự!")
         .max(10, "Số điện thoại phải dài chính xác 10 ký tự!"),
-      avatar_url: Yup.string(),
+      avatar: Yup.string(),
       address: Yup.string(),
-      is_verified: Yup.boolean(),
+      dob: Yup.string(),
     }),
 
     onSubmit: async (values, helpers) => {
       try {
+        const dobValue = values.dob ? dayjs(values.dob).format("YYYY-MM-DD") : null;
         const response = await CustomerService[API.CUSTOMER.CREATE_CUSTOMER]({
           email: values.email.trim(),
           username: values.username.trim(),
           full_name: values.full_name.trim(),
           gender: values.gender.trim(),
           phone: values.phone.trim(),
-          avatar_url: values.avatar_url.trim(),
+          avatar: values.avatar.trim(),
           address: values.address.trim(),
+          dob: dobValue,
         });
 
         if (response?.status === STATUS_CODE.CREATED) {
@@ -117,11 +123,11 @@ const CreateCustomer = (props) => {
       aria-labelledby="scroll-dialog-title"
       aria-describedby="scroll-dialog-description"
       maxWidth="md"
-      fullWidth
       PaperProps={{
         sx: {
-          maxHeight: "80vh",
+          maxHeight: "90vh",
           height: "auto",
+          minWidth: "80%",
         },
       }}
     >
@@ -138,117 +144,123 @@ const CreateCustomer = (props) => {
       >
         <CloseIcon />
       </IconButton>
+
       <form noValidate onSubmit={formik.handleSubmit}>
         <DialogContent dividers>
           <Stack spacing={3} sx={{ mt: 3 }}>
-            <TextField
-              autoFocus
-              error={!!(formik.touched.email && formik.errors.email)}
-              fullWidth
-              helperText={formik.touched.email && formik.errors.email}
-              label="Email"
-              name="email"
-              onBlur={formik.handleBlur}
-              onChange={formik.handleChange}
-              type="email"
-              value={formik.values.email}
-              required
-            />
+            <Stack direction="column" spacing={3} sx={{ width: "100%" }}>
+              <Stack direction="row" spacing={3}>
+                <TextField
+                  autoFocus
+                  fullWidth
+                  required
+                  label="Email"
+                  name="email"
+                  type="email"
+                  onBlur={formik.handleBlur}
+                  value={formik.values.email}
+                  onChange={formik.handleChange}
+                  error={!!(formik.touched.email && formik.errors.email)}
+                  helperText={formik.touched.email && formik.errors.email}
+                />
+              </Stack>
 
-            <Stack direction={{ xs: "column", sm: "row" }} spacing={3}>
-              <TextField
-                error={!!(formik.touched.username && formik.errors.username)}
-                fullWidth
-                helperText={formik.touched.username && formik.errors.username}
-                label="Tên người dùng"
-                name="username"
-                onBlur={formik.handleBlur}
-                onChange={formik.handleChange}
-                type="text"
-                value={formik.values.username}
-                required
-              />
+              <Stack direction="row" spacing={3}>
+                <TextField
+                  fullWidth
+                  required
+                  label="Tên người dùng"
+                  name="username"
+                  type="text"
+                  onBlur={formik.handleBlur}
+                  value={formik.values.username}
+                  onChange={formik.handleChange}
+                  error={!!(formik.touched.username && formik.errors.username)}
+                  helperText={formik.touched.username && formik.errors.username}
+                />
 
-              <TextField
-                error={!!(formik.touched.full_name && formik.errors.full_name)}
-                fullWidth
-                helperText={formik.touched.full_name && formik.errors.full_name}
-                label="Họ và tên"
-                name="full_name"
-                onBlur={formik.handleBlur}
-                onChange={formik.handleChange}
-                type="text"
-                value={formik.values.full_name}
-                required
-              />
-            </Stack>
+                <TextField
+                  fullWidth
+                  required
+                  label="Họ và tên"
+                  name="full_name"
+                  type="text"
+                  onBlur={formik.handleBlur}
+                  value={formik.values.full_name}
+                  onChange={formik.handleChange}
+                  error={!!(formik.touched.full_name && formik.errors.full_name)}
+                  helperText={formik.touched.full_name && formik.errors.full_name}
+                />
+              </Stack>
 
-            <Stack direction={{ xs: "column", sm: "row" }} spacing={3}>
-              <FormControl error={!!(formik.touched.gender && formik.errors.gender)} fullWidth>
-                <InputLabel id="customer-gender">Giới tính</InputLabel>
-                <Select
-                  labelId="customer-gender"
-                  name="gender"
+              <Stack direction="row" spacing={3}>
+                <FormControl
+                  fullWidth
+                  variant="filled"
+                  sx={{ m: 1, minWidth: 120 }}
+                  error={!!(formik.touched.gender && formik.errors.gender)}
+                >
+                  <InputLabel id="gender-label">Giới tính *</InputLabel>
+                  <Select
+                    required
+                    labelId="gender-label"
+                    name="gender"
+                    onBlur={formik.handleBlur}
+                    value={formik.values.gender}
+                    onChange={formik.handleChange}
+                  >
+                    <MenuItem value="male">Nam</MenuItem>
+                    <MenuItem value="female">Nữ</MenuItem>
+                    <MenuItem value="other">Khác</MenuItem>
+                  </Select>
+                  {formik.touched.gender && formik.errors.gender && (
+                    <FormHelperText>{formik.errors.gender}</FormHelperText>
+                  )}
+                </FormControl>
+                <TextField
+                  fullWidth
+                  required
+                  label="Số điện thoại"
+                  name="phone"
+                  type="phone"
+                  onBlur={formik.handleBlur}
+                  value={formik.values.phone}
+                  onChange={formik.handleChange}
+                  error={!!(formik.touched.phone && formik.errors.phone)}
+                  helperText={formik.touched.phone && formik.errors.phone}
+                />
+              </Stack>
+
+              <Stack direction="row" spacing={3}>
+                <TextField
+                  fullWidth
+                  label="Địa chỉ"
+                  name="address"
+                  type="text"
                   onBlur={formik.handleBlur}
                   onChange={formik.handleChange}
-                  value={formik.values.gender}
-                  required
-                >
-                  <MenuItem value="male">Nam</MenuItem>
-                  <MenuItem value="female">Nữ</MenuItem>
-                  <MenuItem value="other">Khác</MenuItem>
-                </Select>
-                {formik.touched.gender && formik.errors.gender && (
-                  <FormHelperText>{formik.errors.gender}</FormHelperText>
-                )}
-              </FormControl>
-              <TextField
-                error={!!(formik.touched.phone && formik.errors.phone)}
-                fullWidth
-                helperText={formik.touched.phone && formik.errors.phone}
-                label="Số điện thoại"
-                name="phone"
-                onBlur={formik.handleBlur}
-                onChange={formik.handleChange}
-                type="phone"
-                value={formik.values.phone}
-                required
-              />
-            </Stack>
-
-            <TextField
-              error={!!(formik.touched.avatar_url && formik.errors.avatar_url)}
-              fullWidth
-              helperText={formik.touched.avatar_url && formik.errors.avatar_url}
-              label="Ảnh đại diện"
-              name="avatar_url"
-              onBlur={formik.handleBlur}
-              onChange={formik.handleChange}
-              type="text"
-              value={formik.values.avatar_url}
-            />
-            <TextField
-              error={!!(formik.touched.address && formik.errors.address)}
-              fullWidth
-              helperText={formik.touched.address && formik.errors.address}
-              label="Địa chỉ"
-              name="address"
-              onBlur={formik.handleBlur}
-              onChange={formik.handleChange}
-              type="text"
-              value={formik.values.address}
-            />
-            {/* <FormControlLabel
-              control={
-                <Switch
-                  checked={formik.values.is_verified}
-                  onChange={formik.handleChange}
-                  name="is_verified"
-                  color="primary"
+                  value={formik.values.address}
+                  error={!!(formik.touched.address && formik.errors.address)}
+                  helperText={formik.touched.address && formik.errors.address}
                 />
-              }
-              label={formik.values.is_verified ? "Đã xác thực" : "Chưa xác thực"}
-            /> */}
+
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DatePicker
+                    required
+                    label="Ngày sinh *"
+                    name="dob"
+                    onBlur={formik.handleBlur}
+                    value={dayjs(formik.values.dob)}
+                    onChange={(value) => {
+                      formik.setFieldValue("dob", Date.parse(value));
+                    }}
+                    error={!!(formik.touched.dob && formik.errors.dob)}
+                    helperText={formik.touched.dob && formik.errors.dob}
+                    // slotProps={{ textField: { variant: "outlined" } }}
+                  />
+                </LocalizationProvider>
+              </Stack>
+            </Stack>
           </Stack>
           {formik.errors.submit && (
             <Typography color="error" sx={{ mt: 3 }} variant="body2">
@@ -256,15 +268,22 @@ const CreateCustomer = (props) => {
             </Typography>
           )}
         </DialogContent>
-        <DialogActions sx={{ my: 3, mr: 3, display: "flex", justifyContent: "flex-end" }}>
-          <Button type="submit" sx={{ mr: 2 }} variant="contained" color="success">
-            OK
-          </Button>
-          <Button onClick={handleCloseModalCreate} variant="contained" color="inherit">
-            Hủy
-          </Button>
-        </DialogActions>
       </form>
+
+      <DialogActions sx={{ my: 3, mr: 3, display: "flex", justifyContent: "flex-end" }}>
+        <Button
+          type="submit"
+          variant="contained"
+          color="success"
+          sx={{ mr: 2 }}
+          onClick={formik.handleSubmit}
+        >
+          OK
+        </Button>
+        <Button variant="contained" color="inherit" onClick={handleCloseModalCreate}>
+          Hủy
+        </Button>
+      </DialogActions>
     </Dialog>
   );
 };

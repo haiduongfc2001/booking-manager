@@ -16,8 +16,9 @@ export const CreateCustomer = async ({
   full_name,
   gender,
   phone,
-  avatar_url,
+  avatar,
   address,
+  dob,
 }) => {
   return CommonService.postRequest(`${prePath}`, {
     email,
@@ -26,8 +27,9 @@ export const CreateCustomer = async ({
     full_name,
     gender,
     phone,
-    avatar_url,
+    avatar,
     address,
+    dob,
   });
 };
 
@@ -42,8 +44,9 @@ export const EditCustomer = async ({
   full_name,
   gender,
   phone,
-  avatar_url,
+  avatar,
   address,
+  dob,
 }) => {
   return CommonService.patchRequest(`${prePath}/${customerId}`, {
     email,
@@ -52,7 +55,8 @@ export const EditCustomer = async ({
     full_name,
     gender,
     phone,
-    avatar_url,
+    avatar,
     address,
+    dob,
   });
 };

@@ -116,7 +116,7 @@ export const ManagersTable = (props) => {
                       </TableCell>
                       <TableCell>
                         <Stack alignItems="center" direction="row" spacing={2}>
-                          <Avatar src={manager.avatar_url}>{getInitials(manager.full_name)}</Avatar>
+                          <Avatar src={manager.avatar}>{getInitials(manager.full_name)}</Avatar>
                           <Box>
                             <Tooltip title="Xem chi tiết">
                               <Typography
