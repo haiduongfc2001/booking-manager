@@ -50,6 +50,9 @@ export const API = {
     DELETE_CUSTOMER: "DeleteCustomer",
     EDIT_CUSTOMER: "EditCustomer",
   },
+  HOTEL: {
+    GET_ALL_HOTELS: "GetAllHotels",
+  },
 };
 
 /**

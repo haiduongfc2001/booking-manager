@@ -1,57 +1,25 @@
 import PropTypes from "prop-types";
-import { format } from "date-fns";
-import {
-  Avatar,
-  Box,
-  Card,
-  Checkbox,
-  Stack,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TablePagination,
-  TableRow,
-  Typography,
-  Button,
-  SvgIcon,
-  Tooltip,
-} from "@mui/material";
-import { Scrollbar } from "src/components/ScrollBar";
-import { getInitials } from "src/utils/GetInitials";
-import { DATAGRID_OPTIONS } from "src/constant/Constants";
-import TrashIcon from "@heroicons/react/24/solid/TrashIcon";
-import PencilIcon from "@heroicons/react/24/solid/PencilIcon";
-import DeleteHotel from "./DeleteHotel";
+import { Box, Card, Typography } from "@mui/material";
 import { useState } from "react";
+import DeleteHotel from "./DeleteHotel";
 import EditHotel from "./EditHotel";
 import DetailHotel from "./DetailHotel";
+import LoadingData from "src/layouts/loading/LoadingData";
+import { Scrollbar } from "src/components/ScrollBar";
+import { columns } from "./columns";
+import CustomDataGrid from "src/components/data-grid/CustomDataGrid";
+import { ErrorOutline } from "@mui/icons-material";
 
 // The table displays the list of hotels
 export const HotelsTable = (props) => {
-  const {
-    count = 0,
-    items = [],
-    onDeselectAll,
-    onDeselectOne,
-    onPageChange = () => {},
-    onRowsPerPageChange,
-    onSelectAll,
-    onSelectOne,
-    page = 0,
-    rowsPerPage = 0,
-    selected = [],
-  } = props;
+  const { items = [], loading = false, onRefresh = () => {} } = props;
 
   const [currentId, setCurrentId] = useState("");
   const [isModalDeleteHotel, setIsModalDeleteHotel] = useState(false);
   const [isModalEditHotel, setIsModalEditHotel] = useState(false);
   const [isModalDetailHotel, setIsModalDetailHotel] = useState(false);
 
-  const selectedSome = selected.length > 0 && selected.length < items.length;
-  const selectedAll = items.length > 0 && selected.length === items.length;
-
-  const handleConfirmDelete = (id) => {
+  const handleOpenModalDelete = (id) => {
     setCurrentId(id);
     setIsModalDeleteHotel(true);
   };
@@ -71,130 +39,49 @@ export const HotelsTable = (props) => {
       <Card>
         <Scrollbar>
           <Box sx={{ minWidth: 800 }}>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell padding="checkbox">
-                    <Checkbox
-                      checked={selectedAll}
-                      indeterminate={selectedSome}
-                      onChange={(event) => {
-                        if (event.target.checked) {
-                          onSelectAll?.();
-                        } else {
-                          onDeselectAll?.();
-                        }
-                      }}
-                    />
-                  </TableCell>
-                  <TableCell>Tên khách sạn</TableCell>
-                  <TableCell>Địa chỉ</TableCell>
-                  <TableCell>Mô tả</TableCell>
-                  <TableCell>Ngày đăng ký</TableCell>
-                  <TableCell>Hành động</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {items.map((hotel) => {
-                  const isSelected = selected.includes(hotel.hotel_id);
-                  const created_at = format(new Date(hotel.created_at), "hh:mm:ss dd/MM/yyyy");
-
-                  return (
-                    <TableRow hover key={hotel.hotel_id} selected={isSelected}>
-                      <TableCell padding="checkbox">
-                        <Checkbox
-                          checked={isSelected}
-                          onChange={(event) => {
-                            if (event.target.checked) {
-                              onSelectOne?.(hotel.hotel_id);
-                            } else {
-                              onDeselectOne?.(hotel.hotel_id);
-                            }
-                          }}
-                        />
-                      </TableCell>
-                      <TableCell>
-                        <Stack alignItems="center" direction="row" spacing={2}>
-                          <Avatar src={hotel.image}>{getInitials(hotel.hotel_name)}</Avatar>
-                          <Box>
-                            <Tooltip title="Xem chi tiết">
-                              <Typography
-                                variant="subtitle1"
-                                onClick={() => handleOpenModalDetail(hotel.hotel_id)}
-                                sx={{ cursor: "pointer" }}
-                              >
-                                {hotel.hotel_name}
-                              </Typography>
-                            </Tooltip>
-                          </Box>
-                        </Stack>
-                      </TableCell>
-                      <TableCell>{hotel.address}</TableCell>
-                      <TableCell>{hotel.description}</TableCell>
-                      <TableCell>{created_at}</TableCell>
-                      <TableCell>
-                        <Button
-                          startIcon={
-                            <SvgIcon fontSize="small">
-                              <TrashIcon />
-                            </SvgIcon>
-                          }
-                          size="small"
-                          variant="contained"
-                          color="error"
-                          sx={{
-                            m: 0.5,
-                            "& .MuiButton-startIcon": {
-                              m: 0,
-                            },
-                          }}
-                          onClick={() => handleConfirmDelete(hotel.hotel_id)}
-                        />
-                        <Button
-                          startIcon={
-                            <SvgIcon fontSize="small">
-                              <PencilIcon />
-                            </SvgIcon>
-                          }
-                          size="small"
-                          variant="contained"
-                          sx={{
-                            m: 0.5,
-                            "& .MuiButton-startIcon": {
-                              m: 0,
-                            },
-                          }}
-                          onClick={() => handleOpenModalEdit(hotel.hotel_id)}
-                        />
-                      </TableCell>
-                    </TableRow>
-                  );
+            {loading ? (
+              <LoadingData />
+            ) : items && items.length > 0 ? (
+              <CustomDataGrid
+                items={items}
+                columns={columns({
+                  handleOpenModalDetail,
+                  handleOpenModalDelete,
+                  handleOpenModalEdit,
                 })}
-              </TableBody>
-            </Table>
+              />
+            ) : (
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  height: "100%",
+                  p: 2,
+                }}
+              >
+                <ErrorOutline sx={{ mr: 1 }} />
+                <Typography variant="body1" color="neutral.900">
+                  No data available
+                </Typography>
+              </Box>
+            )}
           </Box>
         </Scrollbar>
-        <TablePagination
-          component="div"
-          count={count}
-          onPageChange={onPageChange}
-          onRowsPerPageChange={onRowsPerPageChange}
-          page={page}
-          rowsPerPage={rowsPerPage}
-          rowsPerPageOptions={DATAGRID_OPTIONS.PAGE_SIZE_OPTIONS}
-        />
       </Card>
 
       <DeleteHotel
         isModalDeleteHotel={isModalDeleteHotel}
         setIsModalDeleteHotel={setIsModalDeleteHotel}
         currentId={parseInt(currentId)}
+        onRefresh={onRefresh}
       />
 
       <EditHotel
         isModalEditHotel={isModalEditHotel}
         setIsModalEditHotel={setIsModalEditHotel}
         currentId={parseInt(currentId)}
+        onRefresh={onRefresh}
       />
 
       <DetailHotel
@@ -207,15 +94,7 @@ export const HotelsTable = (props) => {
 };
 
 HotelsTable.propTypes = {
-  count: PropTypes.number,
   items: PropTypes.array,
-  onDeselectAll: PropTypes.func,
-  onDeselectOne: PropTypes.func,
-  onPageChange: PropTypes.func,
-  onRowsPerPageChange: PropTypes.func,
-  onSelectAll: PropTypes.func,
-  onSelectOne: PropTypes.func,
-  page: PropTypes.number,
-  rowsPerPage: PropTypes.number,
-  selected: PropTypes.array,
+  loading: PropTypes.bool,
+  onRefresh: PropTypes.func,
 };

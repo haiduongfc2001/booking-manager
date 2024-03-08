@@ -1,44 +1,49 @@
-import { useCallback, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import Head from "next/head";
 import ArrowDownOnSquareIcon from "@heroicons/react/24/solid/ArrowDownOnSquareIcon";
 import ArrowUpOnSquareIcon from "@heroicons/react/24/solid/ArrowUpOnSquareIcon";
 import PlusIcon from "@heroicons/react/24/solid/PlusIcon";
-import { Box, Button, Container, Stack, SvgIcon, Typography, Card } from "@mui/material";
-import { useSelection } from "src/hooks/UseSelection";
+import ArrowPathIcon from "@heroicons/react/24/solid/ArrowPathIcon";
+import { Box, Button, Container, Stack, SvgIcon, Typography, Card, Grid } from "@mui/material";
 import { Layout as DashboardLayout } from "src/layouts/dashboard/Layout";
 import { HotelsTable } from "src/sections/hotel/HotelsTable";
 import { HotelsSearch } from "src/sections/hotel/HotelsSearch";
-import { applyPagination } from "src/utils/ApplyPagination";
-import { hotelData } from "src/components/Data";
-import { DATAGRID_OPTIONS } from "src/constant/Constants";
+import { STATUS_CODE } from "src/constant/Constants";
 import CreateHotel from "src/sections/hotel/CreateHotel";
-
-const useHotels = (page, rowsPerPage) => {
-  return useMemo(() => {
-    return applyPagination(hotelData, page, rowsPerPage);
-  }, [page, rowsPerPage]);
-};
-
-const useHotelIds = (hotels) => {
-  return useMemo(() => {
-    return hotels.map((hotel) => hotel.hotel_id);
-  }, [hotels]);
-};
+import * as HotelService from "../services/HotelService";
+import { API } from "src/constant/Constants";
 
 const Page = () => {
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(DATAGRID_OPTIONS.PAGE_SIZE);
-  const hotels = useHotels(page, rowsPerPage);
-  const hotelsIds = useHotelIds(hotels);
-  const hotelsSelection = useSelection(hotelsIds);
+  const [loading, setLoading] = useState(false);
+  const [hotelsData, setHotelsData] = useState([]);
   const [isModalCreateHotel, setIsModalCreateHotel] = useState(false);
 
-  const handlePageChange = useCallback((event, value) => {
-    setPage(value);
-  }, []);
+  const fetchData = async () => {
+    if (fetchData.current) {
+      return;
+    }
 
-  const handleRowsPerPageChange = useCallback((event) => {
-    setRowsPerPage(event.target.value);
+    fetchData.current = true;
+
+    try {
+      setLoading(true);
+
+      const response = await HotelService[API.HOTEL.GET_ALL_HOTELS]();
+
+      if (response?.status !== STATUS_CODE.UNAUTHORIZED) {
+        setHotelsData(response.data);
+      } else {
+        // dispatch(showCommonAlert(TOAST_KIND.ERROR, response.data.error));
+      }
+    } catch (error) {
+      // dispatch(showCommonAlert(TOAST_KIND.ERROR, TOAST_MESSAGE.FILTER_ERROR));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
   }, []);
 
   const handleOpenModalCreate = () => {
@@ -54,7 +59,7 @@ const Page = () => {
         component="main"
         sx={{
           flexGrow: 1,
-          py: 8,
+          py: 4,
         }}
       >
         <Container maxWidth="xl">
@@ -108,26 +113,32 @@ const Page = () => {
                 </Button>
               </Stack>
             </Card>
-            <HotelsTable
-              count={hotelData.length}
-              items={hotels}
-              onDeselectAll={hotelsSelection.handleDeselectAll}
-              onDeselectOne={hotelsSelection.handleDeselectOne}
-              onPageChange={handlePageChange}
-              onRowsPerPageChange={handleRowsPerPageChange}
-              onSelectAll={hotelsSelection.handleSelectAll}
-              onSelectOne={hotelsSelection.handleSelectOne}
-              page={page}
-              rowsPerPage={rowsPerPage}
-              selected={hotelsSelection.selected}
-            />
+
+            <Grid container justifyContent="flex-end">
+              <Grid item xs={3} sx={{ display: "flex", justifyContent: "inherit", pr: 2 }}>
+                <Button
+                  startIcon={
+                    <SvgIcon fontSize="small">
+                      <ArrowPathIcon />
+                    </SvgIcon>
+                  }
+                  variant="contained"
+                  color="secondary"
+                  onClick={fetchData}
+                >
+                  Làm mới
+                </Button>
+              </Grid>
+            </Grid>
+
+            <HotelsTable items={hotelsData} loading={loading} onRefresh={fetchData} />
           </Stack>
         </Container>
       </Box>
-
       <CreateHotel
         isModalCreateHotel={isModalCreateHotel}
         setIsModalCreateHotel={setIsModalCreateHotel}
+        onRefresh={fetchData}
       />
     </>
   );

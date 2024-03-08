@@ -6,10 +6,9 @@ import EditCustomer from "./EditCustomer";
 import DetailCustomer from "./DetailCustomer";
 import LoadingData from "src/layouts/loading/LoadingData";
 import { Scrollbar } from "src/components/ScrollBar";
-import { columns } from "./Columns";
+import { columns } from "./columns";
 import CustomDataGrid from "src/components/data-grid/CustomDataGrid";
 import { ErrorOutline } from "@mui/icons-material";
-import { neutral } from "src/theme/Colors";
 
 export const CustomersTable = (props) => {
   const { items = [], loading = false, onRefresh = () => {} } = props;
