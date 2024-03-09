@@ -19,7 +19,9 @@ export const columns = ({ handleOpenModalDetail, handleOpenModalDelete, handleOp
       align: "left",
       renderCell: (params) => (
         <Stack display="flex" alignItems="center" direction="row" spacing={2}>
-          <Avatar src={params.row.images[0].url}>{getInitials(params.row.name)}</Avatar>
+          <Avatar src={params.row.images.length > 0 ? params.row.images[0].url : ""}>
+            {getInitials(params.row.name)}
+          </Avatar>
           <Tooltip title="Xem chi tiết">
             <Typography
               variant="subtitle1"

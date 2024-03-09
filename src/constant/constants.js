@@ -52,6 +52,7 @@ export const API = {
   },
   HOTEL: {
     GET_ALL_HOTELS: "GetAllHotels",
+    GET_HOTEL_BY_ID: "GetHotelById",
   },
 };
 

@@ -23,6 +23,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
+import { getGenderLabel } from "src/utils/GetGenderLabel";
 
 const DetailCustomer = (props) => {
   const { isModalDetailCustomer, setIsModalDetailCustomer, currentId } = props;
@@ -69,17 +70,6 @@ const DetailCustomer = (props) => {
       }
     }
   }, [isModalDetailCustomer]);
-
-  const getGenderLabel = (gender) => {
-    switch (gender) {
-      case "male":
-        return "Nam";
-      case "female":
-        return "Nữ";
-      default:
-        return "Khác";
-    }
-  };
 
   return (
     <Dialog
