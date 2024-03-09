@@ -19,3 +19,7 @@ export const CreateHotel = async ({ name, address, contact, description }) => {
     description,
   });
 };
+
+export const DeleteHotel = async ({ hotelId }) => {
+  return CommonService.deleteRequest(`${prePath}/${hotelId}`, {});
+};

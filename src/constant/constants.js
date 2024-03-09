@@ -54,6 +54,7 @@ export const API = {
     GET_ALL_HOTELS: "GetAllHotels",
     GET_HOTEL_BY_ID: "GetHotelById",
     CREATE_HOTEL: "CreateHotel",
+    DELETE_HOTEL: "DeleteHotel",
   },
 };
 

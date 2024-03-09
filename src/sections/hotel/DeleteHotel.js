@@ -1,14 +1,32 @@
 import React from "react";
 import { Button, Modal, Box, Typography } from "@mui/material";
+import { API, STATUS_CODE, TOAST_KIND } from "src/constant/Constants";
+import * as HotelService from "../../services/HotelService";
+import { useDispatch } from "react-redux";
+import { showCommonAlert } from "src/utils/ToastMessage";
 
-const DeleteHotel = ({ isModalDeleteHotel, setIsModalDeleteHotel, currentId }) => {
+const DeleteHotel = ({ isModalDeleteHotel, setIsModalDeleteHotel, currentId, onRefresh }) => {
+  const dispatch = useDispatch();
+
   const handleCloseModal = () => {
     setIsModalDeleteHotel(false);
   };
 
-  const handleDelete = () => {
-    if (isModalDeleteHotel) console.log("hotel id: ", currentId);
-    handleCloseModal();
+  const handleDelete = async () => {
+    try {
+      const response = await HotelService[API.HOTEL.DELETE_HOTEL]({
+        hotelId: String(currentId).trim(),
+      });
+
+      if (response?.status === STATUS_CODE.OK) {
+        onRefresh();
+        dispatch(showCommonAlert(TOAST_KIND.SUCCESS, response.message));
+      }
+    } catch (error) {
+      // dispatch(showCommonAlert(TOAST_KIND.ERROR, TOAST_MESSAGE.FILTER_ERROR));
+    } finally {
+      handleCloseModal();
+    }
   };
 
   return (
