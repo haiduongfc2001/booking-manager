@@ -131,13 +131,23 @@ const DetailHotel = (props) => {
                   <Stack direction="row" spacing={3}>
                     <TextField
                       fullWidth
+                      autoFocus
                       label="Tên khách sạn"
                       name="name"
                       InputProps={{
                         readOnly: true,
                       }}
-                      sx={{ flex: 1 }}
                       value={hotelData?.name}
+                    />
+
+                    <TextField
+                      fullWidth
+                      label="Liên hệ"
+                      name="contact"
+                      InputProps={{
+                        readOnly: true,
+                      }}
+                      value={hotelData?.contact}
                     />
                   </Stack>
 
@@ -149,16 +159,8 @@ const DetailHotel = (props) => {
                       InputProps={{
                         readOnly: true,
                       }}
+                      sx={{ flex: 1 }}
                       value={hotelData?.address}
-                    />
-                    <TextField
-                      fullWidth
-                      label="Liên hệ"
-                      name="contact"
-                      InputProps={{
-                        readOnly: true,
-                      }}
-                      value={hotelData?.contact}
                     />
                   </Stack>
 
