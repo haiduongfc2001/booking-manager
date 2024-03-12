@@ -1,7 +1,7 @@
 import MagnifyingGlassIcon from "@heroicons/react/24/solid/MagnifyingGlassIcon";
 import { InputAdornment, OutlinedInput, SvgIcon, Button } from "@mui/material";
 
-export const CustomersSearch = () => (
+export const SearchCustomer = () => (
   <OutlinedInput
     defaultValue=""
     fullWidth

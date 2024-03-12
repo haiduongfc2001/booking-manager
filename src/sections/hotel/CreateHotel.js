@@ -15,7 +15,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import * as HotelService from "../../services/HotelService";
-import { API, STATUS_CODE, TOAST_KIND } from "src/constant/Constants";
+import { API, STATUS_CODE, TOAST_KIND } from "src/constant/constants";
 import { useDispatch } from "react-redux";
 import { showCommonAlert } from "src/utils/ToastMessage";
 

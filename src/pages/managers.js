@@ -10,7 +10,7 @@ import { ManagersTable } from "src/sections/manager/ManagersTable";
 import { ManagersSearch } from "src/sections/manager/ManagersSearch";
 import { applyPagination } from "src/utils/ApplyPagination";
 import { managerData } from "src/components/Data";
-import { DATAGRID_OPTIONS } from "src/constant/Constants";
+import { DATAGRID_OPTIONS } from "src/constant/constants";
 import CreateManager from "src/sections/manager/CreateManager";
 
 const useManagers = (page, rowsPerPage) => {

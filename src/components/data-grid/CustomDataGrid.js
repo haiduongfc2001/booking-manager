@@ -1,11 +1,11 @@
 import React from "react";
 import { DataGrid } from "@mui/x-data-grid";
-import { DATAGRID_OPTIONS } from "src/constant/Constants";
+import { DATAGRID_OPTIONS } from "src/constant/constants";
 
-const CustomDataGrid = ({ items = [], columns = [] }) => {
+const CustomDataGrid = ({ rows = [], columns = [] }) => {
   return (
     <DataGrid
-      rows={items}
+      rows={rows}
       columns={columns.map((column) => ({
         ...column,
         headerName: column.headerName.toUpperCase(),
@@ -25,6 +25,9 @@ const CustomDataGrid = ({ items = [], columns = [] }) => {
         width: "100%",
         "& .super-app-theme--header": {
           backgroundColor: "rgb(248, 249, 250)",
+          "& .MuiDataGrid-columnHeaderTitleContainer": {
+            justifyContent: "center",
+          },
         },
         boxShadow: 2,
         // border: 2,

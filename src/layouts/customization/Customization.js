@@ -17,7 +17,7 @@ import { useEffect, useState } from "react";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import { useDispatch, useSelector } from "react-redux";
 import { SET_BORDER_RADIUS, SET_FONT_FAMILY } from "../../../redux/actions/Actions";
-import { gridSpacing } from "../../../redux/constants/Constants";
+import { gridSpacing } from "../../../redux/constants/constants";
 import SubCard from "../../layouts/ui-component/cards/SubCard";
 import AnimateButton from "../../layouts/ui-component/extended/AnimateButton";
 import FontSize from "../FontSize";

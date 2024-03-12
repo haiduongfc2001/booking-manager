@@ -19,7 +19,7 @@ import {
 } from "@mui/material";
 import { Scrollbar } from "src/components/ScrollBar";
 import { getInitials } from "src/utils/GetInitials";
-import { DATAGRID_OPTIONS } from "src/constant/Constants";
+import { DATAGRID_OPTIONS } from "src/constant/constants";
 import TrashIcon from "@heroicons/react/24/solid/TrashIcon";
 import PencilIcon from "@heroicons/react/24/solid/PencilIcon";
 import DeleteManager from "./DeleteManager";

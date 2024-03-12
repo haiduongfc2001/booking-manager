@@ -14,7 +14,7 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import { SeverityPill } from "src/components/SeverityPill";
 import { StatusMap } from "src/components/StatusMap";
-import { API, STATUS_CODE } from "src/constant/Constants";
+import { API, STATUS_CODE } from "src/constant/constants";
 import LoadingData from "src/layouts/loading/LoadingData";
 import * as CustomerService from "../../services/CustomerService";
 import { getInitials } from "src/utils/GetInitials";

@@ -10,7 +10,7 @@ import { columns } from "./columns";
 import CustomDataGrid from "src/components/data-grid/CustomDataGrid";
 import { ErrorOutline } from "@mui/icons-material";
 
-export const CustomersTable = (props) => {
+export const CustomerTable = (props) => {
   const { items = [], loading = false, onRefresh = () => {} } = props;
 
   const [currentId, setCurrentId] = useState("");
@@ -42,7 +42,7 @@ export const CustomersTable = (props) => {
               <LoadingData />
             ) : items && items.length > 0 ? (
               <CustomDataGrid
-                items={items}
+                rows={items}
                 columns={columns({
                   handleOpenModalDetail,
                   handleOpenModalDelete,
@@ -90,7 +90,7 @@ export const CustomersTable = (props) => {
   );
 };
 
-CustomersTable.propTypes = {
+CustomerTable.propTypes = {
   items: PropTypes.array,
   loading: PropTypes.bool,
   onRefresh: PropTypes.func,

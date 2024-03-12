@@ -1,4 +1,4 @@
-import { TOAST_KIND } from "../constant/Constants";
+import { TOAST_KIND } from "../constant/constants";
 import { showAlert } from "../redux/create-actions/AlertAction";
 
 // Common Toast Message

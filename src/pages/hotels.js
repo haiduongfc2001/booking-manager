@@ -6,12 +6,12 @@ import PlusIcon from "@heroicons/react/24/solid/PlusIcon";
 import ArrowPathIcon from "@heroicons/react/24/solid/ArrowPathIcon";
 import { Box, Button, Container, Stack, SvgIcon, Typography, Card, Grid } from "@mui/material";
 import { Layout as DashboardLayout } from "src/layouts/dashboard/Layout";
-import { HotelsTable } from "src/sections/hotel/HotelsTable";
-import { HotelsSearch } from "src/sections/hotel/HotelsSearch";
-import { STATUS_CODE } from "src/constant/Constants";
+import { HotelTable } from "src/sections/hotel/HotelTable";
+import { SearchHotel } from "src/sections/hotel/SearchHotel";
+import { STATUS_CODE } from "src/constant/constants";
 import CreateHotel from "src/sections/hotel/CreateHotel";
 import * as HotelService from "../services/HotelService";
-import { API } from "src/constant/Constants";
+import { API } from "src/constant/constants";
 
 const Page = () => {
   const [loading, setLoading] = useState(false);
@@ -98,7 +98,7 @@ const Page = () => {
                 alignItems="center"
                 justifyContent="space-between"
               >
-                <HotelsSearch />
+                <SearchHotel />
                 <Button
                   startIcon={
                     <SvgIcon fontSize="small">
@@ -131,7 +131,7 @@ const Page = () => {
               </Grid>
             </Grid>
 
-            <HotelsTable items={hotelsData} loading={loading} onRefresh={fetchData} />
+            <HotelTable items={hotelsData} loading={loading} onRefresh={fetchData} />
           </Stack>
         </Container>
       </Box>

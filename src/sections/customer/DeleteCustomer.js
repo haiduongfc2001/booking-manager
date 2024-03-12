@@ -1,6 +1,6 @@
 import React from "react";
 import { Button, Modal, Box, Typography } from "@mui/material";
-import { API, STATUS_CODE, TOAST_KIND } from "src/constant/Constants";
+import { API, STATUS_CODE, TOAST_KIND } from "src/constant/constants";
 import * as CustomerService from "../../services/CustomerService";
 import { useDispatch } from "react-redux";
 import { showCommonAlert } from "src/utils/ToastMessage";

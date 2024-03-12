@@ -6,12 +6,12 @@ import PlusIcon from "@heroicons/react/24/solid/PlusIcon";
 import ArrowPathIcon from "@heroicons/react/24/solid/ArrowPathIcon";
 import { Box, Button, Container, Stack, SvgIcon, Typography, Card, Grid } from "@mui/material";
 import { Layout as DashboardLayout } from "src/layouts/dashboard/Layout";
-import { CustomersTable } from "src/sections/customer/CustomersTable";
-import { CustomersSearch } from "src/sections/customer/CustomersSearch";
-import { STATUS_CODE } from "src/constant/Constants";
+import { CustomerTable } from "src/sections/customer/CustomerTable";
+import { SearchCustomer } from "src/sections/customer/SearchCustomer";
+import { STATUS_CODE } from "src/constant/constants";
 import CreateCustomer from "src/sections/customer/CreateCustomer";
 import * as CustomerService from "../services/CustomerService";
-import { API } from "src/constant/Constants";
+import { API } from "src/constant/constants";
 
 const Page = () => {
   const [loading, setLoading] = useState(false);
@@ -98,7 +98,7 @@ const Page = () => {
                 alignItems="center"
                 justifyContent="space-between"
               >
-                <CustomersSearch />
+                <SearchCustomer />
                 <Button
                   startIcon={
                     <SvgIcon fontSize="small">
@@ -131,7 +131,7 @@ const Page = () => {
               </Grid>
             </Grid>
 
-            <CustomersTable items={customersData} loading={loading} onRefresh={fetchData} />
+            <CustomerTable items={customersData} loading={loading} onRefresh={fetchData} />
           </Stack>
         </Container>
       </Box>

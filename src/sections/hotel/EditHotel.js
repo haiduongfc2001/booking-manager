@@ -15,7 +15,7 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { API, STATUS_CODE, TOAST_KIND } from "src/constant/Constants";
+import { API, STATUS_CODE, TOAST_KIND } from "src/constant/constants";
 import * as HotelService from "../../services/HotelService";
 import LoadingData from "src/layouts/loading/LoadingData";
 import { showCommonAlert } from "src/utils/ToastMessage";

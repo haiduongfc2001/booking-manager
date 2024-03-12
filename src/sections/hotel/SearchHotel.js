@@ -2,7 +2,7 @@ import MagnifyingGlassIcon from "@heroicons/react/24/solid/MagnifyingGlassIcon";
 import { InputAdornment, OutlinedInput, SvgIcon } from "@mui/material";
 
 // Search for hotels
-export const HotelsSearch = () => (
+export const SearchHotel = () => (
   <OutlinedInput
     defaultValue=""
     fullWidth

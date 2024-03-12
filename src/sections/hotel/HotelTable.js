@@ -11,7 +11,7 @@ import CustomDataGrid from "src/components/data-grid/CustomDataGrid";
 import { ErrorOutline } from "@mui/icons-material";
 
 // The table displays the list of hotels
-export const HotelsTable = (props) => {
+export const HotelTable = (props) => {
   const { items = [], loading = false, onRefresh = () => {} } = props;
 
   const [currentId, setCurrentId] = useState("");
@@ -43,7 +43,7 @@ export const HotelsTable = (props) => {
               <LoadingData />
             ) : items && items.length > 0 ? (
               <CustomDataGrid
-                items={items}
+                rows={items}
                 columns={columns({
                   handleOpenModalDetail,
                   handleOpenModalDelete,
@@ -93,7 +93,7 @@ export const HotelsTable = (props) => {
   );
 };
 
-HotelsTable.propTypes = {
+HotelTable.propTypes = {
   items: PropTypes.array,
   loading: PropTypes.bool,
   onRefresh: PropTypes.func,

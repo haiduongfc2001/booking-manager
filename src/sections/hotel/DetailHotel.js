@@ -12,7 +12,7 @@ import {
   Avatar,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import { API, STATUS_CODE } from "src/constant/Constants";
+import { API, STATUS_CODE } from "src/constant/constants";
 import LoadingData from "src/layouts/loading/LoadingData";
 import * as HotelService from "../../services/HotelService";
 import { getInitials } from "src/utils/GetInitials";
