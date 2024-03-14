@@ -5,12 +5,12 @@ import ArrowUpOnSquareIcon from "@heroicons/react/24/solid/ArrowUpOnSquareIcon";
 import PlusIcon from "@heroicons/react/24/solid/PlusIcon";
 import ArrowPathIcon from "@heroicons/react/24/solid/ArrowPathIcon";
 import { Box, Button, Container, Stack, SvgIcon, Typography, Card, Grid } from "@mui/material";
-import { Layout as DashboardLayout } from "src/layouts/dashboard/Layout";
-import { HotelTable } from "src/sections/hotel/HotelTable";
-import { SearchHotel } from "src/sections/hotel/SearchHotel";
+import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
+import { HotelTable } from "src/sections/hotel/hotel-table";
+import { SearchHotel } from "src/sections/hotel/search-hotel";
 import { STATUS_CODE } from "src/constant/constants";
-import CreateHotel from "src/sections/hotel/CreateHotel";
-import * as HotelService from "../services/HotelService";
+import CreateHotel from "src/sections/hotel/create-hotel";
+import * as HotelService from "../services/hotel-service";
 import { API } from "src/constant/constants";
 
 const Page = () => {

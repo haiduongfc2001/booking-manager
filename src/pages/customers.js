@@ -5,12 +5,12 @@ import ArrowUpOnSquareIcon from "@heroicons/react/24/solid/ArrowUpOnSquareIcon";
 import PlusIcon from "@heroicons/react/24/solid/PlusIcon";
 import ArrowPathIcon from "@heroicons/react/24/solid/ArrowPathIcon";
 import { Box, Button, Container, Stack, SvgIcon, Typography, Card, Grid } from "@mui/material";
-import { Layout as DashboardLayout } from "src/layouts/dashboard/Layout";
-import { CustomerTable } from "src/sections/customer/CustomerTable";
-import { SearchCustomer } from "src/sections/customer/SearchCustomer";
+import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
+import { CustomerTable } from "src/sections/customer/customer-table";
+import { SearchCustomer } from "src/sections/customer/search-customer";
 import { STATUS_CODE } from "src/constant/constants";
-import CreateCustomer from "src/sections/customer/CreateCustomer";
-import * as CustomerService from "../services/CustomerService";
+import CreateCustomer from "src/sections/customer/create-customer";
+import * as CustomerService from "../services/customer-service";
 import { API } from "src/constant/constants";
 
 const Page = () => {

@@ -16,11 +16,11 @@ import { IconSettings } from "@tabler/icons";
 import { useEffect, useState } from "react";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import { useDispatch, useSelector } from "react-redux";
-import { SET_BORDER_RADIUS, SET_FONT_FAMILY } from "../../../redux/actions/Actions";
+import { SET_BORDER_RADIUS, SET_FONT_FAMILY } from "../../../redux/actions/actions";
 import { gridSpacing } from "../../../redux/constants/constants";
 import SubCard from "../../layouts/ui-component/cards/SubCard";
-import AnimateButton from "../../layouts/ui-component/extended/AnimateButton";
-import FontSize from "../FontSize";
+import AnimateButton from "../../layouts/ui-component/extended/animate-button";
+import FontSize from "../font-size";
 
 function valueText(value) {
   return `${value}px`;

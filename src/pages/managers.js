@@ -4,14 +4,14 @@ import ArrowDownOnSquareIcon from "@heroicons/react/24/solid/ArrowDownOnSquareIc
 import ArrowUpOnSquareIcon from "@heroicons/react/24/solid/ArrowUpOnSquareIcon";
 import PlusIcon from "@heroicons/react/24/solid/PlusIcon";
 import { Box, Button, Container, Stack, SvgIcon, Typography, Card } from "@mui/material";
-import { useSelection } from "src/hooks/UseSelection";
-import { Layout as DashboardLayout } from "src/layouts/dashboard/Layout";
-import { ManagersTable } from "src/sections/manager/ManagersTable";
-import { ManagersSearch } from "src/sections/manager/ManagersSearch";
-import { applyPagination } from "src/utils/ApplyPagination";
-import { managerData } from "src/components/Data";
+import { useSelection } from "src/hooks/use-selection";
+import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
+import { ManagersTable } from "src/sections/manager/managers-table";
+import { ManagersSearch } from "src/sections/manager/managers-search";
+import { applyPagination } from "src/utils/apply-pagination";
+import { managerData } from "src/components/data";
 import { DATAGRID_OPTIONS } from "src/constant/constants";
-import CreateManager from "src/sections/manager/CreateManager";
+import CreateManager from "src/sections/manager/create-manager";
 
 const useManagers = (page, rowsPerPage) => {
   return useMemo(() => {

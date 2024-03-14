@@ -2,7 +2,7 @@ import { format } from "date-fns";
 import { Avatar, Button, Stack, Typography, Tooltip, SvgIcon } from "@mui/material";
 import TrashIcon from "@heroicons/react/24/solid/TrashIcon";
 import PencilIcon from "@heroicons/react/24/solid/PencilIcon";
-import { getInitials } from "src/utils/GetInitials";
+import { getInitials } from "src/utils/get-initials";
 
 export const columns = ({ handleOpenModalDetail, handleOpenModalDelete, handleOpenModalEdit }) => {
   return [

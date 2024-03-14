@@ -1,7 +1,7 @@
 import { combineReducers } from "redux";
-import alertReducer from "./AlertReducer";
-import customizationReducer from "./CustomizationReducer";
-import loadingReducer from "./LoadingReducer";
+import alertReducer from "./alert-reducer";
+import customizationReducer from "./customization-reducer";
+import loadingReducer from "./loading-reducer";
 
 // ==============================|| COMBINE REDUCER ||============================== //
 

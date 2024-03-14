@@ -2,9 +2,9 @@ import { format } from "date-fns";
 import { Avatar, Box, Button, Stack, Typography, Tooltip, SvgIcon } from "@mui/material";
 import TrashIcon from "@heroicons/react/24/solid/TrashIcon";
 import PencilIcon from "@heroicons/react/24/solid/PencilIcon";
-import { SeverityPill } from "src/components/SeverityPill";
-import { getInitials } from "src/utils/GetInitials";
-import { StatusMap } from "src/components/StatusMap";
+import { SeverityPill } from "src/components/severity-pill";
+import { getInitials } from "src/utils/get-initials";
+import { StatusMap } from "src/components/status-map";
 
 export const columns = ({ handleOpenModalDetail, handleOpenModalDelete, handleOpenModalEdit }) => {
   return [

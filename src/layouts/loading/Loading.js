@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import ReactLoading from "react-loading";
 import { useSelector } from "react-redux";
-import { loading } from "src/theme/Colors";
+import { loading } from "src/theme/colors";
 
 export default function Loading() {
   const [isLoading, setLoading] = useState(false);

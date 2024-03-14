@@ -6,7 +6,7 @@ import MuiSnackbar from "@mui/material/Snackbar";
 import { withStyles } from "@mui/styles";
 import PropTypes from "prop-types";
 import * as React from "react";
-import FontSize from "../FontSize";
+import FontSize from "./font-size";
 
 const styles = (theme) => ({
   content: {

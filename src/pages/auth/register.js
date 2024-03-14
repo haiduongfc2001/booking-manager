@@ -14,8 +14,8 @@ import {
   IconButton,
   Tooltip,
 } from "@mui/material";
-import { useAuth } from "src/hooks/UseAuth";
-import { Layout as AuthLayout } from "src/layouts/auth/Layout";
+import { useAuth } from "src/hooks/use-auth";
+import { Layout as AuthLayout } from "src/layouts/auth/layout";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useState } from "react";
 
