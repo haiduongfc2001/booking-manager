@@ -45,7 +45,7 @@ const DetailCustomer = (props) => {
         // dispatch(showCommonAlert(TOAST_KIND.ERROR, response.data.error));
       }
     } catch (error) {
-      // dispatch(showCommonAlert(TOAST_KIND.ERROR, TOAST_MESSAGE.FILTER_ERROR));
+      // dispatch(showCommonAlert(TOAST_KIND.ERROR, TOAST_MESSAGE.SERVER_ERROR));
     } finally {
       setLoading(false);
     }
@@ -177,6 +177,7 @@ const DetailCustomer = (props) => {
                       }}
                     />
                   </Stack>
+
                   <Stack direction="row" spacing={3}>
                     <TextField
                       fullWidth
@@ -197,11 +198,14 @@ const DetailCustomer = (props) => {
                       />
                     </LocalizationProvider>
                   </Stack>
+
+                  <Stack direction="column" spacing={3} sx={{ width: "100%" }}>
+                    <SeverityPill color={StatusMap[customerData?.is_verified]}>
+                      {customerData?.is_verified ? "Đã xác thực" : "Chưa xác thực"}
+                    </SeverityPill>
+                  </Stack>
                 </Stack>
               </Stack>
-              <SeverityPill color={StatusMap[customerData?.is_verified]}>
-                {customerData?.is_verified ? "Đã xác thực" : "Chưa xác thực"}
-              </SeverityPill>
             </Stack>
           </>
         )}

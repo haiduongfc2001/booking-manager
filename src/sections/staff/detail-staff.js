@@ -12,68 +12,68 @@ import {
   Avatar,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import { SeverityPill } from "src/components/severity-pill";
+import { StatusMapRole } from "src/components/status-map";
 import { API, STATUS_CODE } from "src/constant/constants";
 import LoadingData from "src/layouts/loading/loading-data";
-import * as HotelService from "../../services/hotel-service";
+import * as StaffService from "../../services/staff-service";
 import { getInitials } from "src/utils/get-initials";
 import { neutral } from "src/theme/colors";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
-import Box from "@mui/material/Box";
-import ImageList from "@mui/material/ImageList";
-import ImageListItem from "@mui/material/ImageListItem";
+import { getGenderLabel } from "src/utils/get-gender-label";
 
-const DetailHotel = (props) => {
-  const { isModalDetailHotel, setIsModalDetailHotel, currentId } = props;
+const DetailStaff = (props) => {
+  const { isModalDetailStaff, setIsModalDetailStaff, currentId } = props;
 
-  const [hotelData, setHotelData] = useState([]);
+  const [staffData, setStaffData] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const getHotel = async () => {
+  const getStaff = async () => {
     try {
       setLoading(true);
 
-      const response = await HotelService[API.HOTEL.GET_HOTEL_BY_ID]({
-        hotelId: String(currentId).trim(),
+      const response = await StaffService[API.STAFF.GET_STAFF_BY_ID]({
+        staffId: String(currentId).trim(),
       });
 
       if (response?.status !== STATUS_CODE.UNAUTHORIZED) {
-        setHotelData(response.data);
+        setStaffData(response.data);
       } else {
-        // dispatch(showCommonAlert(TOAST_KIND.ERROR, response.data.error));
+        dispatch(showCommonAlert(TOAST_KIND.ERROR, response.data.message));
       }
     } catch (error) {
-      // dispatch(showCommonAlert(TOAST_KIND.ERROR, TOAST_MESSAGE.SERVER_ERROR));
+      dispatch(showCommonAlert(TOAST_KIND.ERROR, TOAST_MESSAGE.SERVER_ERROR));
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    if (isModalDetailHotel && currentId) {
-      getHotel();
+    if (isModalDetailStaff && currentId) {
+      getStaff();
     }
-  }, [isModalDetailHotel, currentId]);
+  }, [isModalDetailStaff, currentId]);
 
   const handleCloseModal = () => {
-    setIsModalDetailHotel(false);
+    setIsModalDetailStaff(false);
   };
 
   const descriptionElementRef = useRef(null);
   useEffect(() => {
-    if (isModalDetailHotel) {
+    if (isModalDetailStaff) {
       const { current: descriptionElement } = descriptionElementRef;
       if (descriptionElement !== null) {
         descriptionElement.focus();
       }
     }
-  }, [isModalDetailHotel]);
+  }, [isModalDetailStaff]);
 
   return (
     <Dialog
-      open={isModalDetailHotel}
+      open={isModalDetailStaff}
       onClose={handleCloseModal}
       aria-labelledby="scroll-dialog-title"
       aria-describedby="scroll-dialog-description"
@@ -111,108 +111,94 @@ const DetailHotel = (props) => {
                 alignItems={{ xs: "center", sm: "flex-start" }}
               >
                 <Avatar
-                  src={
-                    hotelData?.images?.length > 0
-                      ? hotelData?.images[0]?.url
-                      : "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/2048px-No_image_available.svg.png"
-                  }
+                  src={staffData?.avatar}
                   sx={{
                     bgcolor: neutral[300],
                     width: "calc(100% / 3)",
-                    height: "100%",
+                    height: "auto",
                     boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.2)",
                   }}
-                  variant="rounded"
                 >
-                  {getInitials(hotelData?.name)}
+                  {getInitials(staffData?.full_name)}
                 </Avatar>
 
                 <Stack direction="column" spacing={3} sx={{ width: "100%" }}>
                   <Stack direction="row" spacing={3}>
                     <TextField
-                      fullWidth
                       autoFocus
-                      label="Tên khách sạn"
-                      name="name"
-                      InputProps={{
-                        readOnly: true,
-                      }}
-                      value={hotelData?.name}
-                    />
-
-                    <TextField
                       fullWidth
-                      label="Liên hệ"
-                      name="contact"
-                      InputProps={{
-                        readOnly: true,
-                      }}
-                      value={hotelData?.contact}
-                    />
-                  </Stack>
-
-                  <Stack direction="row" spacing={3}>
-                    <TextField
-                      fullWidth
-                      label="Địa chỉ"
-                      name="address"
+                      label="Email"
+                      name="email"
                       InputProps={{
                         readOnly: true,
                       }}
                       sx={{ flex: 1 }}
-                      value={hotelData?.address}
+                      value={staffData?.email}
                     />
                   </Stack>
 
                   <Stack direction="row" spacing={3}>
                     <TextField
                       fullWidth
-                      multiline
-                      label="Mô tả"
-                      name="description"
-                      minRows={3}
-                      maxRows={5}
+                      label="Họ và tên"
+                      name="full_name"
                       InputProps={{
                         readOnly: true,
                       }}
-                      sx={{ flex: 1 }}
-                      value={hotelData?.description}
+                      value={staffData?.full_name}
                     />
                   </Stack>
 
                   <Stack direction="row" spacing={3}>
+                    <TextField
+                      fullWidth
+                      label="Giới tính"
+                      name="gender"
+                      InputProps={{
+                        readOnly: true,
+                      }}
+                      value={getGenderLabel(staffData?.gender)}
+                    />
+                    <TextField
+                      fullWidth
+                      label="Số điện thoại"
+                      name="phone"
+                      value={staffData?.phone}
+                      InputProps={{
+                        readOnly: true,
+                      }}
+                    />
+                  </Stack>
+
+                  <Stack direction="row" spacing={3}>
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                      <DatePicker
+                        readOnly
+                        label="Ngày sinh"
+                        name="dob"
+                        sx={{ width: "50%" }}
+                        value={dayjs(staffData?.dob)}
+                      />
+                    </LocalizationProvider>
+
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                       <DatePicker
                         readOnly
                         label="Ngày tạo"
-                        name="created_at"
-                        value={dayjs(hotelData?.created_at)}
-                      />
-                    </LocalizationProvider>
-
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                      <DatePicker
-                        readOnly
-                        label="Ngày cập nhật gần nhất"
-                        name="updated_at"
-                        value={dayjs(hotelData?.updated_at)}
+                        name="dob"
+                        sx={{ width: "50%" }}
+                        value={dayjs(staffData?.created_at)}
                       />
                     </LocalizationProvider>
                   </Stack>
+
+                  <Stack direction="column" spacing={3} sx={{ width: "100%" }}>
+                    <SeverityPill color={StatusMapRole[staffData?.role]}>
+                      {staffData?.role === "manager" ? "Quản lý" : "Lễ tân"}
+                    </SeverityPill>
+                  </Stack>
                 </Stack>
               </Stack>
-
-              {hotelData.images && hotelData.images.length > 0 && (
-                <Box sx={{ width: "100%", height: "100%", overflowY: "scroll" }}>
-                  <ImageList variant="masonry" cols={3} gap={8}>
-                    {hotelData.images.map((item) => (
-                      <ImageListItem key={item.id}>
-                        <img srcSet={item.url} src={item.url} alt={item.id} loading="lazy" />
-                      </ImageListItem>
-                    ))}
-                  </ImageList>
-                </Box>
-              )}
             </Stack>
           </>
         )}
@@ -227,10 +213,10 @@ const DetailHotel = (props) => {
   );
 };
 
-export default DetailHotel;
+export default DetailStaff;
 
-DetailHotel.propTypes = {
-  isModalDetailHotel: PropTypes.bool.isRequired,
-  setIsModalDetailHotel: PropTypes.func.isRequired,
+DetailStaff.propTypes = {
+  isModalDetailStaff: PropTypes.bool.isRequired,
+  setIsModalDetailStaff: PropTypes.func.isRequired,
   currentId: PropTypes.number.isRequired,
 };

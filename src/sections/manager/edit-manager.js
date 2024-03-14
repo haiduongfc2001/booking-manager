@@ -171,7 +171,7 @@ const EditManager = (props) => {
               value={formik.values.avatar}
             />
 
-            <SeverityPill color="primary">Quản lý khách sạn</SeverityPill>
+            <SeverityPill color="primary">Nhân viên khách sạn</SeverityPill>
           </Stack>
           {formik.errors.submit && (
             <Typography color="error" sx={{ mt: 3 }} variant="body2">

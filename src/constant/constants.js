@@ -52,10 +52,18 @@ export const API = {
   },
   HOTEL: {
     GET_ALL_HOTELS: "GetAllHotels",
+    GET_HOTEL_LIST: "GetHotelList",
     GET_HOTEL_BY_ID: "GetHotelById",
     CREATE_HOTEL: "CreateHotel",
     DELETE_HOTEL: "DeleteHotel",
     EDIT_HOTEL: "EditHotel",
+  },
+  STAFF: {
+    GET_ALL_STAFFS: "GetAllStaffs",
+    GET_STAFF_BY_ID: "GetStaffById",
+    CREATE_STAFF: "CreateStaff",
+    DELETE_STAFF: "DeleteStaff",
+    EDIT_STAFF: "EditStaff",
   },
 };
 

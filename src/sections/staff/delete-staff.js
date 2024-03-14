@@ -1,34 +1,31 @@
 import React from "react";
 import { Button, Modal, Box, Typography } from "@mui/material";
 import { API, STATUS_CODE, TOAST_KIND } from "src/constant/constants";
-import * as CustomerService from "../../services/customer-service";
+import * as StaffService from "../../services/staff-service";
 import { useDispatch } from "react-redux";
 import { showCommonAlert } from "src/utils/toast-message";
 
-const DeleteCustomer = ({
-  isModalDeleteCustomer,
-  setIsModalDeleteCustomer,
-  currentId,
-  onRefresh,
-}) => {
+const DeleteStaff = ({ isModalDeleteStaff, setIsModalDeleteStaff, currentId, onRefresh }) => {
   const dispatch = useDispatch();
 
   const handleCloseModal = () => {
-    setIsModalDeleteCustomer(false);
+    setIsModalDeleteStaff(false);
   };
 
   const handleDelete = async () => {
     try {
-      const response = await CustomerService[API.CUSTOMER.DELETE_CUSTOMER]({
-        customerId: String(currentId).trim(),
+      const response = await StaffService[API.STAFF.DELETE_STAFF]({
+        staffId: String(currentId).trim(),
       });
 
       if (response?.status === STATUS_CODE.OK) {
         onRefresh();
         dispatch(showCommonAlert(TOAST_KIND.SUCCESS, response.message));
+      } else {
+        dispatch(showCommonAlert(TOAST_KIND.ERROR, response.data.message));
       }
     } catch (error) {
-      // dispatch(showCommonAlert(TOAST_KIND.ERROR, TOAST_MESSAGE.SERVER_ERROR));
+      dispatch(showCommonAlert(TOAST_KIND.ERROR, TOAST_MESSAGE.SERVER_ERROR));
     } finally {
       handleCloseModal();
     }
@@ -36,7 +33,7 @@ const DeleteCustomer = ({
 
   return (
     <Modal
-      open={isModalDeleteCustomer}
+      open={isModalDeleteStaff}
       onClose={handleCloseModal}
       aria-labelledby="modal-title"
       aria-describedby="modal-description"
@@ -73,4 +70,4 @@ const DeleteCustomer = ({
   );
 };
 
-export default DeleteCustomer;
+export default DeleteStaff;

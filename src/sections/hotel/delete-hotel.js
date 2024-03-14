@@ -23,7 +23,7 @@ const DeleteHotel = ({ isModalDeleteHotel, setIsModalDeleteHotel, currentId, onR
         dispatch(showCommonAlert(TOAST_KIND.SUCCESS, response.message));
       }
     } catch (error) {
-      // dispatch(showCommonAlert(TOAST_KIND.ERROR, TOAST_MESSAGE.FILTER_ERROR));
+      // dispatch(showCommonAlert(TOAST_KIND.ERROR, TOAST_MESSAGE.SERVER_ERROR));
     } finally {
       handleCloseModal();
     }

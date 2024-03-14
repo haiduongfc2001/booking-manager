@@ -1,5 +1,6 @@
 // Create a common server to communicate with API server
 import axios from "axios";
+import { ExtractErrorInfo } from "src/utils/extract-error-info";
 // import Storage from "../utils/Storage";
 
 // Create Base URL
@@ -56,6 +57,7 @@ export const postRequest = async (endpoint, data) => {
     return res;
   } catch (error) {
     console.error("Error occurred:", error);
+    return ExtractErrorInfo(error);
   }
 };
 

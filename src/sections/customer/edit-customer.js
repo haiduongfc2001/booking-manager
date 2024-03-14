@@ -55,7 +55,7 @@ const EditCustomer = (props) => {
         // dispatch(showCommonAlert(TOAST_KIND.ERROR, response.data.error));
       }
     } catch (error) {
-      // dispatch(showCommonAlert(TOAST_KIND.ERROR, TOAST_MESSAGE.FILTER_ERROR));
+      // dispatch(showCommonAlert(TOAST_KIND.ERROR, TOAST_MESSAGE.SERVER_ERROR));
     } finally {
       setLoading(false);
     }

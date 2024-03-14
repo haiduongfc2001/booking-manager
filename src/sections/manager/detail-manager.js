@@ -44,7 +44,7 @@ const DetailManager = (props) => {
           />
 
           <TextField fullWidth label="Ảnh đại diện" name="avatar" value={manager?.avatar} />
-          <SeverityPill color="primary">Quản lý khách sạn</SeverityPill>
+          <SeverityPill color="primary">Nhân viên khách sạn</SeverityPill>
         </Stack>
 
         <Box sx={{ mt: 3, display: "flex", justifyContent: "flex-end" }}>

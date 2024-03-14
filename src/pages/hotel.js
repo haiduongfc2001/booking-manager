@@ -6,17 +6,17 @@ import PlusIcon from "@heroicons/react/24/solid/PlusIcon";
 import ArrowPathIcon from "@heroicons/react/24/solid/ArrowPathIcon";
 import { Box, Button, Container, Stack, SvgIcon, Typography, Card, Grid } from "@mui/material";
 import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
-import { CustomerTable } from "src/sections/customer/customer-table";
-import { SearchCustomer } from "src/sections/customer/search-customer";
+import { HotelTable } from "src/sections/hotel/hotel-table";
+import { SearchHotel } from "src/sections/hotel/search-hotel";
 import { STATUS_CODE } from "src/constant/constants";
-import CreateCustomer from "src/sections/customer/create-customer";
-import * as CustomerService from "../services/customer-service";
+import CreateHotel from "src/sections/hotel/create-hotel";
+import * as HotelService from "../services/hotel-service";
 import { API } from "src/constant/constants";
 
 const Page = () => {
   const [loading, setLoading] = useState(false);
-  const [customersData, setCustomersData] = useState([]);
-  const [isModalCreateCustomer, setIsModalCreateCustomer] = useState(false);
+  const [hotelsData, setHotelsData] = useState([]);
+  const [isModalCreateHotel, setIsModalCreateHotel] = useState(false);
 
   const fetchData = async () => {
     if (fetchData.current) {
@@ -28,15 +28,15 @@ const Page = () => {
     try {
       setLoading(true);
 
-      const response = await CustomerService[API.CUSTOMER.GET_ALL_CUSTOMERS]();
+      const response = await HotelService[API.HOTEL.GET_ALL_HOTELS]();
 
       if (response?.status !== STATUS_CODE.UNAUTHORIZED) {
-        setCustomersData(response.data);
+        setHotelsData(response.data);
       } else {
         // dispatch(showCommonAlert(TOAST_KIND.ERROR, response.data.error));
       }
     } catch (error) {
-      // dispatch(showCommonAlert(TOAST_KIND.ERROR, TOAST_MESSAGE.FILTER_ERROR));
+      // dispatch(showCommonAlert(TOAST_KIND.ERROR, TOAST_MESSAGE.SERVER_ERROR));
     } finally {
       setLoading(false);
     }
@@ -47,13 +47,13 @@ const Page = () => {
   }, []);
 
   const handleOpenModalCreate = () => {
-    setIsModalCreateCustomer(true);
+    setIsModalCreateHotel(true);
   };
 
   return (
     <>
       <Head>
-        <title>Customers | DHD</title>
+        <title>Hotels | DHD</title>
       </Head>
       <Box
         component="main"
@@ -66,7 +66,7 @@ const Page = () => {
           <Stack spacing={3}>
             <Stack direction="row" justifyContent="space-between" spacing={4}>
               <Stack spacing={1}>
-                <Typography variant="h4">Khách hàng</Typography>
+                <Typography variant="h4">Khách sạn</Typography>
                 <Stack alignItems="center" direction="row" spacing={1}>
                   <Button
                     color="inherit"
@@ -98,7 +98,7 @@ const Page = () => {
                 alignItems="center"
                 justifyContent="space-between"
               >
-                <SearchCustomer />
+                <SearchHotel />
                 <Button
                   startIcon={
                     <SvgIcon fontSize="small">
@@ -131,13 +131,13 @@ const Page = () => {
               </Grid>
             </Grid>
 
-            <CustomerTable items={customersData} loading={loading} onRefresh={fetchData} />
+            <HotelTable items={hotelsData} loading={loading} onRefresh={fetchData} />
           </Stack>
         </Container>
       </Box>
-      <CreateCustomer
-        isModalCreateCustomer={isModalCreateCustomer}
-        setIsModalCreateCustomer={setIsModalCreateCustomer}
+      <CreateHotel
+        isModalCreateHotel={isModalCreateHotel}
+        setIsModalCreateHotel={setIsModalCreateHotel}
         onRefresh={fetchData}
       />
     </>
