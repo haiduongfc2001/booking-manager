@@ -1,39 +1,30 @@
 import React from "react";
 import { Button, Modal, Box, Typography } from "@mui/material";
 import { API, STATUS_CODE, TOAST_KIND } from "src/constant/constants";
-import * as StaffService from "../../services/staff-service";
+import * as HotelService from "../../../services/hotel-service";
 import { useDispatch } from "react-redux";
 import { showCommonAlert } from "src/utils/toast-message";
 import PropTypes from "prop-types";
 
-const DeleteStaff = ({
-  isModalDeleteStaff,
-  setIsModalDeleteStaff,
-  hotelId,
-  currentId,
-  onRefresh,
-}) => {
+const DeleteHotel = ({ isModalDeleteHotel, setIsModalDeleteHotel, currentId, onRefresh }) => {
   const dispatch = useDispatch();
 
   const handleCloseModal = () => {
-    setIsModalDeleteStaff(false);
+    setIsModalDeleteHotel(false);
   };
 
   const handleDelete = async () => {
     try {
-      const response = await StaffService[API.STAFF.DELETE_STAFF]({
-        hotel_id: String(hotelId).trim(),
-        staff_id: String(currentId).trim(),
+      const response = await HotelService[API.HOTEL.DELETE_HOTEL]({
+        hotel_id: String(currentId).trim(),
       });
 
       if (response?.status === STATUS_CODE.OK) {
         onRefresh();
         dispatch(showCommonAlert(TOAST_KIND.SUCCESS, response.message));
-      } else {
-        dispatch(showCommonAlert(TOAST_KIND.ERROR, response.data.message));
       }
     } catch (error) {
-      dispatch(showCommonAlert(TOAST_KIND.ERROR, TOAST_MESSAGE.SERVER_ERROR));
+      // dispatch(showCommonAlert(TOAST_KIND.ERROR, TOAST_MESSAGE.SERVER_ERROR));
     } finally {
       handleCloseModal();
     }
@@ -41,7 +32,7 @@ const DeleteStaff = ({
 
   return (
     <Modal
-      open={isModalDeleteStaff}
+      open={isModalDeleteHotel}
       onClose={handleCloseModal}
       aria-labelledby="modal-title"
       aria-describedby="modal-description"
@@ -60,10 +51,10 @@ const DeleteStaff = ({
         }}
       >
         <Typography id="modal-title" variant="h5" component="div">
-          Xóa tài khoản
+          Xóa khách sạn
         </Typography>
         <Typography id="modal-description" sx={{ mt: 2 }}>
-          Bạn có chắc bạn muốn xóa tài khoản này?
+          Bạn có chắc bạn muốn xóa khách sạn này?
         </Typography>
         <Box sx={{ mt: 3, display: "flex", justifyContent: "flex-end" }}>
           <Button onClick={handleDelete} sx={{ mr: 2 }} variant="contained" color="error">
@@ -78,12 +69,11 @@ const DeleteStaff = ({
   );
 };
 
-export default DeleteStaff;
+export default DeleteHotel;
 
-DeleteStaff.propTypes = {
-  isModalDeleteStaff: PropTypes.bool.isRequired,
-  setIsModalDeleteStaff: PropTypes.func.isRequired,
-  hotelId: PropTypes.number.isRequired,
+DeleteHotel.propTypes = {
+  isModalDeleteHotel: PropTypes.bool.isRequired,
+  setIsModalDeleteHotel: PropTypes.func.isRequired,
   currentId: PropTypes.number.isRequired,
   onRefresh: PropTypes.func.isRequired,
 };

@@ -6,10 +6,10 @@ import PlusIcon from "@heroicons/react/24/solid/PlusIcon";
 import ArrowPathIcon from "@heroicons/react/24/solid/ArrowPathIcon";
 import { Box, Button, Container, Stack, SvgIcon, Typography, Card, Grid } from "@mui/material";
 import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
-import { StaffTable } from "src/sections/staff/staff-table";
-import { SearchStaff } from "src/sections/staff/search-staff";
+import { StaffTable } from "src/sections/admin/staff/staff-table";
+import { SearchStaff } from "src/sections/admin/staff/search-staff";
 import { STATUS_CODE } from "src/constant/constants";
-import CreateStaff from "src/sections/staff/create-staff";
+import CreateStaff from "src/sections/admin/staff/create-staff";
 import * as StaffService from "../../services/staff-service";
 import { API } from "src/constant/constants";
 

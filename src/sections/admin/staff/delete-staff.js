@@ -1,30 +1,39 @@
 import React from "react";
 import { Button, Modal, Box, Typography } from "@mui/material";
 import { API, STATUS_CODE, TOAST_KIND } from "src/constant/constants";
-import * as HotelService from "../../services/hotel-service";
+import * as StaffService from "../../../services/staff-service";
 import { useDispatch } from "react-redux";
 import { showCommonAlert } from "src/utils/toast-message";
 import PropTypes from "prop-types";
 
-const DeleteHotel = ({ isModalDeleteHotel, setIsModalDeleteHotel, currentId, onRefresh }) => {
+const DeleteStaff = ({
+  isModalDeleteStaff,
+  setIsModalDeleteStaff,
+  hotelId,
+  currentId,
+  onRefresh,
+}) => {
   const dispatch = useDispatch();
 
   const handleCloseModal = () => {
-    setIsModalDeleteHotel(false);
+    setIsModalDeleteStaff(false);
   };
 
   const handleDelete = async () => {
     try {
-      const response = await HotelService[API.HOTEL.DELETE_HOTEL]({
-        hotel_id: String(currentId).trim(),
+      const response = await StaffService[API.STAFF.DELETE_STAFF]({
+        hotel_id: String(hotelId).trim(),
+        staff_id: String(currentId).trim(),
       });
 
       if (response?.status === STATUS_CODE.OK) {
         onRefresh();
         dispatch(showCommonAlert(TOAST_KIND.SUCCESS, response.message));
+      } else {
+        dispatch(showCommonAlert(TOAST_KIND.ERROR, response.data.message));
       }
     } catch (error) {
-      // dispatch(showCommonAlert(TOAST_KIND.ERROR, TOAST_MESSAGE.SERVER_ERROR));
+      dispatch(showCommonAlert(TOAST_KIND.ERROR, TOAST_MESSAGE.SERVER_ERROR));
     } finally {
       handleCloseModal();
     }
@@ -32,7 +41,7 @@ const DeleteHotel = ({ isModalDeleteHotel, setIsModalDeleteHotel, currentId, onR
 
   return (
     <Modal
-      open={isModalDeleteHotel}
+      open={isModalDeleteStaff}
       onClose={handleCloseModal}
       aria-labelledby="modal-title"
       aria-describedby="modal-description"
@@ -51,10 +60,10 @@ const DeleteHotel = ({ isModalDeleteHotel, setIsModalDeleteHotel, currentId, onR
         }}
       >
         <Typography id="modal-title" variant="h5" component="div">
-          Xóa khách sạn
+          Xóa tài khoản
         </Typography>
         <Typography id="modal-description" sx={{ mt: 2 }}>
-          Bạn có chắc bạn muốn xóa khách sạn này?
+          Bạn có chắc bạn muốn xóa tài khoản này?
         </Typography>
         <Box sx={{ mt: 3, display: "flex", justifyContent: "flex-end" }}>
           <Button onClick={handleDelete} sx={{ mr: 2 }} variant="contained" color="error">
@@ -69,11 +78,12 @@ const DeleteHotel = ({ isModalDeleteHotel, setIsModalDeleteHotel, currentId, onR
   );
 };
 
-export default DeleteHotel;
+export default DeleteStaff;
 
-DeleteHotel.propTypes = {
-  isModalDeleteHotel: PropTypes.bool.isRequired,
-  setIsModalDeleteHotel: PropTypes.func.isRequired,
+DeleteStaff.propTypes = {
+  isModalDeleteStaff: PropTypes.bool.isRequired,
+  setIsModalDeleteStaff: PropTypes.func.isRequired,
+  hotelId: PropTypes.number.isRequired,
   currentId: PropTypes.number.isRequired,
   onRefresh: PropTypes.func.isRequired,
 };

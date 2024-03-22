@@ -16,7 +16,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { API, STATUS_CODE, TOAST_KIND } from "src/constant/constants";
-import * as HotelService from "../../services/hotel-service";
+import * as HotelService from "../../../services/hotel-service";
 import LoadingData from "src/layouts/loading/loading-data";
 import { showCommonAlert } from "src/utils/toast-message";
 import { useDispatch } from "react-redux";
@@ -173,9 +173,10 @@ const EditHotel = (props) => {
               >
                 <Avatar
                   src={
-                    hotelData?.images?.length > 0
+                    hotelData?.images?.find((image) => image.is_primary)?.url ||
+                    (hotelData?.images?.length > 0
                       ? hotelData?.images[0]?.url
-                      : "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/2048px-No_image_available.svg.png"
+                      : "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/2048px-No_image_available.svg.png")
                   }
                   sx={{
                     bgcolor: neutral[300],

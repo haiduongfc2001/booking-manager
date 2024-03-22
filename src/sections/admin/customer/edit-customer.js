@@ -16,13 +16,12 @@ import {
   InputLabel,
   FormHelperText,
   Avatar,
-  SeverityPill,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { API, STATUS_CODE, TOAST_KIND } from "src/constant/constants";
-import * as CustomerService from "../../services/customer-service";
+import * as CustomerService from "../../../services/customer-service";
 import LoadingData from "src/layouts/loading/loading-data";
 import { showCommonAlert } from "src/utils/toast-message";
 import { useDispatch } from "react-redux";
@@ -213,6 +212,7 @@ const EditCustomer = (props) => {
                   <Stack direction="row" spacing={3}>
                     <TextField
                       fullWidth
+                      autoFocus
                       required
                       label="Email"
                       name="email"

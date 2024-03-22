@@ -46,6 +46,15 @@ export const items = [
     ),
   },
   {
+    title: "Khách sạn của tôi",
+    path: "/manager/hotel",
+    icon: (
+      <SvgIcon fontSize="small">
+        <HotelIcon />
+      </SvgIcon>
+    ),
+  },
+  {
     title: "Tài khoản",
     path: "/account",
     icon: (

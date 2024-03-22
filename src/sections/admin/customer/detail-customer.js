@@ -13,10 +13,10 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { SeverityPill } from "src/components/severity-pill";
-import { StatusMapRole } from "src/components/status-map";
-import { API, STATUS_CODE, TOAST_KIND, TOAST_MESSAGE } from "src/constant/constants";
+import { StatusMap } from "src/components/status-map";
+import { API, STATUS_CODE } from "src/constant/constants";
 import LoadingData from "src/layouts/loading/loading-data";
-import * as StaffService from "../../services/staff-service";
+import * as CustomerService from "../../../services/customer-service";
 import { getInitials } from "src/utils/get-initials";
 import { neutral } from "src/theme/colors";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -24,61 +24,56 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
 import { getGenderLabel } from "src/utils/get-gender-label";
-import { useDispatch } from "react-redux";
-import { showCommonAlert } from "src/utils/toast-message";
 
-const DetailStaff = (props) => {
-  const { isModalDetailStaff, setIsModalDetailStaff, hotelId, currentId } = props;
+const DetailCustomer = (props) => {
+  const { isModalDetailCustomer, setIsModalDetailCustomer, currentId } = props;
 
-  const [staffData, setStaffData] = useState([]);
+  const [customerData, setCustomerData] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const dispatch = useDispatch();
-
-  const getStaff = async () => {
+  const getCustomer = async () => {
     try {
       setLoading(true);
 
-      const response = await StaffService[API.STAFF.GET_STAFF_BY_ID]({
-        hotel_id: String(hotelId).trim(),
-        staff_id: String(currentId).trim(),
+      const response = await CustomerService[API.CUSTOMER.GET_CUSTOMER_BY_ID]({
+        customerId: String(currentId).trim(),
       });
 
       if (response?.status !== STATUS_CODE.UNAUTHORIZED) {
-        setStaffData(response.data);
+        setCustomerData(response.data);
       } else {
-        dispatch(showCommonAlert(TOAST_KIND.ERROR, response.data.message));
+        // dispatch(showCommonAlert(TOAST_KIND.ERROR, response.data.error));
       }
     } catch (error) {
-      dispatch(showCommonAlert(TOAST_KIND.ERROR, TOAST_MESSAGE.SERVER_ERROR));
+      // dispatch(showCommonAlert(TOAST_KIND.ERROR, TOAST_MESSAGE.SERVER_ERROR));
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    if (isModalDetailStaff && hotelId && currentId) {
-      getStaff();
+    if (isModalDetailCustomer && currentId) {
+      getCustomer();
     }
-  }, [isModalDetailStaff, hotelId, currentId]);
+  }, [isModalDetailCustomer, currentId]);
 
   const handleCloseModal = () => {
-    setIsModalDetailStaff(false);
+    setIsModalDetailCustomer(false);
   };
 
   const descriptionElementRef = useRef(null);
   useEffect(() => {
-    if (isModalDetailStaff) {
+    if (isModalDetailCustomer) {
       const { current: descriptionElement } = descriptionElementRef;
       if (descriptionElement !== null) {
         descriptionElement.focus();
       }
     }
-  }, [isModalDetailStaff]);
+  }, [isModalDetailCustomer]);
 
   return (
     <Dialog
-      open={isModalDetailStaff}
+      open={isModalDetailCustomer}
       onClose={handleCloseModal}
       aria-labelledby="scroll-dialog-title"
       aria-describedby="scroll-dialog-description"
@@ -116,7 +111,10 @@ const DetailStaff = (props) => {
                 alignItems={{ xs: "center", sm: "flex-start" }}
               >
                 <Avatar
-                  src={staffData?.avatar}
+                  src={
+                    customerData?.avatar ||
+                    "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/2048px-No_image_available.svg.png"
+                  }
                   sx={{
                     bgcolor: neutral[300],
                     width: "calc(100% / 3)",
@@ -124,25 +122,34 @@ const DetailStaff = (props) => {
                     boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.2)",
                   }}
                 >
-                  {getInitials(staffData?.full_name)}
+                  {getInitials(customerData?.full_name)}
                 </Avatar>
 
                 <Stack direction="column" spacing={3} sx={{ width: "100%" }}>
                   <Stack direction="row" spacing={3}>
                     <TextField
-                      autoFocus
                       fullWidth
+                      autoFocus
                       label="Email"
                       name="email"
                       InputProps={{
                         readOnly: true,
                       }}
                       sx={{ flex: 1 }}
-                      value={staffData?.email}
+                      value={customerData?.email}
                     />
                   </Stack>
 
                   <Stack direction="row" spacing={3}>
+                    <TextField
+                      fullWidth
+                      label="Tên người dùng"
+                      name="username"
+                      InputProps={{
+                        readOnly: true,
+                      }}
+                      value={customerData?.username}
+                    />
                     <TextField
                       fullWidth
                       label="Họ và tên"
@@ -150,7 +157,7 @@ const DetailStaff = (props) => {
                       InputProps={{
                         readOnly: true,
                       }}
-                      value={staffData?.full_name}
+                      value={customerData?.full_name}
                     />
                   </Stack>
 
@@ -162,13 +169,13 @@ const DetailStaff = (props) => {
                       InputProps={{
                         readOnly: true,
                       }}
-                      value={getGenderLabel(staffData?.gender)}
+                      value={getGenderLabel(customerData?.gender)}
                     />
                     <TextField
                       fullWidth
                       label="Số điện thoại"
                       name="phone"
-                      value={staffData?.phone}
+                      value={customerData?.phone}
                       InputProps={{
                         readOnly: true,
                       }}
@@ -176,30 +183,29 @@ const DetailStaff = (props) => {
                   </Stack>
 
                   <Stack direction="row" spacing={3}>
+                    <TextField
+                      fullWidth
+                      label="Địa chỉ"
+                      name="address"
+                      InputProps={{
+                        readOnly: true,
+                      }}
+                      value={customerData?.address}
+                    />
+
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                       <DatePicker
                         readOnly
                         label="Ngày sinh"
                         name="dob"
-                        sx={{ width: "50%" }}
-                        value={dayjs(staffData?.dob)}
-                      />
-                    </LocalizationProvider>
-
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                      <DatePicker
-                        readOnly
-                        label="Ngày tạo"
-                        name="dob"
-                        sx={{ width: "50%" }}
-                        value={dayjs(staffData?.created_at)}
+                        value={dayjs(customerData?.dob)}
                       />
                     </LocalizationProvider>
                   </Stack>
 
                   <Stack direction="column" spacing={3} sx={{ width: "100%" }}>
-                    <SeverityPill color={StatusMapRole[staffData?.role]}>
-                      {staffData?.role === "manager" ? "Quản lý" : "Lễ tân"}
+                    <SeverityPill color={StatusMap[customerData?.is_verified]}>
+                      {customerData?.is_verified ? "Đã xác thực" : "Chưa xác thực"}
                     </SeverityPill>
                   </Stack>
                 </Stack>
@@ -218,11 +224,10 @@ const DetailStaff = (props) => {
   );
 };
 
-export default DetailStaff;
+export default DetailCustomer;
 
-DetailStaff.propTypes = {
-  isModalDetailStaff: PropTypes.bool.isRequired,
-  setIsModalDetailStaff: PropTypes.func.isRequired,
-  hotelId: PropTypes.number.isRequired,
+DetailCustomer.propTypes = {
+  isModalDetailCustomer: PropTypes.bool.isRequired,
+  setIsModalDetailCustomer: PropTypes.func.isRequired,
   currentId: PropTypes.number.isRequired,
 };

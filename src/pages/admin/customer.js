@@ -6,10 +6,10 @@ import PlusIcon from "@heroicons/react/24/solid/PlusIcon";
 import ArrowPathIcon from "@heroicons/react/24/solid/ArrowPathIcon";
 import { Box, Button, Container, Stack, SvgIcon, Typography, Card, Grid } from "@mui/material";
 import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
-import { CustomerTable } from "src/sections/customer/customer-table";
-import { SearchCustomer } from "src/sections/customer/search-customer";
+import { CustomerTable } from "src/sections/admin/customer/customer-table";
+import { SearchCustomer } from "src/sections/admin/customer/search-customer";
 import { STATUS_CODE } from "src/constant/constants";
-import CreateCustomer from "src/sections/customer/create-customer";
+import CreateCustomer from "src/sections/admin/customer/create-customer";
 import * as CustomerService from "src/services/customer-service";
 import { API } from "src/constant/constants";
 
