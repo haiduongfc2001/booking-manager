@@ -18,18 +18,24 @@ export const CustomerTable = (props) => {
   const [isModalEditCustomer, setIsModalEditCustomer] = useState(false);
   const [isModalDetailCustomer, setIsModalDetailCustomer] = useState(false);
 
-  const handleOpenModalDetail = (id) => {
-    setCurrentId(id);
+  const handleRowClick = (params) => {
+    const clickedItem = items.find((item) => item.id === params.id);
+    if (clickedItem) {
+      setCurrentId(clickedItem?.id);
+    } else {
+      console.log("Item not found!");
+    }
+  };
+
+  const handleOpenModalDetail = () => {
     setIsModalDetailCustomer(true);
   };
 
-  const handleOpenModalDelete = (id) => {
-    setCurrentId(id);
+  const handleOpenModalDelete = () => {
     setIsModalDeleteCustomer(true);
   };
 
-  const handleOpenModalEdit = (id) => {
-    setCurrentId(id);
+  const handleOpenModalEdit = () => {
     setIsModalEditCustomer(true);
   };
 
@@ -48,6 +54,7 @@ export const CustomerTable = (props) => {
                   handleOpenModalDelete,
                   handleOpenModalEdit,
                 })}
+                onRowClick={handleRowClick}
               />
             ) : (
               <Box

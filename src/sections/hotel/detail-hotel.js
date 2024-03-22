@@ -36,7 +36,7 @@ const DetailHotel = (props) => {
       setLoading(true);
 
       const response = await HotelService[API.HOTEL.GET_HOTEL_BY_ID]({
-        hotelId: String(currentId).trim(),
+        hotel_id: String(currentId).trim(),
       });
 
       if (response?.status !== STATUS_CODE.UNAUTHORIZED) {
@@ -112,9 +112,10 @@ const DetailHotel = (props) => {
               >
                 <Avatar
                   src={
-                    hotelData?.images?.length > 0
+                    hotelData?.images?.find((image) => image.is_primary)?.url ||
+                    (hotelData?.images?.length > 0
                       ? hotelData?.images[0]?.url
-                      : "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/2048px-No_image_available.svg.png"
+                      : "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/2048px-No_image_available.svg.png")
                   }
                   sx={{
                     bgcolor: neutral[300],

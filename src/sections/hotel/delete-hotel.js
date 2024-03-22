@@ -4,6 +4,7 @@ import { API, STATUS_CODE, TOAST_KIND } from "src/constant/constants";
 import * as HotelService from "../../services/hotel-service";
 import { useDispatch } from "react-redux";
 import { showCommonAlert } from "src/utils/toast-message";
+import PropTypes from "prop-types";
 
 const DeleteHotel = ({ isModalDeleteHotel, setIsModalDeleteHotel, currentId, onRefresh }) => {
   const dispatch = useDispatch();
@@ -15,7 +16,7 @@ const DeleteHotel = ({ isModalDeleteHotel, setIsModalDeleteHotel, currentId, onR
   const handleDelete = async () => {
     try {
       const response = await HotelService[API.HOTEL.DELETE_HOTEL]({
-        hotelId: String(currentId).trim(),
+        hotel_id: String(currentId).trim(),
       });
 
       if (response?.status === STATUS_CODE.OK) {
@@ -69,3 +70,10 @@ const DeleteHotel = ({ isModalDeleteHotel, setIsModalDeleteHotel, currentId, onR
 };
 
 export default DeleteHotel;
+
+DeleteHotel.propTypes = {
+  isModalDeleteHotel: PropTypes.bool.isRequired,
+  setIsModalDeleteHotel: PropTypes.func.isRequired,
+  currentId: PropTypes.number.isRequired,
+  onRefresh: PropTypes.func.isRequired,
+};

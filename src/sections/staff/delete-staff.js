@@ -4,8 +4,15 @@ import { API, STATUS_CODE, TOAST_KIND } from "src/constant/constants";
 import * as StaffService from "../../services/staff-service";
 import { useDispatch } from "react-redux";
 import { showCommonAlert } from "src/utils/toast-message";
+import PropTypes from "prop-types";
 
-const DeleteStaff = ({ isModalDeleteStaff, setIsModalDeleteStaff, currentId, onRefresh }) => {
+const DeleteStaff = ({
+  isModalDeleteStaff,
+  setIsModalDeleteStaff,
+  hotelId,
+  currentId,
+  onRefresh,
+}) => {
   const dispatch = useDispatch();
 
   const handleCloseModal = () => {
@@ -15,7 +22,8 @@ const DeleteStaff = ({ isModalDeleteStaff, setIsModalDeleteStaff, currentId, onR
   const handleDelete = async () => {
     try {
       const response = await StaffService[API.STAFF.DELETE_STAFF]({
-        staffId: String(currentId).trim(),
+        hotel_id: String(hotelId).trim(),
+        staff_id: String(currentId).trim(),
       });
 
       if (response?.status === STATUS_CODE.OK) {
@@ -71,3 +79,11 @@ const DeleteStaff = ({ isModalDeleteStaff, setIsModalDeleteStaff, currentId, onR
 };
 
 export default DeleteStaff;
+
+DeleteStaff.propTypes = {
+  isModalDeleteStaff: PropTypes.bool.isRequired,
+  setIsModalDeleteStaff: PropTypes.func.isRequired,
+  hotelId: PropTypes.number.isRequired,
+  currentId: PropTypes.number.isRequired,
+  onRefresh: PropTypes.func.isRequired,
+};

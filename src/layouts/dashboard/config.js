@@ -20,7 +20,7 @@ export const items = [
   },
   {
     title: "Khách hàng",
-    path: "/customer",
+    path: "/admin/customer",
     icon: (
       <SvgIcon fontSize="small">
         <UsersIcon />
@@ -29,7 +29,7 @@ export const items = [
   },
   {
     title: "Nhân viên khách sạn",
-    path: "/staff",
+    path: "/admin/staff",
     icon: (
       <SvgIcon fontSize="small">
         <UserIcon />
@@ -38,7 +38,7 @@ export const items = [
   },
   {
     title: "Khách sạn",
-    path: "/hotel",
+    path: "/admin/hotel",
     icon: (
       <SvgIcon fontSize="small">
         <HotelIcon />

@@ -11,8 +11,8 @@ import { createEmotionCache } from "src/utils/create-emotion-cache";
 import "simplebar-react/dist/simplebar.min.css";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
-import { persistor, store } from "src/redux/store/store";
 import AlertModal from "src/layouts/alert/alert-modal";
+import { persistor, store } from "src/redux/store/store";
 import Loading from "src/layouts/loading/loading";
 
 const clientSideEmotionCache = createEmotionCache();

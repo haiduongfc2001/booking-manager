@@ -111,7 +111,10 @@ const DetailCustomer = (props) => {
                 alignItems={{ xs: "center", sm: "flex-start" }}
               >
                 <Avatar
-                  src={customerData?.avatar}
+                  src={
+                    customerData?.avatar ||
+                    "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/2048px-No_image_available.svg.png"
+                  }
                   sx={{
                     bgcolor: neutral[300],
                     width: "calc(100% / 3)",

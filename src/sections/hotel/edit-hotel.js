@@ -43,7 +43,7 @@ const EditHotel = (props) => {
       setLoading(true);
 
       const response = await HotelService[API.HOTEL.GET_HOTEL_BY_ID]({
-        hotelId: String(currentId).trim(),
+        hotel_id: String(currentId).trim(),
       });
 
       if (response?.status === STATUS_CODE.OK) {
@@ -96,7 +96,7 @@ const EditHotel = (props) => {
     onSubmit: async (values, helpers) => {
       try {
         const response = await HotelService[API.HOTEL.EDIT_HOTEL]({
-          hotelId: String(currentId).trim(),
+          hotel_id: String(currentId).trim(),
           name: values.name.trim(),
           contact: values.contact.trim(),
           description: values.description.trim(),

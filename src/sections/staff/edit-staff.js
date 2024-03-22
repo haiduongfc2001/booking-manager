@@ -37,7 +37,7 @@ import dayjs from "dayjs";
 import { closeLoadingApi, openLoadingApi } from "src/redux/create-actions/loading-action";
 
 const EditStaff = (props) => {
-  const { isModalEditStaff, setIsModalEditStaff, currentId, onRefresh } = props;
+  const { isModalEditStaff, setIsModalEditStaff, hotelId, currentId, onRefresh } = props;
 
   const [staffData, setStaffData] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -77,7 +77,8 @@ const EditStaff = (props) => {
       setLoading(true);
 
       const response = await StaffService[API.STAFF.GET_STAFF_BY_ID]({
-        staffId: String(currentId).trim(),
+        hotel_id: String(hotelId).trim(),
+        staff_id: String(currentId).trim(),
       });
 
       if (response?.status === STATUS_CODE.OK) {
@@ -93,10 +94,10 @@ const EditStaff = (props) => {
   };
 
   useEffect(() => {
-    if (isModalEditStaff && currentId) {
+    if (isModalEditStaff && hotelId && currentId) {
       getStaff();
     }
-  }, [isModalEditStaff, currentId]);
+  }, [isModalEditStaff, hotelId, currentId]);
 
   const handleCloseModalEdit = () => {
     setIsModalEditStaff(false);
@@ -154,7 +155,7 @@ const EditStaff = (props) => {
         dispatch(openLoadingApi());
         const dobValue = values.dob ? dayjs(values.dob).format("YYYY-MM-DD") : null;
         const response = await StaffService[API.STAFF.EDIT_STAFF]({
-          staffId: String(currentId).trim(),
+          staff_id: String(currentId).trim(),
           email: values.email.trim(),
           full_name: values.full_name.trim(),
           gender: values.gender.trim(),
@@ -199,8 +200,8 @@ const EditStaff = (props) => {
     }
   }, [isModalEditStaff]);
 
-  const getHotelNameById = (hotelId) => {
-    const hotel = hotelList.find((hotel) => hotel.id === hotelId);
+  const getHotelNameById = (hotel_id) => {
+    const hotel = hotelList.find((hotel) => hotel.id === hotel_id);
     return hotel ? hotel.name : "";
   };
 
@@ -430,5 +431,6 @@ export default EditStaff;
 EditStaff.propTypes = {
   isModalEditStaff: PropTypes.bool.isRequired,
   setIsModalEditStaff: PropTypes.func.isRequired,
+  hotelId: PropTypes.number.isRequired,
   currentId: PropTypes.number.isRequired,
 };

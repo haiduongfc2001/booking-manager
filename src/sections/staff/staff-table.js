@@ -14,22 +14,30 @@ export const StaffTable = (props) => {
   const { items = [], loading = false, onRefresh = () => {} } = props;
 
   const [currentId, setCurrentId] = useState("");
+  const [hotelId, setHotelId] = useState("");
   const [isModalDeleteStaff, setIsModalDeleteStaff] = useState(false);
   const [isModalEditStaff, setIsModalEditStaff] = useState(false);
   const [isModalDetailStaff, setIsModalDetailStaff] = useState(false);
 
-  const handleOpenModalDetail = (id) => {
-    setCurrentId(id);
+  const handleRowClick = (params) => {
+    const clickedItem = items.find((item) => item.id === params.id);
+    if (clickedItem) {
+      setHotelId(clickedItem.hotel?.id);
+      setCurrentId(clickedItem?.id);
+    } else {
+      console.log("Item not found!");
+    }
+  };
+
+  const handleOpenModalDetail = () => {
     setIsModalDetailStaff(true);
   };
 
-  const handleOpenModalDelete = (id) => {
-    setCurrentId(id);
+  const handleOpenModalDelete = () => {
     setIsModalDeleteStaff(true);
   };
 
-  const handleOpenModalEdit = (id) => {
-    setCurrentId(id);
+  const handleOpenModalEdit = () => {
     setIsModalEditStaff(true);
   };
 
@@ -48,6 +56,7 @@ export const StaffTable = (props) => {
                   handleOpenModalDelete,
                   handleOpenModalEdit,
                 })}
+                onRowClick={handleRowClick}
               />
             ) : (
               <Box
@@ -72,18 +81,21 @@ export const StaffTable = (props) => {
       <DeleteStaff
         isModalDeleteStaff={isModalDeleteStaff}
         setIsModalDeleteStaff={setIsModalDeleteStaff}
+        hotelId={parseInt(hotelId)}
         currentId={parseInt(currentId)}
         onRefresh={onRefresh}
       />
       <EditStaff
         isModalEditStaff={isModalEditStaff}
         setIsModalEditStaff={setIsModalEditStaff}
+        hotelId={parseInt(hotelId)}
         currentId={parseInt(currentId)}
         onRefresh={onRefresh}
       />
       <DetailStaff
         isModalDetailStaff={isModalDetailStaff}
         setIsModalDetailStaff={setIsModalDetailStaff}
+        hotelId={parseInt(hotelId)}
         currentId={parseInt(currentId)}
       />
     </>

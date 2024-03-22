@@ -4,6 +4,7 @@ import { API, STATUS_CODE, TOAST_KIND } from "src/constant/constants";
 import * as CustomerService from "../../services/customer-service";
 import { useDispatch } from "react-redux";
 import { showCommonAlert } from "src/utils/toast-message";
+import PropTypes from "prop-types";
 
 const DeleteCustomer = ({
   isModalDeleteCustomer,
@@ -74,3 +75,10 @@ const DeleteCustomer = ({
 };
 
 export default DeleteCustomer;
+
+DeleteCustomer.propTypes = {
+  isModalDeleteCustomer: PropTypes.bool.isRequired,
+  setIsModalDeleteCustomer: PropTypes.func.isRequired,
+  currentId: PropTypes.number.isRequired,
+  onRefresh: PropTypes.func.isRequired,
+};

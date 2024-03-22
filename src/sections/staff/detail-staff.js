@@ -14,7 +14,7 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import { SeverityPill } from "src/components/severity-pill";
 import { StatusMapRole } from "src/components/status-map";
-import { API, STATUS_CODE } from "src/constant/constants";
+import { API, STATUS_CODE, TOAST_KIND, TOAST_MESSAGE } from "src/constant/constants";
 import LoadingData from "src/layouts/loading/loading-data";
 import * as StaffService from "../../services/staff-service";
 import { getInitials } from "src/utils/get-initials";
@@ -24,19 +24,24 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
 import { getGenderLabel } from "src/utils/get-gender-label";
+import { useDispatch } from "react-redux";
+import { showCommonAlert } from "src/utils/toast-message";
 
 const DetailStaff = (props) => {
-  const { isModalDetailStaff, setIsModalDetailStaff, currentId } = props;
+  const { isModalDetailStaff, setIsModalDetailStaff, hotelId, currentId } = props;
 
   const [staffData, setStaffData] = useState([]);
   const [loading, setLoading] = useState(false);
+
+  const dispatch = useDispatch();
 
   const getStaff = async () => {
     try {
       setLoading(true);
 
       const response = await StaffService[API.STAFF.GET_STAFF_BY_ID]({
-        staffId: String(currentId).trim(),
+        hotel_id: String(hotelId).trim(),
+        staff_id: String(currentId).trim(),
       });
 
       if (response?.status !== STATUS_CODE.UNAUTHORIZED) {
@@ -52,10 +57,10 @@ const DetailStaff = (props) => {
   };
 
   useEffect(() => {
-    if (isModalDetailStaff && currentId) {
+    if (isModalDetailStaff && hotelId && currentId) {
       getStaff();
     }
-  }, [isModalDetailStaff, currentId]);
+  }, [isModalDetailStaff, hotelId, currentId]);
 
   const handleCloseModal = () => {
     setIsModalDetailStaff(false);
@@ -218,5 +223,6 @@ export default DetailStaff;
 DetailStaff.propTypes = {
   isModalDetailStaff: PropTypes.bool.isRequired,
   setIsModalDetailStaff: PropTypes.func.isRequired,
+  hotelId: PropTypes.number.isRequired,
   currentId: PropTypes.number.isRequired,
 };

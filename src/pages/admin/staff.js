@@ -10,7 +10,7 @@ import { StaffTable } from "src/sections/staff/staff-table";
 import { SearchStaff } from "src/sections/staff/search-staff";
 import { STATUS_CODE } from "src/constant/constants";
 import CreateStaff from "src/sections/staff/create-staff";
-import * as StaffService from "../services/staff-service";
+import * as StaffService from "../../services/staff-service";
 import { API } from "src/constant/constants";
 
 const Page = () => {

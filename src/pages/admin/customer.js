@@ -10,7 +10,7 @@ import { CustomerTable } from "src/sections/customer/customer-table";
 import { SearchCustomer } from "src/sections/customer/search-customer";
 import { STATUS_CODE } from "src/constant/constants";
 import CreateCustomer from "src/sections/customer/create-customer";
-import * as CustomerService from "../services/customer-service";
+import * as CustomerService from "src/services/customer-service";
 import { API } from "src/constant/constants";
 
 const Page = () => {

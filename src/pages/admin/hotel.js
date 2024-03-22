@@ -10,7 +10,7 @@ import { HotelTable } from "src/sections/hotel/hotel-table";
 import { SearchHotel } from "src/sections/hotel/search-hotel";
 import { STATUS_CODE } from "src/constant/constants";
 import CreateHotel from "src/sections/hotel/create-hotel";
-import * as HotelService from "../services/hotel-service";
+import * as HotelService from "../../services/hotel-service";
 import { API } from "src/constant/constants";
 
 const Page = () => {

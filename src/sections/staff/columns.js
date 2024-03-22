@@ -25,7 +25,7 @@ export const columns = ({ handleOpenModalDetail, handleOpenModalDelete, handleOp
           <Tooltip title="Xem chi tiết">
             <Typography
               variant="subtitle1"
-              onClick={() => handleOpenModalDetail(params.row.id)}
+              onClick={handleOpenModalDetail}
               sx={{ cursor: "pointer" }}
             >
               {params.row.full_name}
@@ -84,7 +84,7 @@ export const columns = ({ handleOpenModalDetail, handleOpenModalDelete, handleOp
             sx={{
               "& .MuiButton-startIcon": { m: 0 },
             }}
-            onClick={() => handleOpenModalDelete(params.row.id)}
+            onClick={handleOpenModalDelete}
           />
           <Button
             startIcon={
@@ -97,7 +97,7 @@ export const columns = ({ handleOpenModalDetail, handleOpenModalDelete, handleOp
             sx={{
               "& .MuiButton-startIcon": { m: 0 },
             }}
-            onClick={() => handleOpenModalEdit(params.row.id)}
+            onClick={handleOpenModalEdit}
           />
         </Stack>
       ),

@@ -2,7 +2,13 @@ import React from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import { DATAGRID_OPTIONS } from "src/constant/constants";
 
-const CustomDataGrid = ({ rows = [], columns = [] }) => {
+const CustomDataGrid = ({ rows = [], columns = [], onRowClick }) => {
+  const handleRowClick = (params) => {
+    if (onRowClick) {
+      onRowClick(params.row);
+    }
+  };
+
   return (
     <DataGrid
       rows={rows}
@@ -18,6 +24,7 @@ const CustomDataGrid = ({ rows = [], columns = [] }) => {
           },
         },
       }}
+      onRowClick={handleRowClick}
       pageSizeOptions={DATAGRID_OPTIONS.PAGE_SIZE_OPTIONS}
       rowHeight={DATAGRID_OPTIONS.ROW_HEIGHT}
       sx={{

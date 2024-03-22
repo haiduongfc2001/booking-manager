@@ -3,11 +3,11 @@ import * as CommonService from "./common-service";
 const prePath = "/customer";
 
 export const GetAllCustomers = async () => {
-  return CommonService.getRequest(`${prePath}`);
+  return CommonService.getRequest(`${prePath}/getAllCustomers`);
 };
 
 export const GetCustomerById = async ({ customerId }) => {
-  return CommonService.getRequest(`${prePath}/${customerId}`);
+  return CommonService.getRequest(`${prePath}/${customerId}/getCustomerById`);
 };
 
 export const CreateCustomer = async ({
@@ -20,7 +20,7 @@ export const CreateCustomer = async ({
   address,
   dob,
 }) => {
-  return CommonService.postRequest(`${prePath}`, {
+  return CommonService.postRequest(`${prePath}/createCustomer`, {
     email,
     password: "Uua9D5ba",
     username,
@@ -34,7 +34,7 @@ export const CreateCustomer = async ({
 };
 
 export const DeleteCustomer = async ({ customerId }) => {
-  return CommonService.deleteRequest(`${prePath}/${customerId}`, {});
+  return CommonService.deleteRequest(`${prePath}/${customerId}/deleteCustomer`, {});
 };
 
 export const EditCustomer = async ({
@@ -48,7 +48,7 @@ export const EditCustomer = async ({
   address,
   dob,
 }) => {
-  return CommonService.patchRequest(`${prePath}/${customerId}`, {
+  return CommonService.patchRequest(`${prePath}/${customerId}/updateCustomer`, {
     email,
     password: "Uua9D5ba",
     username,

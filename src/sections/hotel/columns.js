@@ -19,13 +19,18 @@ export const columns = ({ handleOpenModalDetail, handleOpenModalDelete, handleOp
       align: "left",
       renderCell: (params) => (
         <Stack display="flex" alignItems="center" direction="row" spacing={2}>
-          <Avatar src={params.row.images.length > 0 ? params.row.images[0].url : ""}>
+          <Avatar
+            src={
+              params.row?.images?.find((image) => image.is_primary)?.url ||
+              (params.row?.images?.length > 0 ? params.row?.images[0]?.url : "")
+            }
+          >
             {getInitials(params.row.name)}
           </Avatar>
           <Tooltip title="Xem chi tiết">
             <Typography
               variant="subtitle1"
-              onClick={() => handleOpenModalDetail(params.row.id)}
+              onClick={handleOpenModalDetail}
               sx={{ cursor: "pointer" }}
             >
               {params.row.name}
@@ -79,7 +84,7 @@ export const columns = ({ handleOpenModalDetail, handleOpenModalDelete, handleOp
             sx={{
               "& .MuiButton-startIcon": { m: 0 },
             }}
-            onClick={() => handleOpenModalDelete(params.row.id)}
+            onClick={handleOpenModalDelete}
           />
           <Button
             startIcon={
@@ -92,7 +97,7 @@ export const columns = ({ handleOpenModalDetail, handleOpenModalDelete, handleOp
             sx={{
               "& .MuiButton-startIcon": { m: 0 },
             }}
-            onClick={() => handleOpenModalEdit(params.row.id)}
+            onClick={handleOpenModalEdit}
           />
         </Stack>
       ),

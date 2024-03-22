@@ -19,18 +19,24 @@ export const HotelTable = (props) => {
   const [isModalEditHotel, setIsModalEditHotel] = useState(false);
   const [isModalDetailHotel, setIsModalDetailHotel] = useState(false);
 
-  const handleOpenModalDelete = (id) => {
-    setCurrentId(id);
+  const handleRowClick = (params) => {
+    const clickedItem = items.find((item) => item.id === params.id);
+    if (clickedItem) {
+      setCurrentId(clickedItem?.id);
+    } else {
+      console.log("Item not found!");
+    }
+  };
+
+  const handleOpenModalDelete = () => {
     setIsModalDeleteHotel(true);
   };
 
-  const handleOpenModalEdit = (id) => {
-    setCurrentId(id);
+  const handleOpenModalEdit = () => {
     setIsModalEditHotel(true);
   };
 
-  const handleOpenModalDetail = (id) => {
-    setCurrentId(id);
+  const handleOpenModalDetail = () => {
     setIsModalDetailHotel(true);
   };
 
@@ -49,6 +55,7 @@ export const HotelTable = (props) => {
                   handleOpenModalDelete,
                   handleOpenModalEdit,
                 })}
+                onRowClick={handleRowClick}
               />
             ) : (
               <Box
