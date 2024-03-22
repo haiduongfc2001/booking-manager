@@ -7,6 +7,7 @@ import UsersIcon from "@heroicons/react/24/solid/UsersIcon";
 import XCircleIcon from "@heroicons/react/24/solid/XCircleIcon";
 import { SvgIcon } from "@mui/material";
 import HotelIcon from "@mui/icons-material/Hotel";
+import SensorDoorIcon from "@mui/icons-material/SensorDoor";
 
 export const items = [
   {
@@ -51,6 +52,15 @@ export const items = [
     icon: (
       <SvgIcon fontSize="small">
         <HotelIcon />
+      </SvgIcon>
+    ),
+  },
+  {
+    title: "Phòng",
+    path: "/manager/room",
+    icon: (
+      <SvgIcon fontSize="small">
+        <SensorDoorIcon />
       </SvgIcon>
     ),
   },

@@ -58,6 +58,9 @@ export const API = {
     DELETE_HOTEL: "DeleteHotel",
     EDIT_HOTEL: "EditHotel",
   },
+  ROOM: {
+    GET_ALL_ROOMS_BY_HOTEL_ID: "GetAllRoomsByHotelId",
+  },
   STAFF: {
     GET_ALL_STAFFS: "GetAllStaffs",
     GET_STAFF_BY_ID: "GetStaffById",
