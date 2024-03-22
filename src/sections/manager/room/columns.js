@@ -6,7 +6,7 @@ import { getInitials } from "src/utils/get-initials";
 import { capitalizeFirstLetter } from "src/utils/capitalize-letter";
 import FormatNumber from "src/utils/format-number";
 
-export const columns = ({}) => {
+export const columns = ({ handleOpenModalDetail }) => {
   return [
     {
       field: "id",
@@ -32,7 +32,7 @@ export const columns = ({}) => {
           <Tooltip title="Xem chi tiết">
             <Typography
               variant="subtitle1"
-              // onClick={handleOpenModalDetail}
+              onClick={handleOpenModalDetail}
               sx={{ cursor: "pointer" }}
             >
               {params.row.number}

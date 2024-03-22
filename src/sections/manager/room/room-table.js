@@ -6,12 +6,14 @@ import { Scrollbar } from "src/components/scroll-bar";
 import { columns } from "./columns";
 import CustomDataGrid from "src/components/data-grid/custom-data-grid";
 import { ErrorOutline } from "@mui/icons-material";
+import DetailRoom from "./detail-room";
 
 // The table displays the list of rooms
 export const RoomTable = (props) => {
-  const { items = [], loading = false } = props;
+  const { hotelId, items = [], loading = false, onRefresh = () => {} } = props;
 
   const [currentId, setCurrentId] = useState("");
+  const [isModalDetailRoom, setIsModalDetailRoom] = useState(false);
 
   const handleRowClick = (params) => {
     const clickedItem = items.find((item) => item.id === params.id);
@@ -22,6 +24,10 @@ export const RoomTable = (props) => {
     }
   };
 
+  const handleOpenModalDetail = () => {
+    setIsModalDetailRoom(true);
+  };
+
   return (
     <>
       <Card>
@@ -30,7 +36,11 @@ export const RoomTable = (props) => {
             {loading ? (
               <LoadingData />
             ) : items && items.length > 0 ? (
-              <CustomDataGrid rows={items} columns={columns({})} onRowClick={handleRowClick} />
+              <CustomDataGrid
+                rows={items}
+                columns={columns({ handleOpenModalDetail })}
+                onRowClick={handleRowClick}
+              />
             ) : (
               <Box
                 sx={{
@@ -50,11 +60,20 @@ export const RoomTable = (props) => {
           </Box>
         </Scrollbar>
       </Card>
+
+      <DetailRoom
+        isModalDetailRoom={isModalDetailRoom}
+        setIsModalDetailRoom={setIsModalDetailRoom}
+        hotelId={parseInt(hotelId)}
+        currentId={parseInt(currentId)}
+      />
     </>
   );
 };
 
 RoomTable.propTypes = {
+  hotelId: PropTypes.number.isRequired,
   items: PropTypes.array,
   loading: PropTypes.bool,
+  onRefresh: PropTypes.func,
 };

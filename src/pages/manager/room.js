@@ -128,7 +128,12 @@ const Page = () => {
               </Grid>
             </Grid>
 
-            <RoomTable items={roomsData} loading={loading} onRefresh={fetchData} />
+            <RoomTable
+              hotelId={hotelId}
+              items={roomsData}
+              loading={loading}
+              onRefresh={fetchData}
+            />
           </Stack>
         </Container>
       </Box>
