@@ -193,7 +193,7 @@ const DetailRoom = (props) => {
 
                     <Stack direction="row" spacing={3} sx={{ width: "50%" }}>
                       <SeverityPill color={StatusMapRoom[roomData?.status]}>
-                        {roomData?.role === "available" ? "Có sẵn" : "Không có sẵn"}
+                        {roomData?.status === "available" ? "Có sẵn" : "Không có sẵn"}
                       </SeverityPill>
                     </Stack>
                   </Stack>

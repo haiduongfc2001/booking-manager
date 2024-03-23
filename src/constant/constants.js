@@ -61,6 +61,7 @@ export const API = {
   ROOM: {
     GET_ALL_ROOMS_BY_HOTEL_ID: "GetAllRoomsByHotelId",
     GET_ROOM_BY_ID: "GetRoomById",
+    CREATE_ROOM: "CreateRoom",
   },
   STAFF: {
     GET_ALL_STAFFS: "GetAllStaffs",
@@ -91,4 +92,12 @@ export const DATAGRID_OPTIONS = {
   PAGE_SIZE_OPTIONS: [5, 10, 25],
   ROW_HEIGHT: 60,
   TABLE_HEIGHT: 420,
+};
+
+/**
+ * Image
+ */
+export const IMAGE = {
+  MAX_NUMBER_OF_IMAGES: 5,
+  MAX_FILE_SIZE: 100000,
 };

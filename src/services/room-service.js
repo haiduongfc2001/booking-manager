@@ -9,3 +9,7 @@ export const GetAllRoomsByHotelId = async ({ hotel_id }) => {
 export const GetRoomById = async ({ hotel_id, room_id }) => {
   return CommonService.getRequest(`${prePath}/${hotel_id}/room/${room_id}/getRoomById`);
 };
+
+export const CreateRoom = async ({ hotel_id, formData }) => {
+  return CommonService.postRequest(`${prePath}/${hotel_id}/room/createRoom`, formData);
+};

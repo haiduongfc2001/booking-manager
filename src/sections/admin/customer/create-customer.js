@@ -92,7 +92,7 @@ const CreateCustomer = (props) => {
           onRefresh();
           dispatch(showCommonAlert(TOAST_KIND.SUCCESS, response.message));
         } else {
-          dispatch(showCommonAlert(TOAST_KIND.ERROR, response.message));
+          dispatch(showCommonAlert(TOAST_KIND.ERROR, response.data.message));
         }
       } catch (err) {
         helpers.setStatus({ success: false });

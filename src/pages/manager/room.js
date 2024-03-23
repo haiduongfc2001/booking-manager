@@ -11,11 +11,13 @@ import { SearchRoom } from "src/sections/manager/room/search-room";
 import { STATUS_CODE } from "src/constant/constants";
 import * as RoomService from "src/services/room-service";
 import { API } from "src/constant/constants";
+import CreateRoom from "src/sections/manager/room/create-room";
 
 const Page = () => {
   const [hotelId, setHotelId] = useState(10);
   const [loading, setLoading] = useState(false);
   const [roomsData, setRoomsData] = useState([]);
+  const [isModalCreateRoom, setIsModalCreateRoom] = useState(false);
 
   const fetchData = async () => {
     if (fetchData.current) {
@@ -46,6 +48,10 @@ const Page = () => {
   useEffect(() => {
     fetchData();
   }, []);
+
+  const handleOpenModalCreate = () => {
+    setIsModalCreateRoom(true);
+  };
 
   return (
     <>
@@ -104,7 +110,7 @@ const Page = () => {
                   }
                   variant="contained"
                   color="success"
-                  // onClick={handleOpenModalCreate}
+                  onClick={handleOpenModalCreate}
                 >
                   Thêm
                 </Button>
@@ -137,6 +143,13 @@ const Page = () => {
           </Stack>
         </Container>
       </Box>
+
+      <CreateRoom
+        isModalCreateRoom={isModalCreateRoom}
+        setIsModalCreateRoom={setIsModalCreateRoom}
+        hotelId={hotelId}
+        onRefresh={fetchData}
+      />
     </>
   );
 };

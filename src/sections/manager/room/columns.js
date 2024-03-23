@@ -27,7 +27,9 @@ export const columns = ({ handleOpenModalDetail }) => {
           <Avatar
             src={
               params.row?.images?.find((image) => image.is_primary)?.url ||
-              (params.row?.images?.length > 0 ? params.row?.images[0]?.url : "")
+              (params.row?.images?.length > 0
+                ? params.row?.images[0]?.url
+                : "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/2048px-No_image_available.svg.png")
             }
           >
             {getInitials(params.row.number)}
@@ -61,8 +63,8 @@ export const columns = ({ handleOpenModalDetail }) => {
       renderCell: (params) => (
         <Avatar
           sx={{
-            backgroundColor: (theme) => theme.palette.background.neutral[200],
-            color: (theme) => theme.palette.text.primary,
+            backgroundColor: (theme) => theme.palette.background.indigo["dark"],
+            color: (theme) => theme.palette.background.indigo["lightest"],
           }}
         >
           {params.row?.capacity}

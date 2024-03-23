@@ -65,7 +65,7 @@ const CreateHotel = (props) => {
           onRefresh();
           dispatch(showCommonAlert(TOAST_KIND.SUCCESS, response.message));
         } else {
-          dispatch(showCommonAlert(TOAST_KIND.ERROR, response.message));
+          dispatch(showCommonAlert(TOAST_KIND.ERROR, response.data.message));
         }
       } catch (err) {
         helpers.setStatus({ success: false });
@@ -104,7 +104,7 @@ const CreateHotel = (props) => {
         },
       }}
     >
-      <DialogTitle id="scroll-dialog-title">Tạo tài khoản khách sạn</DialogTitle>
+      <DialogTitle id="scroll-dialog-title">Tạo khách sạn mới</DialogTitle>
       <IconButton
         aria-label="close"
         onClick={handleCloseModalCreate}
@@ -169,9 +169,13 @@ const CreateHotel = (props) => {
               <Stack direction="row" spacing={3}>
                 <TextField
                   fullWidth
+                  required
+                  multiline
                   label="Mô tả"
                   name="description"
                   type="text"
+                  minRows={3}
+                  maxRows={5}
                   onBlur={formik.handleBlur}
                   onChange={formik.handleChange}
                   value={formik.values.description}

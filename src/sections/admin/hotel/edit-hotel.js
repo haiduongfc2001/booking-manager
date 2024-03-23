@@ -107,7 +107,7 @@ const EditHotel = (props) => {
           dispatch(showCommonAlert(TOAST_KIND.SUCCESS, response.message));
           onRefresh();
         } else {
-          dispatch(showCommonAlert(TOAST_KIND.ERROR, response.message));
+          dispatch(showCommonAlert(TOAST_KIND.ERROR, response.data.message));
         }
       } catch (err) {
         helpers.setStatus({ success: false });
