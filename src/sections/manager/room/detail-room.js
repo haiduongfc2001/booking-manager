@@ -188,11 +188,10 @@ const DetailRoom = (props) => {
                       InputProps={{
                         readOnly: true,
                       }}
-                      sx={{ flex: 1 }}
                       value={roomData?.capacity}
                     />
 
-                    <Stack direction="row" spacing={3}>
+                    <Stack direction="row" spacing={3} sx={{ width: "50%" }}>
                       <SeverityPill color={StatusMapRoom[roomData?.status]}>
                         {roomData?.role === "available" ? "Có sẵn" : "Không có sẵn"}
                       </SeverityPill>
@@ -221,6 +220,7 @@ const DetailRoom = (props) => {
                         readOnly
                         label="Ngày tạo"
                         name="created_at"
+                        sx={{ width: "50%" }}
                         value={dayjs(roomData?.created_at)}
                       />
                     </LocalizationProvider>
@@ -230,6 +230,7 @@ const DetailRoom = (props) => {
                         readOnly
                         label="Ngày cập nhật gần nhất"
                         name="updated_at"
+                        sx={{ width: "50%" }}
                         value={dayjs(roomData?.updated_at)}
                       />
                     </LocalizationProvider>

@@ -18,11 +18,11 @@ const Page = () => {
   const [roomsData, setRoomsData] = useState([]);
 
   const fetchData = async () => {
-    // if (fetchData.current) {
-    //   return;
-    // }
+    if (fetchData.current) {
+      return;
+    }
 
-    // fetchData.current = true;
+    fetchData.current = true;
 
     try {
       setLoading(true);

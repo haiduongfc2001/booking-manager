@@ -1,6 +1,6 @@
 import React from "react";
-import { DataGrid } from "@mui/x-data-grid";
 import { DATAGRID_OPTIONS } from "src/constant/constants";
+import { StyledDataGrid } from "./styled-data-grid";
 
 const CustomDataGrid = ({ rows = [], columns = [], onRowClick }) => {
   const handleRowClick = (params) => {
@@ -10,7 +10,7 @@ const CustomDataGrid = ({ rows = [], columns = [], onRowClick }) => {
   };
 
   return (
-    <DataGrid
+    <StyledDataGrid
       rows={rows}
       columns={columns.map((column) => ({
         ...column,
@@ -45,6 +45,7 @@ const CustomDataGrid = ({ rows = [], columns = [], onRowClick }) => {
         },
       }}
       hideFooterSelectedRowCount
+      getRowClassName={(params) => `super-app-theme--status-${params.row.status}`}
       // pagination
       // rowCount={count}
       // onPageChange={onPageChange}
