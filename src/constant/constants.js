@@ -62,6 +62,7 @@ export const API = {
     GET_ALL_ROOMS_BY_HOTEL_ID: "GetAllRoomsByHotelId",
     GET_ROOM_BY_ID: "GetRoomById",
     CREATE_ROOM: "CreateRoom",
+    DELETE_ROOM: "DeleteRoom",
   },
   STAFF: {
     GET_ALL_STAFFS: "GetAllStaffs",

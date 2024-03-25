@@ -9,7 +9,7 @@ import { SeverityPill } from "src/components/severity-pill";
 import { StatusMapRoom } from "src/components/status-map";
 import RatingCircle from "./rating-circle";
 
-export const columns = ({ handleOpenModalDetail }) => {
+export const columns = ({ handleOpenModalDetail, handleOpenModalDelete }) => {
   return [
     {
       field: "id",
@@ -159,7 +159,7 @@ export const columns = ({ handleOpenModalDetail }) => {
               sx={{
                 "& .MuiButton-startIcon": { m: 0 },
               }}
-              // onClick={handleOpenModalDelete}
+              onClick={handleOpenModalDelete}
             />
           </Tooltip>
         </Stack>

@@ -224,6 +224,8 @@ const CreateRoom = (props) => {
           maxHeight: "90vh",
           height: "auto",
           minWidth: "80%",
+          display: "flex",
+          flexDirection: "column",
         },
       }}
     >
@@ -253,7 +255,13 @@ const CreateRoom = (props) => {
       </DialogTitle>
 
       <form noValidate onSubmit={formik.handleSubmit}>
-        <DialogContent dividers>
+        <DialogContent
+          dividers
+          sx={{
+            overflowY: "auto",
+            flexGrow: 1,
+          }}
+        >
           <Stack spacing={3} sx={{ mt: 3 }}>
             <Stack direction="column" spacing={3} sx={{ width: "100%" }}>
               <Stack direction={{ xs: "column", sm: "row" }} spacing={3}>
@@ -459,7 +467,17 @@ const CreateRoom = (props) => {
         </DialogContent>
       </form>
 
-      <DialogActions sx={{ my: 3, mr: 3, display: "flex", justifyContent: "flex-end" }}>
+      <DialogActions
+        sx={{
+          position: "sticky",
+          bottom: 0,
+          zIndex: 1100,
+          my: 3,
+          mr: 3,
+          display: "flex",
+          justifyContent: "flex-end",
+        }}
+      >
         <Button
           type="submit"
           variant="contained"
