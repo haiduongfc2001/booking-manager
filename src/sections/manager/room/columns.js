@@ -9,7 +9,7 @@ import { SeverityPill } from "src/components/severity-pill";
 import { StatusMapRoom } from "src/components/status-map";
 import RatingCircle from "./rating-circle";
 
-export const columns = ({ handleOpenModalDetail, handleOpenModalDelete }) => {
+export const columns = ({ handleOpenModalDetail, handleOpenModalDelete, handleOpenModalEdit }) => {
   return [
     {
       field: "id",
@@ -143,7 +143,7 @@ export const columns = ({ handleOpenModalDetail, handleOpenModalDelete }) => {
               sx={{
                 "& .MuiButton-startIcon": { m: 0 },
               }}
-              // onClick={handleOpenModalEdit}
+              onClick={handleOpenModalEdit}
             />
           </Tooltip>
           <Tooltip title="Xóa">

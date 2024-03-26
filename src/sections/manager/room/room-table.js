@@ -8,6 +8,7 @@ import CustomDataGrid from "src/components/data-grid/custom-data-grid";
 import { ErrorOutline } from "@mui/icons-material";
 import DetailRoom from "./detail-room";
 import DeleteRoom from "./delete-room";
+import EditRoom from "./edit-room";
 
 // The table displays the list of rooms
 export const RoomTable = (props) => {
@@ -16,6 +17,7 @@ export const RoomTable = (props) => {
   const [currentId, setCurrentId] = useState("");
   const [isModalDetailRoom, setIsModalDetailRoom] = useState(false);
   const [isModalDeleteRoom, setIsModalDeleteRoom] = useState(false);
+  const [isModalEditRoom, setIsModalEditRoom] = useState(false);
 
   const handleRowClick = (params) => {
     const clickedItem = items.find((item) => item.id === params.id);
@@ -34,6 +36,10 @@ export const RoomTable = (props) => {
     setIsModalDeleteRoom(true);
   };
 
+  const handleOpenModalEdit = () => {
+    setIsModalEditRoom(true);
+  };
+
   return (
     <>
       <Card>
@@ -44,7 +50,11 @@ export const RoomTable = (props) => {
             ) : items && items.length > 0 ? (
               <CustomDataGrid
                 rows={items}
-                columns={columns({ handleOpenModalDetail, handleOpenModalDelete })}
+                columns={columns({
+                  handleOpenModalDetail,
+                  handleOpenModalDelete,
+                  handleOpenModalEdit,
+                })}
                 onRowClick={handleRowClick}
               />
             ) : (
@@ -77,6 +87,14 @@ export const RoomTable = (props) => {
       <DeleteRoom
         isModalDeleteRoom={isModalDeleteRoom}
         setIsModalDeleteRoom={setIsModalDeleteRoom}
+        hotelId={parseInt(hotelId)}
+        currentId={parseInt(currentId)}
+        onRefresh={onRefresh}
+      />
+
+      <EditRoom
+        isModalEditRoom={isModalEditRoom}
+        setIsModalEditRoom={setIsModalEditRoom}
         hotelId={parseInt(hotelId)}
         currentId={parseInt(currentId)}
         onRefresh={onRefresh}

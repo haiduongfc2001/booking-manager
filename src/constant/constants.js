@@ -63,6 +63,10 @@ export const API = {
     GET_ROOM_BY_ID: "GetRoomById",
     CREATE_ROOM: "CreateRoom",
     DELETE_ROOM: "DeleteRoom",
+    EDIT_ROOM: "EditRoom",
+    DELETE_ROOM_IMAGE_BY_ID: "DeleteRoomImageById",
+    UPDATE_ROOM_IMAGE_BY_ID: "UpdateRoomImageById",
+    CREATE_ROOM_IMAGES: "CreateRoomImages",
   },
   STAFF: {
     GET_ALL_STAFFS: "GetAllStaffs",

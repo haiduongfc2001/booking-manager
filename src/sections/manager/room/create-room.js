@@ -121,8 +121,8 @@ const CreateRoom = (props) => {
       updatedIsPrimarys.fill(false); // Reset all to false
       updatedIsPrimarys[index] = true;
 
-      // If no primary is selected, default to the first image
-      if (!updatedIsPrimarys.includes(true)) {
+      // If all is_primarys are false, default to the first image
+      if (!updatedIsPrimarys.some((value) => value)) {
         updatedIsPrimarys[0] = true;
       }
 
@@ -176,11 +176,11 @@ const CreateRoom = (props) => {
       formData.append("description", values.description.trim());
       formData.append("status", "available");
 
-      for (let i = 0; i < values.images.length; i++) {
-        formData.append("images", values.images[i]);
-        formData.append("captions", values.captions[i]);
-        formData.append("is_primarys", values.is_primarys[i]);
-      }
+      values.images.forEach((image, index) => {
+        formData.append("images", image);
+        formData.append("captions", values.captions[index]);
+        formData.append("is_primarys", values.is_primarys[index]);
+      });
 
       try {
         const response = await RoomService[API.ROOM.CREATE_ROOM]({ hotel_id: hotelId, formData });
@@ -224,8 +224,6 @@ const CreateRoom = (props) => {
           maxHeight: "90vh",
           height: "auto",
           minWidth: "80%",
-          display: "flex",
-          flexDirection: "column",
         },
       }}
     >
@@ -254,14 +252,8 @@ const CreateRoom = (props) => {
         </IconButton>
       </DialogTitle>
 
-      <form noValidate onSubmit={formik.handleSubmit}>
-        <DialogContent
-          dividers
-          sx={{
-            overflowY: "auto",
-            flexGrow: 1,
-          }}
-        >
+      <DialogContent dividers>
+        <form noValidate onSubmit={formik.handleSubmit}>
           <Stack spacing={3} sx={{ mt: 3 }}>
             <Stack direction="column" spacing={3} sx={{ width: "100%" }}>
               <Stack direction={{ xs: "column", sm: "row" }} spacing={3}>
@@ -362,19 +354,12 @@ const CreateRoom = (props) => {
             }}
           >
             <Grid container spacing={2} justifyContent="center">
-              <Grid item xs={12} sx={{ pt: "0 !important", pl: "0 !important" }}>
-                <Grid
-                  container
-                  spacing={2}
-                  display={"flex"}
-                  alignItems="center"
-                  direction={"column"}
-                >
-                  {formik.values.images.map((image, index) => (
+              {formik.values.images.map((image, index) => (
+                <Grid item xs={12} key={index} sx={{ pt: "0 !important", pl: "0 !important" }}>
+                  <Grid container spacing={2} alignItems="center" direction="column">
                     <Grid
                       item
-                      key={index}
-                      display={"flex"}
+                      display="flex"
                       alignItems="center"
                       justifyContent="center"
                       sx={{ mx: 2, mt: 1 }}
@@ -425,22 +410,20 @@ const CreateRoom = (props) => {
                         value={formik.values.is_primarys[index]}
                         onChange={() => handleIsPrimaryChange(index)}
                       >
-                        <FormControlLabel value={true} control={<Radio />} label="Primary" />
+                        <FormControlLabel value={true} control={<Radio />} label="Ảnh đại diện" />
                       </RadioGroup>
                       <Button
                         variant="contained"
                         color="error"
-                        sx={{
-                          mx: 2,
-                        }}
+                        sx={{ mx: 2 }}
                         onClick={() => handleRemoveImage(index)}
                       >
                         Xóa
                       </Button>
                     </Grid>
-                  ))}
+                  </Grid>
                 </Grid>
-              </Grid>
+              ))}
               <Grid
                 item
                 xs={12}
@@ -464,8 +447,8 @@ const CreateRoom = (props) => {
               {formik.errors.submit}
             </Typography>
           )}
-        </DialogContent>
-      </form>
+        </form>
+      </DialogContent>
 
       <DialogActions
         sx={{
