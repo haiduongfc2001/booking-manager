@@ -68,7 +68,7 @@ export const CustomerTable = (props) => {
               >
                 <ErrorOutline sx={{ mr: 1 }} />
                 <Typography variant="body1" color="neutral.900">
-                  No data available
+                  Không có dữ liệu!
                 </Typography>
               </Box>
             )}

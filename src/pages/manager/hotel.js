@@ -31,10 +31,11 @@ import Head from "next/head";
 import ArrowDownOnSquareIcon from "@heroicons/react/24/solid/ArrowDownOnSquareIcon";
 import ArrowUpOnSquareIcon from "@heroicons/react/24/solid/ArrowUpOnSquareIcon";
 import ArrowPathIcon from "@heroicons/react/24/solid/ArrowPathIcon";
+import EditHotel from "src/sections/manager/hotel/edit-hotel";
 
 const Page = () => {
   const [hotelId, setHotelId] = useState(10);
-  const [hotelData, setHotelData] = useState([]);
+  const [hotelData, setHotelData] = useState({});
   const [loading, setLoading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
 
@@ -399,10 +400,12 @@ const Page = () => {
         >
           <ErrorOutline sx={{ mr: 1 }} />
           <Typography variant="body1" color="neutral.900">
-            No data available
+            Không có dữ liệu!
           </Typography>
         </Box>
       )}
+
+      <EditHotel onRefresh={getHotel} hotelData={hotelData} hotelId={hotelId} />
     </>
   );
 };

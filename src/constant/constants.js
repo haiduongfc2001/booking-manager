@@ -57,6 +57,9 @@ export const API = {
     CREATE_HOTEL: "CreateHotel",
     DELETE_HOTEL: "DeleteHotel",
     EDIT_HOTEL: "EditHotel",
+    DELETE_HOTEL_IMAGE_BY_ID: "DeleteHotelImageById",
+    UPDATE_HOTEL_IMAGE_BY_ID: "UpdateHotelImageById",
+    CREATE_HOTEL_IMAGES: "CreateHotelImages",
   },
   ROOM: {
     GET_ALL_ROOMS_BY_HOTEL_ID: "GetAllRoomsByHotelId",

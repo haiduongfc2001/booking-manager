@@ -37,3 +37,24 @@ export const EditHotel = async ({ hotel_id, name, address, contact, description 
     description,
   });
 };
+
+export const UpdateHotelImageById = async ({ hotel_id, hotel_image_id, caption, is_primary }) => {
+  return CommonService.patchRequest(
+    `${prePath}/${hotel_id}/image/${hotel_image_id}/updateHotelImageById`,
+    {
+      caption,
+      is_primary,
+    }
+  );
+};
+
+export const DeleteHotelImageById = async ({ hotel_id, hotel_image_id }) => {
+  return CommonService.deleteRequest(
+    `${prePath}/${hotel_id}/image/${hotel_image_id}/deleteImage`,
+    {}
+  );
+};
+
+export const CreateHotelImages = async ({ hotel_id, formData }) => {
+  return CommonService.postRequest(`${prePath}/${hotel_id}/createHotelImages`, formData);
+};
