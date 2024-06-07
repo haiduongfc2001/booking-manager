@@ -15,7 +15,7 @@ import {
 } from "@mui/material";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { API, STATUS_CODE, TOAST_KIND } from "src/constant/constants";
+import { API, HOTEL_ID_FAKE, STATUS_CODE, TOAST_KIND } from "src/constant/constants";
 import * as HotelService from "src/services/hotel-service";
 import * as AddressService from "src/services/address-service";
 import LoadingData from "src/layouts/loading/loading-data";
@@ -41,7 +41,7 @@ import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { useRouter } from "next/navigation";
 
 const Page = () => {
-  const [hotelId, setHotelId] = useState(1);
+  const [hotelId, setHotelId] = useState(HOTEL_ID_FAKE);
   const [hotelData, setHotelData] = useState({});
   const [loading, setLoading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -220,7 +220,7 @@ const Page = () => {
             <Stack direction="row" justifyContent="space-between" spacing={4}>
               <Stack spacing={1}>
                 <Typography variant="h4">Khách sạn</Typography>
-                <Stack alignItems="center" direction="row" spacing={1}>
+                {/* <Stack alignItems="center" direction="row" spacing={1}>
                   <Button
                     color="inherit"
                     startIcon={
@@ -241,7 +241,7 @@ const Page = () => {
                   >
                     Export
                   </Button>
-                </Stack>
+                </Stack> */}
               </Stack>
             </Stack>
 
@@ -255,7 +255,7 @@ const Page = () => {
                   }
                   variant="contained"
                   color="primary"
-                  onClick={() => router.push("/manager/room")}
+                  onClick={() => router.push("/manager/room-type")}
                 >
                   Đi đến phòng
                 </Button>

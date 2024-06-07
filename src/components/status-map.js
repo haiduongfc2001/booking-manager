@@ -4,11 +4,11 @@ export const StatusMap = {
 };
 
 export const StatusMapRole = {
-  manager: "success",
-  receptionist: "primary",
+  MANAGER: "success",
+  RECEPTIONIST: "primary",
 };
 
 export const StatusMapRoom = {
-  available: "success",
-  unavailable: "error",
+  AVAILABLE: "success",
+  UNAVAILABLE: "error",
 };

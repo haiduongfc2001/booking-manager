@@ -57,7 +57,7 @@ export const items = [
   },
   {
     title: "Phòng",
-    path: "/manager/room",
+    path: "/manager/room-type",
     icon: (
       <SvgIcon fontSize="small">
         <SensorDoorIcon />

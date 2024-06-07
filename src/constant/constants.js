@@ -76,6 +76,23 @@ export const API = {
     UPDATE_ROOM_IMAGE_BY_ID: "UpdateRoomImageById",
     CREATE_ROOM_IMAGES: "CreateRoomImages",
   },
+  ROOM_TYPE: {
+    GET_ALL_ROOM_TYPES_BY_HOTEL_ID: "GetAllRoomTypesByHotelId",
+    GET_ROOM_TYPE_BY_ID: "GetRoomTypeById",
+    CREATE_ROOM_TYPE: "CreateRoomType",
+    DELETE_ROOM_TYPE: "DeleteRoomType",
+    EDIT_ROOM_TYPE: "EditRoomType",
+    DELETE_ROOM_TYPE_IMAGE_BY_ID: "DeleteRoomTypeImageById",
+    UPDATE_ROOM_TYPE_IMAGE_BY_ID: "UpdateRoomTypeImageById",
+    CREATE_ROOM_TYPE_IMAGES: "CreateRoomTypeImages",
+    BED: {
+      GET_ALL_BEDS: "GetAllBeds",
+      GET_BED_BY_ID: "GetBedById",
+      CREATE_BED: "CreateBed",
+      DELETE_BED: "DeleteBed",
+      EDIT_BED: "EditBed",
+    },
+  },
   STAFF: {
     GET_ALL_STAFFS: "GetAllStaffs",
     GET_STAFF_BY_ID: "GetStaffById",
@@ -124,4 +141,11 @@ export const ROLE = {
   ADMIN: "ADMIN",
   MANAGER: "MANAGER",
   RECEPTIONIST: "RECEPTIONIST",
+};
+
+export const HOTEL_ID_FAKE = 1;
+
+export const ROOM_STATUS = {
+  AVAILABLE: "AVAILABLE",
+  UNAVAILABLE: "UNAVAILABLE",
 };

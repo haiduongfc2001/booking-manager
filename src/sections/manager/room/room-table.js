@@ -12,7 +12,7 @@ import EditRoom from "./edit-room";
 
 // The table displays the list of rooms
 export const RoomTable = (props) => {
-  const { hotelId, items = [], loading = false, onRefresh = () => {} } = props;
+  const { roomTypeId, hotelId, items = [], loading = false, onRefresh = () => {} } = props;
 
   const [currentId, setCurrentId] = useState("");
   const [isModalDetailRoom, setIsModalDetailRoom] = useState(false);
@@ -104,6 +104,7 @@ export const RoomTable = (props) => {
 };
 
 RoomTable.propTypes = {
+  roomTypeId: PropTypes.number.isRequired,
   hotelId: PropTypes.number.isRequired,
   items: PropTypes.array,
   loading: PropTypes.bool,

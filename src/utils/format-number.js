@@ -1,6 +1,6 @@
 function FormatNumber(input) {
   if (input === null || input === undefined) {
-    return FormatNumber(0); // Return empty string for null or undefined
+    return "0"; // Return "0" for null or undefined
   }
 
   let numberValue;
@@ -14,14 +14,14 @@ function FormatNumber(input) {
 
     // Check if the conversion is successful
     if (isNaN(numberValue)) {
-      return FormatNumber(0); // Return empty string if conversion fails
+      return "0"; // Return "0" if conversion fails
     }
   } else {
-    return FormatNumber(0); // Return empty string for other data types
+    return "0"; // Return "0" for other data types
   }
 
   // Use toLocaleString with options for formatting
-  return numberValue.toLocaleString("en-US", {
+  return numberValue.toLocaleString("vi-VN", {
     style: "decimal", // Use the decimal style
     minimumFractionDigits: 2, // Minimum two decimal places
     maximumFractionDigits: 2, // Maximum two decimal places

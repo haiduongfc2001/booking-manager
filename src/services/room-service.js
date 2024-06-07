@@ -3,7 +3,7 @@ import * as CommonService from "./common-service";
 const prePath = "/hotel";
 
 export const GetAllRoomsByHotelId = async ({ hotel_id }) => {
-  return CommonService.getRequest(`${prePath}/${hotel_id}/room/getAllRoomsByHotelId`);
+  return CommonService.getRequest(`${prePath}/${hotel_id}/getAllRoomsByHotelId`);
 };
 
 export const GetRoomById = async ({ hotel_id, room_id }) => {
@@ -50,4 +50,40 @@ export const CreateRoomImages = async ({ hotel_id, room_id, formData }) => {
     `${prePath}/${hotel_id}/room/${room_id}/createRoomImages`,
     formData
   );
+};
+
+export const DeleteRoomType = async ({ hotel_id, room_type_id }) => {
+  return CommonService.deleteRequest(
+    `${prePath}/${hotel_id}/room-type/${room_type_id}/deleteRoomType`,
+    {}
+  );
+};
+
+export const GetRoomTypeById = async ({ hotel_id, room_type_id }) => {
+  return CommonService.getRequest(
+    `${prePath}/${hotel_id}/room_type/${room_type_id}/getRoomTypeById`
+  );
+};
+
+// Bed of room type
+export const DeleteBed = async ({ bed_id }) => {
+  return CommonService.deleteRequest(`${prePath}/room-type/${bed_id}/deleteBed`, {});
+};
+
+export const CreateBed = async ({ room_type_id, type, description, quantity }) => {
+  return CommonService.postRequest(`${prePath}/room-type/createBed`, {
+    room_type_id,
+    type,
+    description,
+    quantity,
+  });
+};
+
+export const EditBed = async ({ bed_id, room_type_id, type, description, quantity }) => {
+  return CommonService.patchRequest(`${prePath}/room-type/${bed_id}/updateBed`, {
+    room_type_id,
+    type,
+    description,
+    quantity,
+  });
 };

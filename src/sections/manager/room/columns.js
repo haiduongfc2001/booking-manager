@@ -1,13 +1,11 @@
-import { Avatar, Button, Stack, Typography, Tooltip, SvgIcon } from "@mui/material";
+import { Button, Stack, Tooltip, SvgIcon } from "@mui/material";
 import EyeIcon from "@heroicons/react/24/solid/EyeIcon";
 import TrashIcon from "@heroicons/react/24/solid/TrashIcon";
 import PencilIcon from "@heroicons/react/24/solid/PencilIcon";
-import { getInitials } from "src/utils/get-initials";
-import { capitalizeFirstLetter } from "src/utils/capitalize-letter";
-import FormatNumber from "src/utils/format-number";
 import { SeverityPill } from "src/components/severity-pill";
 import { StatusMapRoom } from "src/components/status-map";
-import RatingCircle from "./rating-circle";
+import dayjs from "dayjs";
+import { ROOM_STATUS } from "src/constant/constants";
 
 export const columns = ({ handleOpenModalDetail, handleOpenModalDelete, handleOpenModalEdit }) => {
   return [
@@ -16,78 +14,21 @@ export const columns = ({ handleOpenModalDetail, handleOpenModalDelete, handleOp
       headerName: "ID",
       width: 50,
       align: "center",
+      renderCell: (params) => params.row.id,
     },
     {
       field: "number",
-      headerName: "Số phòng",
-      width: 150,
-      align: "left",
-      renderCell: (params) => (
-        <Stack display="flex" alignItems="center" direction="row" spacing={2}>
-          <Avatar
-            src={
-              params.row?.images?.find((image) => image.is_primary)?.url ||
-              (params.row?.images?.length > 0
-                ? params.row?.images[0]?.url
-                : "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/2048px-No_image_available.svg.png")
-            }
-          >
-            {getInitials(params.row.number)}
-          </Avatar>
-          <Tooltip title="Xem chi tiết">
-            <Typography
-              variant="subtitle1"
-              onClick={handleOpenModalDetail}
-              sx={{ cursor: "pointer" }}
-            >
-              {params.row.number}
-            </Typography>
-          </Tooltip>
-        </Stack>
-      ),
-    },
-    {
-      field: "type",
-      headerName: "Loại phòng",
-      width: 100,
-      align: "left",
-      renderCell: (params) => (
-        <Typography variant="subtitle1">{capitalizeFirstLetter(params.row?.type)}</Typography>
-      ),
-    },
-    {
-      field: "capacity",
-      headerName: "Sức chứa",
+      headerName: "Mã phòng",
       width: 150,
       align: "center",
-      renderCell: (params) => (
-        <Avatar
-          sx={{
-            backgroundColor: (theme) => theme.palette.background.indigo["dark"],
-            color: (theme) => theme.palette.background.indigo["lightest"],
-          }}
-        >
-          {params.row?.capacity}
-        </Avatar>
-      ),
+      renderCell: (params) => params.row.number,
     },
     {
-      field: "price",
-      headerName: "Giá gốc",
-      width: 150,
-      align: "right",
-      renderCell: (params) => (
-        <Typography variant="subtitle1">{FormatNumber(params.row?.price)}</Typography>
-      ),
-    },
-    {
-      field: "discount",
-      headerName: "Giảm giá",
-      width: 150,
-      align: "right",
-      renderCell: (params) => (
-        <Typography variant="subtitle1">{FormatNumber(params.row?.discount)}</Typography>
-      ),
+      field: "description",
+      headerName: "Mô tả",
+      width: 250,
+      align: "left",
+      renderCell: (params) => params.row.description,
     },
     {
       field: "status",
@@ -96,17 +37,31 @@ export const columns = ({ handleOpenModalDetail, handleOpenModalDelete, handleOp
       align: "center",
       renderCell: (params) => (
         <SeverityPill color={StatusMapRoom[params.row.status]}>
-          {params.row.status === "available" ? "Đang có sẵn" : "Hết phòng"}
+          {params.row.status === ROOM_STATUS.AVAILABLE ? "Đang có sẵn" : "Hết phòng"}
         </SeverityPill>
       ),
     },
     {
-      field: "rating_average",
-      headerName: "Đánh giá",
+      field: "created_at",
+      headerName: "Ngày tạo",
       width: 150,
       align: "center",
-      renderCell: (params) => <RatingCircle rating={params.row.rating_average} />,
+      renderCell: (params) => {
+        const createdAt = dayjs(params.row.created_at);
+        return createdAt.isValid() ? createdAt.format("HH:mm:ss DD/MM/YYYY") : "";
+      },
     },
+    {
+      field: "updated_at",
+      headerName: "Cập nhật lần cuối",
+      width: 180,
+      align: "center",
+      renderCell: (params) => {
+        const updatedAt = dayjs(params.row.updated_at);
+        return updatedAt.isValid() ? updatedAt.format("HH:mm:ss DD/MM/YYYY") : "";
+      },
+    },
+
     {
       field: "actions",
       headerName: "Hành động",

@@ -31,7 +31,7 @@ const CustomDataGrid = ({ rows = [], columns = [], onRowClick }) => {
         height: DATAGRID_OPTIONS.TABLE_HEIGHT,
         width: "100%",
         "& .super-app-theme--header": {
-          backgroundColor: "rgb(248, 249, 250)",
+          backgroundColor: "neutral.200",
           "& .MuiDataGrid-columnHeaderTitleContainer": {
             justifyContent: "center",
           },
