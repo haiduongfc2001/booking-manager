@@ -372,7 +372,7 @@ const CreateRoom = (props) => {
                           width: 160,
                           height: 160,
                           objectFit: "cover",
-                          marginBottom: 2,
+                          mb: 2,
                           borderRadius: "20%",
                           mr: 2,
                         }}

@@ -5,9 +5,9 @@ export const customerAdminServiceV2 = process.env.REACT_APP_CONSUMER_SERVICE;
 
 export const ACCOUNT_TEST = {
   EMAIL_1: "haiduongfc2001@gmail.com",
-  PASSWORD_1: "Password123456",
+  PASSWORD_1: "123456Aa",
   EMAIL_2: "admin@gmail.com",
-  PASSWORD_2: "Password123456",
+  PASSWORD_2: "123456Aa",
 };
 
 /**
@@ -43,6 +43,11 @@ export const SCREEN_TITLE = {};
  * Screen API
  */
 export const API = {
+  LOGIN: {
+    ADMIN: "AdminLogin",
+    MANAGER: "ManagerLogin",
+    RECEPTIONIST: "ReceptionistLogin",
+  },
   CUSTOMER: {
     GET_ALL_CUSTOMERS: "GetAllCustomers",
     GET_CUSTOMER_BY_ID: "GetCustomerById",
@@ -59,7 +64,7 @@ export const API = {
     EDIT_HOTEL: "EditHotel",
     DELETE_HOTEL_IMAGE_BY_ID: "DeleteHotelImageById",
     UPDATE_HOTEL_IMAGE_BY_ID: "UpdateHotelImageById",
-    CREATE_HOTEL_IMAGES: "CreateHotelImages",
+    CREATE_HOTEL_IMAGE: "CreateHotelImage",
   },
   ROOM: {
     GET_ALL_ROOMS_BY_HOTEL_ID: "GetAllRoomsByHotelId",
@@ -77,6 +82,11 @@ export const API = {
     CREATE_STAFF: "CreateStaff",
     DELETE_STAFF: "DeleteStaff",
     EDIT_STAFF: "EditStaff",
+  },
+  ADDRESS: {
+    GET_ALL_PROVINCES: "GetAllProvinces",
+    GET_ALL_DISTRICTS_BY_PROVINCE_ID: "GetAllDistrictsByProvinceId",
+    GET_ALL_WARDS_BY_DISTRICT_ID: "GetAllWardsByDistrictId",
   },
 };
 
@@ -108,4 +118,10 @@ export const DATAGRID_OPTIONS = {
 export const IMAGE = {
   MAX_NUMBER_OF_IMAGES: 5,
   MAX_FILE_SIZE: 100000,
+};
+
+export const ROLE = {
+  ADMIN: "ADMIN",
+  MANAGER: "MANAGER",
+  RECEPTIONIST: "RECEPTIONIST",
 };

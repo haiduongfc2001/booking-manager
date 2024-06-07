@@ -44,7 +44,7 @@ export const HotelTable = (props) => {
     <>
       <Card>
         <Scrollbar>
-          <Box sx={{ minWidth: 800 }}>
+          <Box sx={{ width: "100%" }}>
             {loading ? (
               <LoadingData />
             ) : items && items.length > 0 ? (

@@ -1,5 +1,4 @@
 import Head from "next/head";
-import NextLink from "next/link";
 import { useRouter } from "next/navigation";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -14,6 +13,11 @@ import {
   InputAdornment,
   IconButton,
   Tooltip,
+  FormControl,
+  FormLabel,
+  RadioGroup,
+  FormControlLabel,
+  Radio,
 } from "@mui/material";
 import { useAuth } from "src/hooks/use-auth";
 import { Layout as AuthLayout } from "src/layouts/auth/layout";
@@ -21,6 +25,9 @@ import { useState } from "react";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { closeLoadingApi, openLoadingApi } from "src/redux/create-actions/loading-action";
 import { useDispatch } from "react-redux";
+import * as LoginService from "src/services/auth-service";
+import { API, ROLE, STATUS_CODE, TOAST_KIND } from "src/constant/constants";
+import { showCommonAlert } from "src/utils/toast-message";
 
 const Page = () => {
   const router = useRouter();
@@ -40,7 +47,8 @@ const Page = () => {
   const formik = useFormik({
     initialValues: {
       email: "admin@gmail.com",
-      password: "Password123456",
+      password: "123456Aa",
+      role: ROLE.ADMIN,
       submit: null,
     },
     validationSchema: Yup.object({
@@ -49,12 +57,42 @@ const Page = () => {
         .max(255)
         .required("Vui lòng nhập địa chỉ email!"),
       password: Yup.string().max(255).required("Vui lòng nhập mật khẩu!"),
+      role: Yup.string().required("Vui lòng chọn vai trò của bạn!"),
     }),
     onSubmit: async (values, helpers) => {
       try {
         dispatch(openLoadingApi());
-        await auth.signIn(values.email, values.password);
-        router.push("/");
+
+        const body = {
+          email: values.email,
+          password: values.password,
+          role: values.role,
+        };
+
+        let response;
+
+        switch (values.role) {
+          case ROLE.ADMIN:
+            response = await LoginService[API.LOGIN.ADMIN](body);
+            break;
+          case ROLE.MANAGER:
+            response = await LoginService[API.LOGIN.MANAGER](body);
+            break;
+          case ROLE.RECEPTIONIST:
+            response = await LoginService[API.LOGIN.RECEPTIONIST](body);
+            break;
+          default:
+            throw new Error("Vai trò không hợp lệ");
+        }
+
+        if (response && response.status === STATUS_CODE.OK) {
+          await auth.signIn(values.email, values.password);
+          router.push("/");
+          dispatch(showCommonAlert(TOAST_KIND.SUCCESS, response.message));
+          formik.resetForm();
+        } else {
+          throw new Error("Email hoặc mật khẩu của bạn không chính xác!");
+        }
       } catch (err) {
         helpers.setStatus({ success: false });
         helpers.setErrors({ submit: err.message });
@@ -90,7 +128,7 @@ const Page = () => {
           <div>
             <Stack spacing={1} sx={{ mb: 3 }}>
               <Typography variant="h4">Đăng nhập</Typography>
-              <Typography color="text.secondary" variant="body2">
+              {/* <Typography color="text.secondary" variant="body2">
                 Bạn không có tài khoản?&nbsp;
                 <Link
                   component={NextLink}
@@ -100,7 +138,7 @@ const Page = () => {
                 >
                   Đăng ký
                 </Link>
-              </Typography>
+              </Typography> */}
             </Stack>
             <form noValidate onSubmit={formik.handleSubmit}>
               <Stack spacing={3}>
@@ -117,9 +155,7 @@ const Page = () => {
                   value={formik.values.email}
                 />
                 <TextField
-                  error={!!(formik.touched.password && formik.errors.password)}
                   fullWidth
-                  helperText={formik.touched.password && formik.errors.password}
                   label="Mật khẩu"
                   name="password"
                   onBlur={formik.handleBlur}
@@ -152,7 +188,40 @@ const Page = () => {
                       </InputAdornment>
                     ),
                   }}
+                  error={!!(formik.touched.password && formik.errors.password)}
+                  helperText={formik.touched.password && formik.errors.password}
                 />
+                <FormControl error={!!(formik.touched.role && formik.errors.role)}>
+                  <FormLabel id="demo-controlled-radio-buttons-group">Vai trò</FormLabel>
+                  <RadioGroup
+                    aria-labelledby="demo-controlled-radio-buttons-group"
+                    name="role"
+                    value={formik.values.role}
+                    onBlur={formik.handleBlur}
+                    onChange={formik.handleChange}
+                  >
+                    <FormControlLabel
+                      value={ROLE.ADMIN}
+                      control={<Radio />}
+                      label="Quản trị viên"
+                    />
+                    <FormControlLabel
+                      value={ROLE.MANAGER}
+                      control={<Radio />}
+                      label="Quản lý khách sạn"
+                    />
+                    <FormControlLabel
+                      value={ROLE.RECEPTIONIST}
+                      control={<Radio />}
+                      label="Nhân viên lễ tân"
+                    />
+                  </RadioGroup>
+                  {formik.touched.role && formik.errors.role && (
+                    <Typography color="error" variant="body2">
+                      {formik.errors.role}
+                    </Typography>
+                  )}
+                </FormControl>
               </Stack>
               {formik.errors.submit && (
                 <Typography color="error" sx={{ mt: 3 }} variant="body2">
@@ -164,7 +233,7 @@ const Page = () => {
               </Button>
               <Alert color="primary" severity="info" sx={{ mt: 3 }}>
                 <div>
-                  Bạn có thể sử dụng <b>admin@gmail.com</b> và mật khẩu <b>Password123456</b>
+                  Bạn có thể sử dụng <b>admin@gmail.com</b> và mật khẩu <b>123456Aa</b>
                 </div>
               </Alert>
             </form>

@@ -1,7 +1,7 @@
 // Create a common server to communicate with API server
 import axios from "axios";
 import { ExtractErrorInfo } from "src/utils/extract-error-info";
-// import Storage from "../utils/Storage";
+import Storage from "src/utils/storage";
 
 // Create Base URL
 const commonService = axios.create({
@@ -37,7 +37,9 @@ export const getRequest = async (endpoint) => {
   try {
     const res = await get(endpoint, {
       headers: {
-        Authorization: "Bearer " + "ewqeeqeyqueqyeieyqwiequiye",
+        Authorization:
+          "Bearer " +
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjEsImVtYWlsIjoiaGFpZHVvbmd0YjIwMDFAZ21haWwuY29tIiwicm9sZSI6IkNVU1RPTUVSIiwiaWF0IjoxNzE3NzUxMDk1fQ.c1zK22Szzsb6UNFZjLexJ-GAEKZLX_44ppJR04uy25w",
       },
     });
     return res;
@@ -51,7 +53,9 @@ export const postRequest = async (endpoint, data) => {
   try {
     const res = await post(endpoint, data, {
       headers: {
-        Authorization: "Bearer " + "ewqeeqeyqueqyeieyqwiequiye",
+        Authorization:
+          "Bearer " +
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjEsImVtYWlsIjoiaGFpZHVvbmd0YjIwMDFAZ21haWwuY29tIiwicm9sZSI6IkNVU1RPTUVSIiwiaWF0IjoxNzE3NzUxMDk1fQ.c1zK22Szzsb6UNFZjLexJ-GAEKZLX_44ppJR04uy25w",
       },
     });
     return res;
@@ -66,7 +70,9 @@ export const deleteRequest = async (endpoint, data) => {
   try {
     const res = await _delete(endpoint, data, {
       headers: {
-        Authorization: "Bearer " + "ewqeeqeyqueqyeieyqwiequiye",
+        Authorization:
+          "Bearer " +
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjEsImVtYWlsIjoiaGFpZHVvbmd0YjIwMDFAZ21haWwuY29tIiwicm9sZSI6IkNVU1RPTUVSIiwiaWF0IjoxNzE3NzUxMDk1fQ.c1zK22Szzsb6UNFZjLexJ-GAEKZLX_44ppJR04uy25w",
       },
     });
     return res;
@@ -80,7 +86,9 @@ export const patchRequest = async (endpoint, data) => {
   try {
     const res = await patch(endpoint, data, {
       headers: {
-        Authorization: "Bearer " + "ewqeeqeyqueqyeieyqwiequiye",
+        Authorization:
+          "Bearer " +
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjEsImVtYWlsIjoiaGFpZHVvbmd0YjIwMDFAZ21haWwuY29tIiwicm9sZSI6IkNVU1RPTUVSIiwiaWF0IjoxNzE3NzUxMDk1fQ.c1zK22Szzsb6UNFZjLexJ-GAEKZLX_44ppJR04uy25w",
       },
     });
     return res;

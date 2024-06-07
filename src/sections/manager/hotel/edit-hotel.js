@@ -16,7 +16,7 @@ import {
 } from "@mui/material";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { API, IMAGE, STATUS_CODE, TOAST_KIND } from "src/constant/constants";
+import { API, IMAGE, STATUS_CODE, TOAST_KIND, TOAST_MESSAGE } from "src/constant/constants";
 import * as HotelService from "src/services/hotel-service";
 import { showCommonAlert } from "src/utils/toast-message";
 import { useDispatch } from "react-redux";
@@ -205,7 +205,7 @@ const EditHotel = (props) => {
       });
 
       try {
-        const response = await HotelService[API.HOTEL.CREATE_HOTEL_IMAGES]({
+        const response = await HotelService[API.HOTEL.CREATE_HOTEL_IMAGE]({
           hotel_id: String(hotelId).trim(),
           formData,
         });
@@ -255,7 +255,7 @@ const EditHotel = (props) => {
                     width: 160,
                     height: 160,
                     objectFit: "cover",
-                    marginBottom: 2,
+                    mb: 2,
                     borderRadius: "20%",
                     mr: 2,
                   }}
@@ -355,7 +355,7 @@ const EditHotel = (props) => {
                     width: 160,
                     height: 160,
                     objectFit: "cover",
-                    marginBottom: 2,
+                    mb: 2,
                     borderRadius: "20%",
                     mr: 2,
                   }}

@@ -31,7 +31,7 @@ export const OverviewLatestOrders = (props) => {
     <Card sx={sx}>
       <CardHeader title="Latest Orders" />
       <Scrollbar sx={{ flexGrow: 1 }}>
-        <Box sx={{ minWidth: 800 }}>
+        <Box sx={{ width: "100%" }}>
           <Table>
             <TableHead>
               <TableRow>

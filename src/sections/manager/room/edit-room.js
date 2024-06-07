@@ -343,6 +343,7 @@ const EditRoom = (props) => {
         });
 
         if (response?.status === STATUS_CODE.CREATED) {
+          formikAddImage.resetForm();
           getRoom();
           dispatch(showCommonAlert(TOAST_KIND.SUCCESS, response.message));
         } else {
@@ -570,7 +571,7 @@ const EditRoom = (props) => {
                             width: 160,
                             height: 160,
                             objectFit: "cover",
-                            marginBottom: 2,
+                            mb: 2,
                             borderRadius: "20%",
                             mr: 2,
                           }}
@@ -680,7 +681,7 @@ const EditRoom = (props) => {
                             width: 160,
                             height: 160,
                             objectFit: "cover",
-                            marginBottom: 2,
+                            mb: 2,
                             borderRadius: "20%",
                             mr: 2,
                           }}
