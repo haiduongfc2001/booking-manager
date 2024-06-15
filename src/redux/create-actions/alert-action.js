@@ -1,4 +1,4 @@
-import * as actionTypes from "../actions/actions";
+import * as actionTypes from "../actions/Actions";
 
 export const closeAlert = () => ({ type: actionTypes.CLOSE_ALERT });
 

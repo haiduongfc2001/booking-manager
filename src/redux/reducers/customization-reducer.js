@@ -1,5 +1,5 @@
-import Storage from "src/utils/storage";
-import * as actionTypes from "../actions/actions";
+import Storage from "src/utils/Storage";
+import * as actionTypes from "../actions/Actions";
 
 export const initialState = {
   isOpen: [],

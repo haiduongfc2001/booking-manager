@@ -1,7 +1,7 @@
 // Create a common server to communicate with API server
 import axios from "axios";
 import { ExtractErrorInfo } from "src/utils/extract-error-info";
-import Storage from "src/utils/storage";
+import Storage from "src/utils/Storage";
 
 // Create Base URL
 const commonService = axios.create({

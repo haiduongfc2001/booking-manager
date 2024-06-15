@@ -14,6 +14,8 @@ import {
   IconButton,
   TextField,
   InputAdornment,
+  ImageList,
+  ImageListItem,
 } from "@mui/material";
 import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
 import { SearchRoom } from "src/sections/manager/room/search-room";
@@ -210,7 +212,7 @@ const Page = () => {
                         }
                         onClick={() => handleRoomTypeClick(roomType.id)}
                       >
-                        Đi đến trang chi tiết
+                        Xem chi tiết
                       </Button>
                     </Stack>
 

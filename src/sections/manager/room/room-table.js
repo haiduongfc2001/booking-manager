@@ -104,7 +104,7 @@ export const RoomTable = (props) => {
 };
 
 RoomTable.propTypes = {
-  roomTypeId: PropTypes.number.isRequired,
+  // roomTypeId: PropTypes.number.isRequired,
   hotelId: PropTypes.number.isRequired,
   items: PropTypes.array,
   loading: PropTypes.bool,

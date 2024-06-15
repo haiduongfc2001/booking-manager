@@ -2,7 +2,7 @@ import { composeWithDevTools } from "@redux-devtools/extension";
 import { legacy_createStore as createStore } from "redux";
 import { persistReducer, persistStore } from "redux-persist";
 import storage from "redux-persist/lib/storage";
-import Reducer from "../reducers/reducer";
+import Reducer from "../reducers/Reducer";
 
 // ==============================|| REDUX - MAIN STORE ||============================== //
 

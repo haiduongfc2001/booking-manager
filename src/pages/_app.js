@@ -12,8 +12,8 @@ import "simplebar-react/dist/simplebar.min.css";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import AlertModal from "src/layouts/alert/alert-modal";
-import { persistor, store } from "src/redux/store/store";
-import Loading from "src/layouts/loading/loading";
+import { persistor, store } from "src/redux/store/Store";
+import Loading from "src/layouts/loading/Loading";
 
 const clientSideEmotionCache = createEmotionCache();
 
@@ -40,7 +40,7 @@ const App = (props) => {
           <LocalizationProvider dateAdapter={AdapterDateFns}>
             <AuthProvider>
               <ThemeProvider theme={theme}>
-                <AlertModal></AlertModal>
+                {/* <AlertModal></AlertModal> */}
                 <CssBaseline />
                 <AuthConsumer>
                   {(auth) =>
