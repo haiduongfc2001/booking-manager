@@ -85,12 +85,21 @@ export const API = {
     DELETE_ROOM_TYPE_IMAGE_BY_ID: "DeleteRoomTypeImageById",
     UPDATE_ROOM_TYPE_IMAGE_BY_ID: "UpdateRoomTypeImageById",
     CREATE_ROOM_TYPE_IMAGES: "CreateRoomTypeImages",
+    CREATE_ROOM_TYPE_IMAGE: "CreateRoomTypeImage",
+    EDIT_ROOM_TYPE_IMAGE: "EditRoomTypeImage",
     BED: {
       GET_ALL_BEDS: "GetAllBeds",
       GET_BED_BY_ID: "GetBedById",
       CREATE_BED: "CreateBed",
       DELETE_BED: "DeleteBed",
       EDIT_BED: "EditBed",
+    },
+    AMENITY: {
+      GET_ALL_AMENITIES: "GetAllAmenities",
+      GET_AMENITY_BY_ID: "GetAmenityById",
+      CREATE_AMENITY: "CreateAmenity",
+      DELETE_AMENITY: "DeleteAmenity",
+      EDIT_AMENITY: "EditAmenity",
     },
   },
   STAFF: {

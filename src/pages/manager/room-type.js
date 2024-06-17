@@ -16,10 +16,11 @@ import {
   InputAdornment,
   ImageList,
   ImageListItem,
+  Avatar,
 } from "@mui/material";
 import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
 import { SearchRoom } from "src/sections/manager/room/search-room";
-import { HOTEL_ID_FAKE, STATUS_CODE } from "src/constant/constants";
+import { HOTEL_ID_FAKE, STATUS_CODE, TOAST_KIND, TOAST_MESSAGE } from "src/constant/constants";
 import * as RoomService from "src/services/room-service";
 import { API } from "src/constant/constants";
 import CreateRoom from "src/sections/manager/room/create-room";
@@ -34,14 +35,17 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import { useDispatch } from "react-redux";
 import { closeLoadingApi, openLoadingApi } from "src/redux/create-actions/loading-action";
+import { neutral } from "src/theme/colors";
+import { getInitials } from "src/utils/get-initials";
+import { showCommonAlert } from "src/utils/toast-message";
 
 const Page = () => {
   const [hotelId, setHotelId] = useState(HOTEL_ID_FAKE);
   const [roomTypesData, setRoomTypesData] = useState([]);
+  const [numRoomTypes, setNumRoomTypes] = useState(0);
 
   const [isModalCreateRoom, setIsModalCreateRoom] = useState(false);
-  const [isEditing, setIsEditing] = useState(false);
-  const [expanded, setExpanded] = useState(false);
+  const [expandedRoomTypeId, setExpandedRoomTypeId] = useState(null);
 
   const inputRef = useRef(null);
   const router = useRouter();
@@ -57,12 +61,13 @@ const Page = () => {
     try {
       dispatch(openLoadingApi());
 
-      const response = await RoomService[API.ROOM.GET_ALL_ROOMS_BY_HOTEL_ID]({
+      const response = await RoomService[API.ROOM_TYPE.GET_ALL_ROOM_TYPES_BY_HOTEL_ID]({
         hotel_id: hotelId,
       });
 
       if (response?.status !== STATUS_CODE.UNAUTHORIZED) {
-        setRoomTypesData(response.data);
+        setRoomTypesData(response.data.roomTypes);
+        setNumRoomTypes(response.data.totalRoomTypes);
       } else {
         dispatch(showCommonAlert(TOAST_KIND.ERROR, response.data.message));
       }
@@ -77,12 +82,6 @@ const Page = () => {
     fetchData();
   }, []);
 
-  useEffect(() => {
-    if (isEditing && inputRef.current) {
-      inputRef.current.focus();
-    }
-  }, [isEditing]);
-
   const handleOpenModalCreate = () => {
     setIsModalCreateRoom(true);
   };
@@ -91,14 +90,14 @@ const Page = () => {
     router.push(`/manager/room-type/detail/${roomTypeId}`);
   };
 
-  const handleToggleExpand = () => {
-    setExpanded(!expanded);
+  const handleToggleExpand = (roomTypeId) => {
+    setExpandedRoomTypeId(expandedRoomTypeId === roomTypeId ? null : roomTypeId);
   };
 
   return (
     <>
       <Head>
-        <title>Room</title>
+        <title>Các loại phòng</title>
       </Head>
       <Box
         component="main"
@@ -159,21 +158,31 @@ const Page = () => {
               </Stack>
             </Card>
 
-            <Grid container justifyContent="flex-end">
-              <Grid item xs={3} sx={{ display: "flex", justifyContent: "inherit", pr: 2 }}>
-                <Button
-                  startIcon={
-                    <SvgIcon fontSize="small">
-                      <ArrowPathIcon />
-                    </SvgIcon>
-                  }
-                  variant="contained"
-                  color="secondary"
-                  onClick={fetchData}
-                >
-                  Làm mới
-                </Button>
-              </Grid>
+            <Grid
+              container
+              justifyContent="flex-end"
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                pr: 2,
+              }}
+            >
+              <Button variant="contained" color="info">
+                Số loại phòng: {numRoomTypes}
+              </Button>
+              <Button
+                startIcon={
+                  <SvgIcon fontSize="small">
+                    <ArrowPathIcon />
+                  </SvgIcon>
+                }
+                variant="contained"
+                color="secondary"
+                onClick={fetchData}
+              >
+                Làm mới
+              </Button>
             </Grid>
 
             {roomTypesData?.length > 0 &&
@@ -186,9 +195,35 @@ const Page = () => {
                       alignItems="center"
                       justifyContent="space-between"
                     >
-                      <Typography variant="h6">{roomType.name}</Typography>
-                      <IconButton onClick={handleToggleExpand} sx={{ color: "primary.main" }}>
-                        {expanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+                      <Stack direction="row" alignItems="center" spacing={2}>
+                        <Avatar
+                          src={
+                            roomType?.roomImages?.find((image) => image.is_primary)?.url ||
+                            (roomType?.roomImages?.length > 0
+                              ? roomType?.roomImages[0]?.url
+                              : "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/2048px-No_image_available.svg.png")
+                          }
+                          sx={{
+                            bgcolor: neutral[300],
+                            width: 64,
+                            height: 64,
+                            boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.2)",
+                          }}
+                          variant="rounded"
+                        >
+                          {getInitials(roomType?.name)}
+                        </Avatar>
+                        <Typography variant="h6">{roomType.name}</Typography>
+                      </Stack>
+                      <IconButton
+                        onClick={() => handleToggleExpand(roomType.id)}
+                        sx={{ color: "primary.main" }}
+                      >
+                        {expandedRoomTypeId === roomType.id ? (
+                          <ExpandLessIcon />
+                        ) : (
+                          <ExpandMoreIcon />
+                        )}
                       </IconButton>
                     </Stack>
 
@@ -200,7 +235,7 @@ const Page = () => {
                       mt={2}
                     >
                       <Button variant="contained" color="info" sx={{ width: "auto", mt: 1 }}>
-                        <Typography variant="body1">Số phòng: {roomType?.totalRooms}</Typography>
+                        Số phòng: {roomType?.totalRooms}
                       </Button>
                       <Button
                         variant="contained"
@@ -216,7 +251,7 @@ const Page = () => {
                       </Button>
                     </Stack>
 
-                    {expanded && (
+                    {expandedRoomTypeId === roomType.id && (
                       <Box>
                         <Stack spacing={3} sx={{ mt: 3 }}>
                           <Stack direction="column" spacing={3} sx={{ width: "100%" }}>

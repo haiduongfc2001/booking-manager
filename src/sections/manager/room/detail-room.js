@@ -12,7 +12,7 @@ import {
   Avatar,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import { API, STATUS_CODE } from "src/constant/constants";
+import { API, ROOM_STATUS, STATUS_CODE, TOAST_KIND, TOAST_MESSAGE } from "src/constant/constants";
 import LoadingData from "src/layouts/loading/loading-data";
 import * as RoomService from "../../../services/room-service";
 import { getInitials } from "src/utils/get-initials";
@@ -28,9 +28,12 @@ import { capitalizeFirstLetter } from "src/utils/capitalize-letter";
 import FormatNumber from "src/utils/format-number";
 import { SeverityPill } from "src/components/severity-pill";
 import { StatusMapRoom } from "src/components/status-map";
+import { showCommonAlert } from "src/utils/toast-message";
+import { useDispatch } from "react-redux";
 
 const DetailRoom = (props) => {
-  const { isModalDetailRoom, setIsModalDetailRoom, hotelId, currentId } = props;
+  const { isModalDetailRoom, setIsModalDetailRoom, hotelId, roomTypeId, currentId } = props;
+  const dispatch = useDispatch();
 
   const [roomData, setRoomData] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -40,17 +43,17 @@ const DetailRoom = (props) => {
       setLoading(true);
 
       const response = await RoomService[API.ROOM.GET_ROOM_BY_ID]({
-        hotel_id: String(hotelId).trim(),
+        room_type_id: String(roomTypeId).trim(),
         room_id: String(currentId).trim(),
       });
 
       if (response?.status !== STATUS_CODE.UNAUTHORIZED) {
         setRoomData(response.data);
       } else {
-        // dispatch(showCommonAlert(TOAST_KIND.ERROR, response.data.error));
+        dispatch(showCommonAlert(TOAST_KIND.ERROR, response.data.message));
       }
     } catch (error) {
-      // dispatch(showCommonAlert(TOAST_KIND.ERROR, TOAST_MESSAGE.SERVER_ERROR));
+      dispatch(showCommonAlert(TOAST_KIND.ERROR, TOAST_MESSAGE.SERVER_ERROR));
     } finally {
       setLoading(false);
     }
@@ -108,149 +111,64 @@ const DetailRoom = (props) => {
         {loading ? (
           <LoadingData />
         ) : (
-          <>
-            <Stack spacing={3} sx={{ mt: 3 }}>
-              <Stack
-                direction={{ xs: "column", sm: "row" }}
-                spacing={3}
-                alignItems={{ xs: "center", sm: "flex-start" }}
-              >
-                <Avatar
-                  src={
-                    roomData?.images?.find((image) => image.is_primary)?.url ||
-                    (roomData?.images?.length > 0
-                      ? roomData?.images[0]?.url
-                      : "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/2048px-No_image_available.svg.png")
-                  }
-                  sx={{
-                    bgcolor: neutral[300],
-                    width: "calc(100% / 3)",
-                    height: "100%",
-                    boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.2)",
-                  }}
-                  variant="rounded"
-                >
-                  {getInitials(roomData?.name)}
-                </Avatar>
-
-                <Stack direction="column" spacing={3} sx={{ width: "100%" }}>
-                  <Stack direction="row" spacing={3}>
-                    <TextField
-                      fullWidth
-                      autoFocus
-                      label="Số phòng"
-                      name="number"
-                      InputProps={{
-                        readOnly: true,
-                      }}
-                      value={roomData?.number}
-                    />
-
-                    <TextField
-                      fullWidth
-                      label="Loại phòng"
-                      name="type"
-                      InputProps={{
-                        readOnly: true,
-                      }}
-                      value={capitalizeFirstLetter(roomData?.type)}
-                    />
-                  </Stack>
-
-                  <Stack direction="row" spacing={3}>
-                    <TextField
-                      fullWidth
-                      label="Giá"
-                      name="price"
-                      InputProps={{
-                        readOnly: true,
-                      }}
-                      sx={{ flex: 1 }}
-                      value={FormatNumber(roomData?.price)}
-                    />
-                    <TextField
-                      fullWidth
-                      label="Giá giảm"
-                      name="discount"
-                      InputProps={{
-                        readOnly: true,
-                      }}
-                      sx={{ flex: 1 }}
-                      value={FormatNumber(roomData?.discount)}
-                    />
-                  </Stack>
-
-                  <Stack direction="row" spacing={3}>
-                    <TextField
-                      fullWidth
-                      label="Sức chứa"
-                      name="capacity"
-                      InputProps={{
-                        readOnly: true,
-                      }}
-                      value={roomData?.capacity}
-                    />
-
-                    <Stack direction="row" spacing={3} sx={{ width: "50%" }}>
-                      <SeverityPill color={StatusMapRoom[roomData?.status]}>
-                        {roomData?.status === "available" ? "Có sẵn" : "Không có sẵn"}
-                      </SeverityPill>
-                    </Stack>
-                  </Stack>
-
-                  <Stack direction="row" spacing={3}>
-                    <TextField
-                      fullWidth
-                      multiline
-                      label="Mô tả"
-                      name="description"
-                      minRows={3}
-                      maxRows={5}
-                      InputProps={{
-                        readOnly: true,
-                      }}
-                      sx={{ flex: 1 }}
-                      value={roomData?.description}
-                    />
-                  </Stack>
-
-                  <Stack direction="row" spacing={3}>
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                      <DatePicker
-                        readOnly
-                        label="Ngày tạo"
-                        name="created_at"
-                        sx={{ width: "50%" }}
-                        value={dayjs(roomData?.created_at)}
-                      />
-                    </LocalizationProvider>
-
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                      <DatePicker
-                        readOnly
-                        label="Ngày cập nhật gần nhất"
-                        name="updated_at"
-                        sx={{ width: "50%" }}
-                        value={dayjs(roomData?.updated_at)}
-                      />
-                    </LocalizationProvider>
-                  </Stack>
-                </Stack>
-              </Stack>
-
-              {roomData.images && roomData.images.length > 0 && (
-                <Box sx={{ width: "100%", height: "100%", overflowY: "scroll" }}>
-                  <ImageList variant="masonry" cols={3} gap={8}>
-                    {roomData.images.map((item) => (
-                      <ImageListItem key={item.id}>
-                        <img srcSet={item.url} src={item.url} alt={item.id} loading="lazy" />
-                      </ImageListItem>
-                    ))}
-                  </ImageList>
-                </Box>
-              )}
+          <Stack direction="column" spacing={3} sx={{ width: "100%" }}>
+            <Stack direction="row" spacing={3} alignItems="center">
+              <TextField
+                fullWidth
+                autoFocus
+                label="Số phòng"
+                name="number"
+                InputProps={{
+                  readOnly: true,
+                }}
+                value={roomData?.number || ""}
+                sx={{ width: "50%" }}
+              />
+              <Box sx={{ width: "50%", height: "100%" }}>
+                <SeverityPill color={StatusMapRoom[roomData?.status]}>
+                  {roomData?.status === ROOM_STATUS.AVAILABLE ? "Đang có sẵn" : "Không có sẵn"}
+                </SeverityPill>
+              </Box>
             </Stack>
-          </>
+
+            <Stack direction="row" spacing={3}>
+              <TextField
+                fullWidth
+                multiline
+                label="Mô tả"
+                name="description"
+                minRows={3}
+                maxRows={5}
+                InputProps={{
+                  readOnly: true,
+                }}
+                sx={{ flex: 1 }}
+                value={roomData?.description}
+              />
+            </Stack>
+
+            <Stack direction="row" spacing={3}>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DatePicker
+                  readOnly
+                  label="Ngày tạo"
+                  name="created_at"
+                  sx={{ width: "50%" }}
+                  value={dayjs(roomData?.created_at)}
+                />
+              </LocalizationProvider>
+
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DatePicker
+                  readOnly
+                  label="Ngày cập nhật gần nhất"
+                  name="updated_at"
+                  sx={{ width: "50%" }}
+                  value={dayjs(roomData?.updated_at)}
+                />
+              </LocalizationProvider>
+            </Stack>
+          </Stack>
         )}
       </DialogContent>
 

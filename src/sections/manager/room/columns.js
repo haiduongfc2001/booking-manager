@@ -37,7 +37,7 @@ export const columns = ({ handleOpenModalDetail, handleOpenModalDelete, handleOp
       align: "center",
       renderCell: (params) => (
         <SeverityPill color={StatusMapRoom[params.row.status]}>
-          {params.row.status === ROOM_STATUS.AVAILABLE ? "Đang có sẵn" : "Hết phòng"}
+          {params.row.status === ROOM_STATUS.AVAILABLE ? "Đang có sẵn" : "Không có sẵn"}
         </SeverityPill>
       ),
     },

@@ -2,35 +2,48 @@ import * as CommonService from "./common-service";
 
 const prePath = "/hotel";
 
-export const GetAllRoomsByHotelId = async ({ hotel_id }) => {
-  return CommonService.getRequest(`${prePath}/${hotel_id}/getAllRoomsByHotelId`);
+export const GetAllRoomTypesByHotelId = async ({ hotel_id }) => {
+  return CommonService.getRequest(`${prePath}/${hotel_id}/getAllRoomTypesByHotelId`);
 };
 
-export const GetRoomById = async ({ hotel_id, room_id }) => {
-  return CommonService.getRequest(`${prePath}/${hotel_id}/room/${room_id}/getRoomById`);
+export const GetRoomById = async ({ room_type_id, room_id }) => {
+  return CommonService.getRequest(
+    `${prePath}/room_type/${room_type_id}/room/${room_id}/getRoomById`
+  );
 };
 
-export const CreateRoom = async ({ hotel_id, formData }) => {
-  return CommonService.postRequest(`${prePath}/${hotel_id}/room/createRoom`, formData);
+export const CreateRoom = async ({ room_type_id, number, description }) => {
+  return CommonService.postRequest(`${prePath}/room_type/${room_type_id}/room/createRoom`, {
+    number,
+    description,
+  });
 };
 
-export const DeleteRoom = async ({ hotel_id, room_id }) => {
-  return CommonService.deleteRequest(`${prePath}/${hotel_id}/room/${room_id}/deleteRoom`, {});
+export const DeleteRoom = async ({ room_type_id, room_id }) => {
+  return CommonService.deleteRequest(
+    `${prePath}/room_type/${room_type_id}/room/${room_id}/deleteRoom`,
+    {}
+  );
 };
 
-export const EditRoom = async ({ hotel_id, room_id, formData }) => {
-  return CommonService.patchRequest(`${prePath}/${hotel_id}/room/${room_id}/updateRoom`, formData);
+export const EditRoom = async ({ room_type_id, room_id, number, description }) => {
+  return CommonService.patchRequest(
+    `${prePath}/room_type/${room_type_id}/room/${room_id}/updateRoom`,
+    {
+      number,
+      description,
+    }
+  );
 };
 
-export const UpdateRoomImageById = async ({
-  hotel_id,
-  room_id,
-  room_image_id,
+export const UpdateRoomTypeImageById = async ({
+  room_type_id,
+  room_type_image_id,
   caption,
   is_primary,
 }) => {
   return CommonService.patchRequest(
-    `${prePath}/${hotel_id}/room/${room_id}/image/${room_image_id}/updateRoomImageById`,
+    `${prePath}/room/${room_type_id}/image/${room_type_image_id}/updateRoomImageById`,
     {
       caption,
       is_primary,
@@ -38,16 +51,16 @@ export const UpdateRoomImageById = async ({
   );
 };
 
-export const DeleteRoomImageById = async ({ hotel_id, room_id, room_image_id }) => {
+export const DeleteRoomTypeImageById = async ({ room_type_id, room_type_image_id }) => {
   return CommonService.deleteRequest(
-    `${prePath}/${hotel_id}/room/${room_id}/image/${room_image_id}/deleteImage`,
+    `${prePath}/room/${room_type_id}/image/${room_type_image_id}/deleteImage`,
     {}
   );
 };
 
-export const CreateRoomImages = async ({ hotel_id, room_id, formData }) => {
+export const CreateRoomTypeImages = async ({ hotel_id, room_type_id, formData }) => {
   return CommonService.postRequest(
-    `${prePath}/${hotel_id}/room/${room_id}/createRoomImages`,
+    `${prePath}/${hotel_id}/room/${room_type_id}/createRoomTypeImages`,
     formData
   );
 };
@@ -62,6 +75,13 @@ export const DeleteRoomType = async ({ hotel_id, room_type_id }) => {
 export const GetRoomTypeById = async ({ hotel_id, room_type_id }) => {
   return CommonService.getRequest(
     `${prePath}/${hotel_id}/room_type/${room_type_id}/getRoomTypeById`
+  );
+};
+
+export const EditRoomType = async ({ hotel_id, room_type_id, data }) => {
+  return CommonService.patchRequest(
+    `${prePath}/${hotel_id}/room_type/${room_type_id}/updateRoomType`,
+    data
   );
 };
 
@@ -85,5 +105,27 @@ export const EditBed = async ({ bed_id, room_type_id, type, description, quantit
     type,
     description,
     quantity,
+  });
+};
+
+// Amenity of room type
+export const DeleteAmenity = async ({ room_type_id, amenity_id }) => {
+  return CommonService.deleteRequest(
+    `${prePath}/room-type/${room_type_id}/amenity/${amenity_id}/deleteRoomTypeAmenity`,
+    {}
+  );
+};
+
+export const CreateAmenity = async ({ room_type_id, amenity }) => {
+  return CommonService.postRequest(
+    `${prePath}/room-type/${room_type_id}/amenity/createRoomTypeAmenity`,
+    { amenity }
+  );
+};
+
+export const EditAmenity = async ({ amenity_id, room_type_id, amenity }) => {
+  return CommonService.patchRequest(`${prePath}/room-type/${amenity_id}/updateAmenity`, {
+    room_type_id,
+    amenity,
   });
 };

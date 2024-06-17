@@ -101,7 +101,7 @@ const RoomTypeBeds = ({ roomTypeId, beds = [] }) => {
   return (
     <Stack p={2} mt={2} bgcolor={"#f2f3f5"} borderRadius={"20px"}>
       <Typography variant="h6" py={2}>
-        Loại giường
+        Các loại giường
       </Typography>
 
       {editableBeds.length > 0 ? (

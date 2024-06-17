@@ -1,7 +1,6 @@
 // Create a common server to communicate with API server
 import axios from "axios";
 import { ExtractErrorInfo } from "src/utils/extract-error-info";
-import Storage from "src/utils/Storage";
 
 // Create Base URL
 const commonService = axios.create({
@@ -21,8 +20,11 @@ export const post = async (path, data, options = {}) => {
 };
 
 // Create Base DELETE method
-export const _delete = async (path, data, options = {}) => {
-  const response = await commonService.delete(path, data, options);
+export const _delete = async (path, data = {}, options = {}) => {
+  const response = await commonService.delete(path, {
+    ...options,
+    data: data,
+  });
   return response.data;
 };
 

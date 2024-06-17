@@ -6,7 +6,14 @@ import { useDispatch } from "react-redux";
 import { showCommonAlert } from "src/utils/toast-message";
 import PropTypes from "prop-types";
 
-const DeleteRoom = ({ isModalDeleteRoom, setIsModalDeleteRoom, hotelId, currentId, onRefresh }) => {
+const DeleteRoom = ({
+  isModalDeleteRoom,
+  setIsModalDeleteRoom,
+  hotelId,
+  roomTypeId,
+  currentId,
+  onRefresh,
+}) => {
   const dispatch = useDispatch();
 
   const handleCloseModal = () => {
@@ -16,7 +23,7 @@ const DeleteRoom = ({ isModalDeleteRoom, setIsModalDeleteRoom, hotelId, currentI
   const handleDelete = async () => {
     try {
       const response = await RoomService[API.ROOM.DELETE_ROOM]({
-        hotel_id: hotelId,
+        room_type_id: String(roomTypeId).trim(),
         room_id: String(currentId).trim(),
       });
 
@@ -75,6 +82,7 @@ export default DeleteRoom;
 DeleteRoom.propTypes = {
   isModalDeleteRoom: PropTypes.bool.isRequired,
   setIsModalDeleteRoom: PropTypes.func.isRequired,
+  roomTypeId: PropTypes.number.isRequired,
   currentId: PropTypes.number.isRequired,
   onRefresh: PropTypes.func.isRequired,
 };

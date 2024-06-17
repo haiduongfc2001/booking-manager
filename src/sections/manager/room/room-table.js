@@ -81,6 +81,7 @@ export const RoomTable = (props) => {
         isModalDetailRoom={isModalDetailRoom}
         setIsModalDetailRoom={setIsModalDetailRoom}
         hotelId={parseInt(hotelId)}
+        roomTypeId={parseInt(roomTypeId)}
         currentId={parseInt(currentId)}
       />
 
@@ -88,6 +89,7 @@ export const RoomTable = (props) => {
         isModalDeleteRoom={isModalDeleteRoom}
         setIsModalDeleteRoom={setIsModalDeleteRoom}
         hotelId={parseInt(hotelId)}
+        roomTypeId={parseInt(roomTypeId)}
         currentId={parseInt(currentId)}
         onRefresh={onRefresh}
       />
@@ -96,6 +98,7 @@ export const RoomTable = (props) => {
         isModalEditRoom={isModalEditRoom}
         setIsModalEditRoom={setIsModalEditRoom}
         hotelId={parseInt(hotelId)}
+        roomTypeId={parseInt(roomTypeId)}
         currentId={parseInt(currentId)}
         onRefresh={onRefresh}
       />

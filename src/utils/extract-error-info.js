@@ -9,6 +9,7 @@
 export const ExtractErrorInfo = (error) => {
   let res = {};
   res.data = error.response.data;
+  res.message = error.response.data.message;
   res.status = error.response.status;
   res.headers = error.response.headers;
   return res;
