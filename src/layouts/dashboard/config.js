@@ -65,6 +65,15 @@ export const items = [
     ),
   },
   {
+    title: "Nhân viên của tôi",
+    path: "/manager/staff",
+    icon: (
+      <SvgIcon fontSize="small">
+        <UserIcon />
+      </SvgIcon>
+    ),
+  },
+  {
     title: "Tài khoản",
     path: "/account",
     icon: (

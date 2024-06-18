@@ -83,3 +83,28 @@ export const DeleteHotelImageById = async ({ hotel_id, hotel_image_id }) => {
 export const CreateHotelImage = async ({ hotel_id, formData }) => {
   return CommonService.postRequest(`${prePath}/${hotel_id}/createHotelImage`, formData);
 };
+
+// Amenity of hotel
+export const DeleteAmenity = async ({ hotel_id, amenity_id }) => {
+  return CommonService.deleteRequest(
+    `${prePath}/${hotel_id}/amenity/${amenity_id}/deleteHotelAmenity`,
+    {}
+  );
+};
+
+export const CreateAmenity = async ({ hotel_id, amenity }) => {
+  return CommonService.postRequest(`${prePath}/${hotel_id}/amenity/createHotelAmenity`, {
+    amenity,
+  });
+};
+
+export const EditAmenity = async ({ amenity_id, hotel_id, amenity }) => {
+  return CommonService.patchRequest(`${prePath}/${amenity_id}/updateAmenity`, {
+    hotel_id,
+    amenity,
+  });
+};
+
+export const GetAllStaffs = async ({ hotel_id }) => {
+  return CommonService.getRequest(`${prePath}/${hotel_id}/getAllStaffsByHotelId`);
+};

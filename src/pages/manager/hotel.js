@@ -12,13 +12,15 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  ImageListItemBar,
+  IconButton,
+  Card,
 } from "@mui/material";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { API, HOTEL_ID_FAKE, STATUS_CODE, TOAST_KIND } from "src/constant/constants";
+import { API, HOTEL_ID_FAKE, STATUS_CODE, TOAST_KIND, TOAST_MESSAGE } from "src/constant/constants";
 import * as HotelService from "src/services/hotel-service";
 import * as AddressService from "src/services/address-service";
-import LoadingData from "src/layouts/loading/loading-data";
 import { showCommonAlert } from "src/utils/toast-message";
 import { useDispatch } from "react-redux";
 import { neutral } from "src/theme/colors";
@@ -33,12 +35,14 @@ import ImageListItem from "@mui/material/ImageListItem";
 import { ErrorOutline } from "@mui/icons-material";
 import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
 import Head from "next/head";
-import ArrowDownOnSquareIcon from "@heroicons/react/24/solid/ArrowDownOnSquareIcon";
-import ArrowUpOnSquareIcon from "@heroicons/react/24/solid/ArrowUpOnSquareIcon";
 import ArrowPathIcon from "@heroicons/react/24/solid/ArrowPathIcon";
-import EditHotel from "src/sections/manager/hotel/edit-hotel";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
+import StarBorderIcon from "@mui/icons-material/StarBorder";
+import ImageIcon from "@mui/icons-material/Image";
+import EditHotelImage from "src/sections/manager/hotel/edit-hotel-image";
+import HotelAmenities from "src/sections/manager/hotel/hotel-amenity";
 
 const Page = () => {
   const [hotelId, setHotelId] = useState(HOTEL_ID_FAKE);
@@ -49,6 +53,7 @@ const Page = () => {
   const [provinces, setProvinces] = useState([]);
   const [districts, setDistricts] = useState([]);
   const [wards, setWards] = useState([]);
+  const [openPopupAddImages, setOpenPopupAddImages] = useState(false);
 
   const dispatch = useDispatch();
   const router = useRouter();
@@ -257,7 +262,7 @@ const Page = () => {
                   color="primary"
                   onClick={() => router.push("/manager/room-type")}
                 >
-                  Đi đến phòng
+                  Xem danh sách các loại phòng
                 </Button>
               </Grid>
               <Button
@@ -288,296 +293,377 @@ const Page = () => {
                 </Button>
               </Grid> */}
             </Grid>
-          </Stack>
-        </Container>
-      </Box>
-      {loading ? (
-        <LoadingData />
-      ) : hotelData ? (
-        <Box
-          sx={{
-            mx: 3,
-            mb: 3,
-            p: 2,
-            bgcolor: "background.paper",
-            borderRadius: 4,
-            boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
-            border: "1px solid #ddd",
-            transition: "all 0.3s ease",
-            "&:hover": {
-              boxShadow: "0px 8px 16px rgba(0, 0, 0, 0.2)",
-            },
-          }}
-        >
-          <Box>
-            <form noValidate onSubmit={formik.handleSubmit}>
-              <Stack spacing={3} sx={{ mt: 3 }}>
-                <Stack
-                  direction={{ xs: "column", sm: "row" }}
-                  spacing={3}
-                  alignItems={{ xs: "center", sm: "flex-start" }}
-                >
-                  <Avatar
-                    src={
-                      hotelData?.images?.find((image) => image.is_primary)?.url ||
-                      (hotelData?.images?.length > 0
-                        ? hotelData?.images[0]?.url
-                        : "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/2048px-No_image_available.svg.png")
-                    }
-                    sx={{
-                      bgcolor: neutral[300],
-                      width: "calc(100% / 3)",
-                      height: "100%",
-                      boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.2)",
-                    }}
-                    variant="rounded"
-                  >
-                    {getInitials(hotelData?.name)}
-                  </Avatar>
-                  <Stack direction="column" spacing={3} sx={{ width: "100%" }}>
-                    <Stack direction={{ xs: "column", sm: "row" }} spacing={3}>
-                      <TextField
-                        inputRef={inputRef}
-                        autoFocus={!isEditing}
-                        fullWidth
-                        required={isEditing}
-                        label="Tên khách sạn"
-                        name="name"
-                        type="text"
-                        InputProps={{
-                          readOnly: !isEditing,
-                        }}
-                        onBlur={formik.handleBlur}
-                        value={formik.values.name}
-                        onChange={formik.handleChange}
-                        error={!!(formik.touched.name && formik.errors.name)}
-                        helperText={formik.touched.name && formik.errors.name}
-                      />
 
-                      <TextField
-                        fullWidth
-                        required={isEditing}
-                        label="Liên hệ"
-                        name="contact"
-                        type="text"
-                        InputProps={{
-                          readOnly: !isEditing,
-                        }}
-                        onBlur={formik.handleBlur}
-                        value={formik.values.contact}
-                        onChange={formik.handleChange}
-                        error={!!(formik.touched.contact && formik.errors.contact)}
-                        helperText={formik.touched.contact && formik.errors.contact}
-                      />
-                    </Stack>
-
-                    {isEditing ? (
-                      <>
-                        <Stack direction="row" spacing={3} mt={3}>
-                          <FormControl fullWidth required>
-                            <InputLabel>Tỉnh/Thành phố</InputLabel>
-                            <Select
-                              label="Tỉnh/Thành phố"
-                              name="province"
-                              value={formik.values.province}
-                              onChange={(e) => {
-                                formik.handleChange(e);
-                                fetchDistricts(e.target.value);
-                              }}
-                              disabled={!isEditing}
-                            >
-                              {provinces.map((province) => (
-                                <MenuItem key={province.id} value={province.id}>
-                                  {province.name}
-                                </MenuItem>
-                              ))}
-                            </Select>
-                          </FormControl>
-                        </Stack>
-                        <Stack direction="row" spacing={3} mt={3}>
-                          <FormControl fullWidth required>
-                            <InputLabel>Quận/Huyện</InputLabel>
-                            <Select
-                              label="Quận/Huyện"
-                              name="district"
-                              value={formik.values.district}
-                              onChange={(e) => {
-                                formik.handleChange(e);
-                                fetchWards(e.target.value);
-                              }}
-                              disabled={!isEditing || !formik.values.province}
-                            >
-                              {districts.map((district) => (
-                                <MenuItem key={district.id} value={district.id}>
-                                  {district.name}
-                                </MenuItem>
-                              ))}
-                            </Select>
-                          </FormControl>
-                        </Stack>
-                        <Stack direction="row" spacing={3} mt={3}>
-                          <FormControl fullWidth required>
-                            <InputLabel>Phường/Xã</InputLabel>
-                            <Select
-                              label="Phường/Xã"
-                              name="ward"
-                              value={formik.values.ward}
-                              onChange={formik.handleChange}
-                              disabled={!isEditing || !formik.values.district}
-                            >
-                              {wards.map((ward) => (
-                                <MenuItem key={ward.id} value={ward.name}>
-                                  {ward.name}
-                                </MenuItem>
-                              ))}
-                            </Select>
-                          </FormControl>
-                        </Stack>
-                        <Stack direction="row" spacing={3} mt={3}>
-                          <TextField
-                            fullWidth
-                            required
-                            label="Đường/Phố"
-                            name="street"
-                            type="text"
-                            InputProps={{
-                              readOnly: !isEditing,
+            {hotelData ? (
+              <Card key={hotelData?.id} sx={{ p: 2 }}>
+                <Box>
+                  <form noValidate onSubmit={formik.handleSubmit}>
+                    <Stack spacing={3} sx={{ mt: 3 }}>
+                      <Stack
+                        direction={{ xs: "column", sm: "row" }}
+                        spacing={3}
+                        alignItems={{ xs: "center", sm: "flex-start" }}
+                      >
+                        <Stack
+                          direction="column"
+                          justifyContent="center"
+                          alignItems="center"
+                          spacing={3}
+                          sx={{ width: "calc(100% / 3)", height: "100%" }}
+                        >
+                          <Avatar
+                            src={
+                              hotelData?.images?.find((image) => image.is_primary)?.url ||
+                              (hotelData?.images?.length > 0
+                                ? hotelData?.images[0]?.url
+                                : "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/2048px-No_image_available.svg.png")
+                            }
+                            sx={{
+                              bgcolor: neutral[300],
+                              width: "100%",
+                              height: "100%",
+                              boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.2)",
                             }}
-                            onBlur={formik.handleBlur}
-                            value={formik.values.street}
-                            onChange={formik.handleChange}
-                            error={!!(formik.touched.street && formik.errors.street)}
-                            helperText={formik.touched.street && formik.errors.street}
-                          />
-                        </Stack>
-                      </>
-                    ) : (
-                      <>
-                        <Stack direction="row" spacing={3}>
-                          <TextField
-                            fullWidth
-                            required={isEditing}
-                            readOnly
-                            label="Địa chỉ"
-                            name="address"
-                            type="text"
-                            InputProps={{
-                              readOnly: !isEditing,
-                            }}
-                            value={`${hotelData.street}, ${hotelData.ward}, ${hotelData.district}, ${hotelData.province}`}
-                          />
-                        </Stack>{" "}
-                      </>
-                    )}
-
-                    <Stack direction="row" spacing={3}>
-                      <TextField
-                        fullWidth
-                        multiline
-                        label="Mô tả"
-                        name="description"
-                        type="text"
-                        minRows={3}
-                        maxRows={5}
-                        InputProps={{
-                          readOnly: !isEditing,
-                        }}
-                        onBlur={formik.handleBlur}
-                        onChange={formik.handleChange}
-                        value={formik.values.description}
-                        error={!!(formik.touched.description && formik.errors.description)}
-                        helperText={formik.touched.description && formik.errors.description}
-                      />
-                    </Stack>
-
-                    <Stack direction={{ xs: "column", sm: "row" }} spacing={3}>
-                      <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DatePicker
-                          readOnly
-                          label="Ngày tạo"
-                          name="created_at"
-                          value={dayjs(hotelData?.created_at)}
-                        />
-                      </LocalizationProvider>
-
-                      <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DatePicker
-                          readOnly
-                          label="Ngày cập nhật gần nhất"
-                          name="updated_at"
-                          value={dayjs(hotelData?.updated_at)}
-                        />
-                      </LocalizationProvider>
-                    </Stack>
-
-                    <Stack
-                      direction={{ xs: "column", sm: "row" }}
-                      sx={{ display: "flex", justifyContent: "flex-end" }}
-                      spacing={3}
-                    >
-                      {isEditing ? (
-                        <Box sx={{ my: 3, mr: 3, display: "flex", justifyContent: "flex-end" }}>
-                          <Button
-                            type="submit"
-                            variant="contained"
-                            color="success"
-                            sx={{ mr: 2 }}
-                            onClick={formik.handleSubmit}
+                            variant="rounded"
                           >
-                            Lưu thay đổi
-                          </Button>
-                          <Button variant="contained" color="inherit" onClick={handleCancelEdit}>
-                            Hủy
-                          </Button>
-                        </Box>
-                      ) : (
-                        <Button variant="contained" sx={{ mr: 2 }} onClick={handleEdit}>
-                          Chỉnh sửa
-                        </Button>
-                      )}
+                            {getInitials(hotelData?.name)}
+                          </Avatar>
+                          {hotelData?.images?.length <= 0 && (
+                            <Button
+                              variant="contained"
+                              color="success"
+                              endIcon={<ImageIcon />}
+                              onClick={() => setOpenPopupAddImages(true)}
+                            >
+                              Thêm ảnh
+                            </Button>
+                          )}
+                        </Stack>
+                        <Stack direction="column" spacing={3} sx={{ width: "100%" }}>
+                          <Stack direction={{ xs: "column", sm: "row" }} spacing={3}>
+                            <TextField
+                              inputRef={inputRef}
+                              autoFocus={!isEditing}
+                              fullWidth
+                              required={isEditing}
+                              label="Tên khách sạn"
+                              name="name"
+                              type="text"
+                              InputProps={{
+                                readOnly: !isEditing,
+                              }}
+                              onBlur={formik.handleBlur}
+                              value={formik.values.name}
+                              onChange={formik.handleChange}
+                              error={!!(formik.touched.name && formik.errors.name)}
+                              helperText={formik.touched.name && formik.errors.name}
+                            />
+
+                            <TextField
+                              fullWidth
+                              required={isEditing}
+                              label="Liên hệ"
+                              name="contact"
+                              type="text"
+                              InputProps={{
+                                readOnly: !isEditing,
+                              }}
+                              onBlur={formik.handleBlur}
+                              value={formik.values.contact}
+                              onChange={formik.handleChange}
+                              error={!!(formik.touched.contact && formik.errors.contact)}
+                              helperText={formik.touched.contact && formik.errors.contact}
+                            />
+                          </Stack>
+
+                          {isEditing ? (
+                            <>
+                              <Stack direction="row" spacing={3} mt={3}>
+                                <FormControl fullWidth required>
+                                  <InputLabel>Tỉnh/Thành phố</InputLabel>
+                                  <Select
+                                    label="Tỉnh/Thành phố"
+                                    name="province"
+                                    value={formik.values.province}
+                                    onChange={(e) => {
+                                      formik.handleChange(e);
+                                      fetchDistricts(e.target.value);
+                                    }}
+                                    disabled={!isEditing}
+                                  >
+                                    {provinces.map((province) => (
+                                      <MenuItem key={province.id} value={province.id}>
+                                        {province.name}
+                                      </MenuItem>
+                                    ))}
+                                  </Select>
+                                </FormControl>
+                              </Stack>
+                              <Stack direction="row" spacing={3} mt={3}>
+                                <FormControl fullWidth required>
+                                  <InputLabel>Quận/Huyện</InputLabel>
+                                  <Select
+                                    label="Quận/Huyện"
+                                    name="district"
+                                    value={formik.values.district}
+                                    onChange={(e) => {
+                                      formik.handleChange(e);
+                                      fetchWards(e.target.value);
+                                    }}
+                                    disabled={!isEditing || !formik.values.province}
+                                  >
+                                    {districts.map((district) => (
+                                      <MenuItem key={district.id} value={district.id}>
+                                        {district.name}
+                                      </MenuItem>
+                                    ))}
+                                  </Select>
+                                </FormControl>
+                              </Stack>
+                              <Stack direction="row" spacing={3} mt={3}>
+                                <FormControl fullWidth required>
+                                  <InputLabel>Phường/Xã</InputLabel>
+                                  <Select
+                                    label="Phường/Xã"
+                                    name="ward"
+                                    value={formik.values.ward}
+                                    onChange={formik.handleChange}
+                                    disabled={!isEditing || !formik.values.district}
+                                  >
+                                    {wards.map((ward) => (
+                                      <MenuItem key={ward.id} value={ward.name}>
+                                        {ward.name}
+                                      </MenuItem>
+                                    ))}
+                                  </Select>
+                                </FormControl>
+                              </Stack>
+                              <Stack direction="row" spacing={3} mt={3}>
+                                <TextField
+                                  fullWidth
+                                  required
+                                  label="Đường/Phố"
+                                  name="street"
+                                  type="text"
+                                  InputProps={{
+                                    readOnly: !isEditing,
+                                  }}
+                                  onBlur={formik.handleBlur}
+                                  value={formik.values.street}
+                                  onChange={formik.handleChange}
+                                  error={!!(formik.touched.street && formik.errors.street)}
+                                  helperText={formik.touched.street && formik.errors.street}
+                                />
+                              </Stack>
+                            </>
+                          ) : (
+                            <>
+                              <Stack direction="row" spacing={3}>
+                                <TextField
+                                  fullWidth
+                                  required={isEditing}
+                                  readOnly
+                                  label="Địa chỉ"
+                                  name="address"
+                                  type="text"
+                                  InputProps={{
+                                    readOnly: !isEditing,
+                                  }}
+                                  value={`${hotelData.street}, ${hotelData.ward}, ${hotelData.district}, ${hotelData.province}`}
+                                />
+                              </Stack>{" "}
+                            </>
+                          )}
+
+                          <Stack direction="row" spacing={3}>
+                            <TextField
+                              fullWidth
+                              multiline
+                              label="Mô tả"
+                              name="description"
+                              type="text"
+                              minRows={3}
+                              maxRows={5}
+                              InputProps={{
+                                readOnly: !isEditing,
+                              }}
+                              onBlur={formik.handleBlur}
+                              onChange={formik.handleChange}
+                              value={formik.values.description}
+                              error={!!(formik.touched.description && formik.errors.description)}
+                              helperText={formik.touched.description && formik.errors.description}
+                            />
+                          </Stack>
+
+                          <Stack direction={{ xs: "column", sm: "row" }} spacing={3}>
+                            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                              <DatePicker
+                                readOnly
+                                label="Ngày tạo"
+                                name="created_at"
+                                value={dayjs(hotelData?.created_at)}
+                              />
+                            </LocalizationProvider>
+
+                            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                              <DatePicker
+                                readOnly
+                                label="Ngày cập nhật gần nhất"
+                                name="updated_at"
+                                value={dayjs(hotelData?.updated_at)}
+                              />
+                            </LocalizationProvider>
+                          </Stack>
+
+                          <Stack
+                            direction={{ xs: "column", sm: "row" }}
+                            sx={{ display: "flex", justifyContent: "flex-end" }}
+                            spacing={3}
+                          >
+                            {isEditing ? (
+                              <Box
+                                sx={{ my: 3, mr: 3, display: "flex", justifyContent: "flex-end" }}
+                              >
+                                <Button
+                                  type="submit"
+                                  variant="contained"
+                                  color="success"
+                                  sx={{ mr: 2 }}
+                                  onClick={formik.handleSubmit}
+                                >
+                                  Lưu thay đổi
+                                </Button>
+                                <Button
+                                  variant="contained"
+                                  color="inherit"
+                                  onClick={handleCancelEdit}
+                                >
+                                  Hủy
+                                </Button>
+                              </Box>
+                            ) : (
+                              <Button variant="contained" sx={{ mr: 2 }} onClick={handleEdit}>
+                                Chỉnh sửa
+                              </Button>
+                            )}
+                          </Stack>
+                        </Stack>
+                      </Stack>
                     </Stack>
-                  </Stack>
-                </Stack>
+
+                    {formik.errors.submit && (
+                      <Typography color="error" sx={{ mt: 3 }} variant="body2">
+                        {formik.errors.submit}
+                      </Typography>
+                    )}
+                  </form>
+                </Box>
 
                 {hotelData.images && hotelData.images.length > 0 && (
-                  <Box sx={{ width: "100%", height: "100%", overflowY: "scroll" }}>
-                    <ImageList variant="masonry" cols={3} gap={8}>
-                      {hotelData.images.map((item) => (
-                        <ImageListItem key={item.id}>
-                          <img srcSet={item.url} src={item.url} alt={item.id} loading="lazy" />
+                  <Box
+                    sx={{
+                      width: "100%",
+                      height: "100%",
+                      overflowY: "auto",
+                      maxHeight: 460,
+                    }}
+                  >
+                    <ImageList variant="quilted" cols={4} gap={8} rowHeight={160}>
+                      {hotelData.images.map((image, index) => (
+                        <ImageListItem
+                          key={image.id}
+                          cols={index === 0 ? 2 : 1}
+                          rows={index === 0 ? 2 : 1}
+                        >
+                          <div
+                            style={{
+                              width: "100%",
+                              height: "100%",
+                              position: "relative",
+                            }}
+                          >
+                            <Image
+                              fill
+                              priority
+                              // loading="lazy"
+                              // loader={() => image.url}
+                              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                              src={image.url}
+                              alt={image.caption}
+                              style={{
+                                borderRadius: "8px",
+                                objectFit: "cover",
+                              }}
+                            />
+                          </div>
+                          <ImageListItemBar
+                            sx={{
+                              background:
+                                "linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, " +
+                                "rgba(0,0,0,0.3) 70%, rgba(0,0,0,0) 100%)",
+                            }}
+                            title={image.caption}
+                            position="bottom"
+                            actionIcon={
+                              <IconButton
+                                sx={{ color: "white" }}
+                                aria-label={`star ${image.caption}`}
+                              >
+                                <StarBorderIcon />
+                              </IconButton>
+                            }
+                            actionPosition="left"
+                          />
                         </ImageListItem>
                       ))}
                     </ImageList>
+                    <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        endIcon={<ImageIcon />}
+                        onClick={() => setOpenPopupAddImages(true)}
+                      >
+                        Sửa đổi ảnh
+                      </Button>
+                    </Box>
                   </Box>
                 )}
-              </Stack>
 
-              {formik.errors.submit && (
-                <Typography color="error" sx={{ mt: 3 }} variant="body2">
-                  {formik.errors.submit}
+                <HotelAmenities
+                  hotelId={parseInt(hotelData?.id)}
+                  amenities={hotelData?.hotelAmenities}
+                />
+              </Card>
+            ) : (
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  height: "100%",
+                  p: 2,
+                }}
+              >
+                <ErrorOutline sx={{ mr: 1 }} />
+                <Typography variant="body1" color="neutral.900">
+                  Không có dữ liệu!
                 </Typography>
-              )}
-            </form>
-          </Box>
-        </Box>
-      ) : (
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            height: "100%",
-            p: 2,
-          }}
-        >
-          <ErrorOutline sx={{ mr: 1 }} />
-          <Typography variant="body1" color="neutral.900">
-            Không có dữ liệu!
-          </Typography>
-        </Box>
-      )}
+              </Box>
+            )}
+          </Stack>
+        </Container>
+      </Box>
 
-      <EditHotel onRefresh={getHotel} hotelData={hotelData} hotelId={hotelId} />
+      {openPopupAddImages && hotelData && (
+        <EditHotelImage
+          onRefresh={getHotel}
+          openPopupAddImages={openPopupAddImages}
+          setOpenPopupAddImages={setOpenPopupAddImages}
+          hotelData={hotelData}
+          hotelId={hotelData.id}
+        />
+      )}
     </>
   );
 };

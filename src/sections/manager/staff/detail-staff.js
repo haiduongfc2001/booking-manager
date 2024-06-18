@@ -26,6 +26,7 @@ import dayjs from "dayjs";
 import { getGenderLabel } from "src/utils/get-gender-label";
 import { useDispatch } from "react-redux";
 import { showCommonAlert } from "src/utils/toast-message";
+import { width } from "@mui/system";
 
 const DetailStaff = (props) => {
   const { isModalDetailStaff, setIsModalDetailStaff, hotelId, currentId } = props;
@@ -91,7 +92,9 @@ const DetailStaff = (props) => {
         },
       }}
     >
-      <DialogTitle id="scroll-dialog-title">Thông tin chi tiết</DialogTitle>
+      <DialogTitle id="scroll-dialog-title">
+        Thông tin chi tiết của nhân viên {staffData.full_name}
+      </DialogTitle>
       <IconButton
         aria-label="close"
         onClick={handleCloseModal}
@@ -197,11 +200,11 @@ const DetailStaff = (props) => {
                     </LocalizationProvider>
                   </Stack>
 
-                  <Stack direction="column" spacing={3} sx={{ width: "100%" }}>
+                  {/* <Stack direction="column" spacing={3} sx={{ width: "100%" }}>
                     <SeverityPill color={StatusMapRole[staffData?.role]}>
                       {staffData?.role === ROLE.MANAGER ? "Quản lý" : "Lễ tân"}
                     </SeverityPill>
-                  </Stack>
+                  </Stack> */}
                 </Stack>
               </Stack>
             </Stack>
@@ -209,7 +212,15 @@ const DetailStaff = (props) => {
         )}
       </DialogContent>
 
-      <DialogActions sx={{ my: 3, mr: 3, display: "flex", justifyContent: "flex-end" }}>
+      <DialogActions sx={{ my: 3, mr: 3, display: "flex", justifyContent: "space-between" }}>
+        <Stack direction="column" spacing={3} sx={{ width: "100%" }}>
+          <SeverityPill
+            color={StatusMapRole[staffData?.role]}
+            sx={{ width: "fit-content", p: 1.5 }}
+          >
+            {staffData?.role === ROLE.MANAGER ? "Quản lý" : "Lễ tân"}
+          </SeverityPill>
+        </Stack>
         <Button variant="contained" color="inherit" onClick={handleCloseModal}>
           Đóng
         </Button>
