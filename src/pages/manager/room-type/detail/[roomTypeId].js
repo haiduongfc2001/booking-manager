@@ -96,10 +96,12 @@ const Page = () => {
     const elementPosition = listRoomsRef.current?.offsetTop;
     const offsetPosition = elementPosition - offset;
 
-    window.scrollTo({
-      top: offsetPosition,
-      behavior: "smooth",
-    });
+    if (typeof window !== "undefined") {
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: "smooth",
+      });
+    }
   };
 
   const handleOpenModalCreate = () => {

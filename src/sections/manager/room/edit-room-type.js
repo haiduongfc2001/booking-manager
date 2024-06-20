@@ -212,8 +212,8 @@ const EditRoomType = (props) => {
                 }
                 sx={{
                   bgcolor: neutral[300],
-                  width: "calc(100% / 3)",
-                  height: "100%",
+                  width: 256,
+                  height: 256,
                   boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.2)",
                 }}
                 variant="rounded"

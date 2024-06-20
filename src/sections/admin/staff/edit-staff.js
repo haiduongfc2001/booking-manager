@@ -22,10 +22,9 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { API, ROLE, STATUS_CODE, TOAST_KIND } from "src/constant/constants";
+import { API, GENDER, ROLE, STATUS_CODE, TOAST_KIND } from "src/constant/constants";
 import * as StaffService from "../../../services/staff-service";
 import * as HotelService from "../../../services/hotel-service";
-import LoadingData from "src/layouts/loading/loading-data";
 import { showCommonAlert } from "src/utils/toast-message";
 import { useDispatch } from "react-redux";
 import { neutral } from "src/theme/colors";
@@ -40,7 +39,6 @@ const EditStaff = (props) => {
   const { isModalEditStaff, setIsModalEditStaff, hotelId, currentId, onRefresh } = props;
 
   const [staffData, setStaffData] = useState([]);
-  const [loading, setLoading] = useState(false);
 
   const [hotelList, setHotelList] = useState([]);
   const [hotelInfo, setHotelInfo] = useState(null);
@@ -60,6 +58,7 @@ const EditStaff = (props) => {
     fetchData.current = true;
 
     try {
+      dispatch(openLoadingApi());
       const response = await HotelService[API.HOTEL.GET_HOTEL_LIST]();
 
       if (response?.status !== STATUS_CODE.UNAUTHORIZED) {
@@ -69,14 +68,16 @@ const EditStaff = (props) => {
       }
     } catch (error) {
       // dispatch(showCommonAlert(TOAST_KIND.ERROR, TOAST_MESSAGE.SERVER_ERROR));
+    } finally {
+      dispatch(closeLoadingApi());
     }
   };
 
   const getStaff = async () => {
     try {
-      setLoading(true);
+      dispatch(openLoadingApi());
 
-      const response = await StaffService[API.STAFF.GET_STAFF_BY_ID]({
+      const response = await StaffService[API.HOTEL.STAFF.GET_STAFF_BY_ID]({
         hotel_id: String(hotelId).trim(),
         staff_id: String(currentId).trim(),
       });
@@ -89,7 +90,7 @@ const EditStaff = (props) => {
     } catch (error) {
       dispatch(showCommonAlert(TOAST_KIND.ERROR, TOAST_MESSAGE.SERVER_ERROR));
     } finally {
-      setLoading(false);
+      dispatch(closeLoadingApi());
     }
   };
 
@@ -112,12 +113,10 @@ const EditStaff = (props) => {
       gender: staffData?.gender || "",
       phone: staffData?.phone || "",
       hotel_id: staffData?.hotel_id || "",
-      dob: staffData?.dob || null,
       role: staffData?.role || "",
       submit: null,
     }),
     [
-      staffData?.dob,
       staffData?.email,
       staffData?.full_name,
       staffData?.gender,
@@ -135,7 +134,9 @@ const EditStaff = (props) => {
         .max(255)
         .required("Vui lòng nhập địa chỉ email!"),
       full_name: Yup.string().max(20).required("Vui lòng nhập họ và tên!"),
-      gender: Yup.mixed().oneOf(["male", "female", "other"]).required("Vui lòng chọn 1 giới tính!"),
+      gender: Yup.mixed()
+        .oneOf([GENDER.MALE, GENDER.FEMALE, GENDER.OTHER])
+        .required("Vui lòng chọn 1 giới tính!"),
       phone: Yup.string()
         .matches(/^[0-9]{10}$/, "Số điện thoại chỉ gồm 10 số!")
         .required("Vui lòng nhập số điện thoại!")
@@ -144,7 +145,6 @@ const EditStaff = (props) => {
       hotel_id: Yup.string()
         .matches(/^\d+$/, "Hotel ID phải là chuỗi số!")
         .required("Vui lòng nhập chọn 1 khách sạn!"),
-      dob: Yup.string(),
       role: Yup.mixed()
         .oneOf([ROLE.MANAGER, ROLE.RECEPTIONIST])
         .required("Vui lòng lựa chọn chức vụ của nhân viên!"),
@@ -153,15 +153,13 @@ const EditStaff = (props) => {
     onSubmit: async (values, helpers) => {
       try {
         dispatch(openLoadingApi());
-        const dobValue = values.dob ? dayjs(values.dob).format("YYYY-MM-DD") : null;
-        const response = await StaffService[API.STAFF.EDIT_STAFF]({
+        const response = await StaffService[API.HOTEL.STAFF.EDIT_STAFF]({
           staff_id: String(currentId).trim(),
           email: values.email.trim(),
           full_name: values.full_name.trim(),
           gender: values.gender.trim(),
           phone: values.phone.trim(),
           hotel_id: String(values.hotel_id).trim(),
-          dob: dobValue,
           role: values.role.trim(),
         });
 
@@ -245,175 +243,151 @@ const EditStaff = (props) => {
       </IconButton>
 
       <DialogContent dividers>
-        {loading ? (
-          <LoadingData />
-        ) : (
-          <form noValidate onSubmit={formik.handleSubmit}>
-            <Stack spacing={3} sx={{ mt: 3 }}>
-              <Stack
-                direction={{ xs: "column", sm: "row" }}
-                spacing={3}
-                alignItems={{ xs: "center", sm: "flex-start" }}
+        <form noValidate onSubmit={formik.handleSubmit}>
+          <Stack spacing={3} sx={{ mt: 3 }}>
+            <Stack
+              direction={{ xs: "column", sm: "row" }}
+              spacing={3}
+              alignItems={{ xs: "center", sm: "flex-start" }}
+            >
+              <Avatar
+                src={staffData?.avatar}
+                sx={{
+                  bgcolor: neutral[300],
+                  width: 256,
+                  height: 256,
+                  boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.2)",
+                }}
               >
-                <Avatar
-                  src={staffData?.avatar}
-                  sx={{
-                    bgcolor: neutral[300],
-                    width: "calc(100% / 3)",
-                    height: "auto",
-                    boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.2)",
-                  }}
-                >
-                  {getInitials(staffData?.full_name)}
-                </Avatar>
+                {getInitials(staffData?.full_name)}
+              </Avatar>
 
-                <Stack direction="column" spacing={3} sx={{ width: "100%" }}>
-                  <Stack direction={{ md: "row", xs: "column" }} spacing={3}>
-                    <TextField
-                      autoFocus
-                      fullWidth
-                      required
-                      label="Email"
-                      name="email"
-                      type="email"
-                      onBlur={formik.handleBlur}
-                      value={formik.values.email}
-                      onChange={formik.handleChange}
-                      error={!!(formik.touched.email && formik.errors.email)}
-                      helperText={formik.touched.email && formik.errors.email}
-                    />
-                    <TextField
-                      fullWidth
-                      required
-                      label="Họ và tên"
-                      name="full_name"
-                      type="text"
-                      onBlur={formik.handleBlur}
-                      value={formik.values.full_name}
-                      onChange={formik.handleChange}
-                      error={!!(formik.touched.full_name && formik.errors.full_name)}
-                      helperText={formik.touched.full_name && formik.errors.full_name}
-                    />
-                  </Stack>
+              <Stack direction="column" spacing={3} sx={{ width: "100%" }}>
+                <Stack direction={{ md: "row", xs: "column" }} spacing={3}>
+                  <TextField
+                    autoFocus
+                    fullWidth
+                    required
+                    label="Email"
+                    name="email"
+                    type="email"
+                    onBlur={formik.handleBlur}
+                    value={formik.values.email}
+                    onChange={formik.handleChange}
+                    error={!!(formik.touched.email && formik.errors.email)}
+                    helperText={formik.touched.email && formik.errors.email}
+                  />
+                  <TextField
+                    fullWidth
+                    required
+                    label="Họ và tên"
+                    name="full_name"
+                    type="text"
+                    onBlur={formik.handleBlur}
+                    value={formik.values.full_name}
+                    onChange={formik.handleChange}
+                    error={!!(formik.touched.full_name && formik.errors.full_name)}
+                    helperText={formik.touched.full_name && formik.errors.full_name}
+                  />
+                </Stack>
 
-                  <Stack direction={{ sm: "row", xs: "column" }} spacing={3}>
-                    <TextField
-                      fullWidth
-                      required
-                      label="Số điện thoại"
-                      name="phone"
-                      type="phone"
-                      onBlur={formik.handleBlur}
-                      value={formik.values.phone}
-                      onChange={formik.handleChange}
-                      error={!!(formik.touched.phone && formik.errors.phone)}
-                      helperText={formik.touched.phone && formik.errors.phone}
-                    />
+                <Stack direction={{ sm: "row", xs: "column" }} spacing={3}>
+                  <TextField
+                    fullWidth
+                    required
+                    label="Số điện thoại"
+                    name="phone"
+                    type="phone"
+                    onBlur={formik.handleBlur}
+                    value={formik.values.phone}
+                    onChange={formik.handleChange}
+                    error={!!(formik.touched.phone && formik.errors.phone)}
+                    helperText={formik.touched.phone && formik.errors.phone}
+                  />
+                </Stack>
 
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                      <DatePicker
-                        required
-                        fullWidth
-                        label="Ngày sinh *"
-                        name="dob"
+                <Stack direction="row" spacing={3}>
+                  <FormControl
+                    sx={{ width: "100%", m: 1, minWidth: 120 }}
+                    error={!!(formik.touched.gender && formik.errors.gender)}
+                  >
+                    <FormLabel id="radio-gender">Giới tính</FormLabel>
+                    <RadioGroup
+                      row
+                      aria-labelledby="radio-gender"
+                      defaultValue={staffData?.gender}
+                      name="gender"
+                      onBlur={formik.handleBlur}
+                      value={formik.values.gender}
+                      onChange={formik.handleChange}
+                    >
+                      <FormControlLabel value={GENDER.MALE} control={<Radio />} label="Nam" />
+                      <FormControlLabel value={GENDER.FEMALE} control={<Radio />} label="Nữ" />
+                      <FormControlLabel value={GENDER.OTHER} control={<Radio />} label="Khác" />
+                    </RadioGroup>
+                    {formik.touched.gender && formik.errors.gender && (
+                      <FormHelperText>{formik.errors.gender}</FormHelperText>
+                    )}
+                  </FormControl>
+                </Stack>
+
+                <Stack direction={{ md: "row", xs: "column" }} spacing={3}>
+                  <Autocomplete
+                    {...defaultProps}
+                    fullWidth
+                    id="hotel_id"
+                    value={hotelInfo}
+                    onChange={(event, newValue) => {
+                      setHotelInfo(newValue);
+                      formik.setFieldValue("hotel_id", newValue?.id || "");
+                    }}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label="Khách sạn"
                         onBlur={formik.handleBlur}
-                        value={dayjs(formik.values.dob)}
-                        onChange={(value) => {
-                          formik.setFieldValue("dob", Date.parse(value));
-                        }}
-                        error={!!(formik.touched.dob && formik.errors.dob)}
-                        helperText={formik.touched.dob && formik.errors.dob}
+                        error={!!(formik.touched.hotel_id && formik.errors.hotel_id)}
+                        helperText={formik.touched.hotel_id && formik.errors.hotel_id}
                       />
-                    </LocalizationProvider>
-                  </Stack>
+                    )}
+                  />
 
-                  <Stack direction="row" spacing={3}>
-                    <FormControl
-                      sx={{ width: "100%", m: 1, minWidth: 120 }}
-                      error={!!(formik.touched.gender && formik.errors.gender)}
+                  <FormControl
+                    fullWidth
+                    sx={{ m: 1, minWidth: 120 }}
+                    error={!!(formik.touched.role && formik.errors.role)}
+                  >
+                    <FormLabel id="radio-role">Chức vụ</FormLabel>
+                    <RadioGroup
+                      row
+                      aria-labelledby="radio-role"
+                      defaultValue={staffData?.role}
+                      name="role"
+                      onBlur={formik.handleBlur}
+                      value={formik.values.role}
+                      onChange={formik.handleChange}
                     >
-                      <FormLabel id="radio-gender">Giới tính</FormLabel>
-                      <RadioGroup
-                        row
-                        aria-labelledby="radio-gender"
-                        defaultValue={staffData?.gender}
-                        name="gender"
-                        onBlur={formik.handleBlur}
-                        value={formik.values.gender}
-                        onChange={formik.handleChange}
-                      >
-                        <FormControlLabel value="male" control={<Radio />} label="Nam" />
-                        <FormControlLabel value="female" control={<Radio />} label="Nữ" />
-                        <FormControlLabel value="other" control={<Radio />} label="Khác" />
-                      </RadioGroup>
-                      {formik.touched.gender && formik.errors.gender && (
-                        <FormHelperText>{formik.errors.gender}</FormHelperText>
-                      )}
-                    </FormControl>
-                  </Stack>
-
-                  <Stack direction={{ md: "row", xs: "column" }} spacing={3}>
-                    <Autocomplete
-                      {...defaultProps}
-                      fullWidth
-                      id="hotel_id"
-                      value={hotelInfo}
-                      onChange={(event, newValue) => {
-                        setHotelInfo(newValue);
-                        formik.setFieldValue("hotel_id", newValue?.id || "");
-                      }}
-                      renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          label="Khách sạn"
-                          onBlur={formik.handleBlur}
-                          error={!!(formik.touched.hotel_id && formik.errors.hotel_id)}
-                          helperText={formik.touched.hotel_id && formik.errors.hotel_id}
-                        />
-                      )}
-                    />
-
-                    <FormControl
-                      fullWidth
-                      sx={{ m: 1, minWidth: 120 }}
-                      error={!!(formik.touched.role && formik.errors.role)}
-                    >
-                      <FormLabel id="radio-role">Chức vụ</FormLabel>
-                      <RadioGroup
-                        row
-                        aria-labelledby="radio-role"
-                        defaultValue={staffData?.role}
-                        name="role"
-                        onBlur={formik.handleBlur}
-                        value={formik.values.role}
-                        onChange={formik.handleChange}
-                      >
-                        <FormControlLabel
-                          value={ROLE.MANAGER}
-                          control={<Radio />}
-                          label="Quản lý"
-                        />
-                        <FormControlLabel
-                          value={ROLE.RECEPTIONIST}
-                          control={<Radio />}
-                          label="Lễ tân"
-                        />
-                      </RadioGroup>
-                      {formik.touched.role && formik.errors.role && (
-                        <FormHelperText>{formik.errors.role}</FormHelperText>
-                      )}
-                    </FormControl>
-                  </Stack>
+                      <FormControlLabel value={ROLE.MANAGER} control={<Radio />} label="Quản lý" />
+                      <FormControlLabel
+                        value={ROLE.RECEPTIONIST}
+                        control={<Radio />}
+                        label="Lễ tân"
+                      />
+                    </RadioGroup>
+                    {formik.touched.role && formik.errors.role && (
+                      <FormHelperText>{formik.errors.role}</FormHelperText>
+                    )}
+                  </FormControl>
                 </Stack>
               </Stack>
             </Stack>
-            {formik.errors.submit && (
-              <Typography color="error" variant="body2" sx={{ mt: 3 }}>
-                {formik.errors.submit}
-              </Typography>
-            )}
-          </form>
-        )}
+          </Stack>
+          {formik.errors.submit && (
+            <Typography color="error" variant="body2" sx={{ mt: 3 }}>
+              {formik.errors.submit}
+            </Typography>
+          )}
+        </form>
       </DialogContent>
 
       <DialogActions sx={{ my: 3, mr: 3, display: "flex", justifyContent: "flex-end" }}>

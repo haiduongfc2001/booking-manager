@@ -117,8 +117,8 @@ const DetailCustomer = (props) => {
                   }
                   sx={{
                     bgcolor: neutral[300],
-                    width: "calc(100% / 3)",
-                    height: "auto",
+                    width: 256,
+                    height: 256,
                     boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.2)",
                   }}
                 >

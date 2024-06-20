@@ -160,7 +160,6 @@ const Page = () => {
 
             <Grid
               container
-              justifyContent="flex-end"
               sx={{
                 display: "flex",
                 justifyContent: "space-between",

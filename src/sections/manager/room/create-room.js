@@ -206,6 +206,6 @@ export default CreateRoom;
 CreateRoom.propTypes = {
   isModalCreateRoom: PropTypes.bool.isRequired,
   setIsModalCreateRoom: PropTypes.func.isRequired,
-  roomTypeId: PropTypes.number.isRequired,
+  // roomTypeId: PropTypes.number.isRequired,
   onRefresh: PropTypes.func,
 };

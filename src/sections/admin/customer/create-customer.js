@@ -20,7 +20,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import * as CustomerService from "../../../services/customer-service";
-import { API, STATUS_CODE, TOAST_KIND } from "src/constant/constants";
+import { API, GENDER, STATUS_CODE, TOAST_KIND } from "src/constant/constants";
 import { useDispatch } from "react-redux";
 import { showCommonAlert } from "src/utils/toast-message";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -62,7 +62,7 @@ const CreateCustomer = (props) => {
       username: Yup.string().max(20).required("Vui lòng nhập tên người dùng!"),
       full_name: Yup.string().max(20).required("Vui lòng nhập họ và tên!"),
       gender: Yup.mixed()
-        .oneOf(["male", "female", "other"])
+        .oneOf([GENDER.MALE, GENDER.FEMALE, GENDER.OTHER])
         .required("Vui lòng nhập giới tính người dùng!"),
       phone: Yup.string()
         .matches(/^[0-9]{10}$/, "Số điện thoại chỉ gồm 10 số!")
@@ -209,9 +209,9 @@ const CreateCustomer = (props) => {
                     value={formik.values.gender}
                     onChange={formik.handleChange}
                   >
-                    <MenuItem value="male">Nam</MenuItem>
-                    <MenuItem value="female">Nữ</MenuItem>
-                    <MenuItem value="other">Khác</MenuItem>
+                    <MenuItem value={GENDER.MALE}>Nam</MenuItem>
+                    <MenuItem value={GENDER.FEMALE}>Nữ</MenuItem>
+                    <MenuItem value={GENDER.OTHER}>Khác</MenuItem>
                   </Select>
                   {formik.touched.gender && formik.errors.gender && (
                     <FormHelperText>{formik.errors.gender}</FormHelperText>

@@ -59,10 +59,10 @@ export const columns = ({ handleOpenModalDetail, handleOpenModalDelete, handleOp
     },
     {
       field: "created_at",
-      headerName: "Ngày đăng ký",
+      headerName: "Ngày tạo",
       flex: 0.15,
       align: "right",
-      renderCell: (params) => format(new Date(params.row.created_at), "hh:mm:ss dd/MM/yyyy"),
+      renderCell: (params) => format(new Date(params.row.created_at), "dd/MM/yyyy"),
     },
     {
       field: "actions",

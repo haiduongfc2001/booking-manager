@@ -32,7 +32,9 @@ const Page = () => {
     try {
       dispatch(openLoadingApi());
 
-      const response = await StaffService[API.HOTEL.STAFF.GET_ALL_STAFFS]({ hotel_id: hotelId });
+      const response = await StaffService[API.HOTEL.STAFF.GET_ALL_STAFFS_BY_HOTEL_ID]({
+        hotel_id: hotelId,
+      });
 
       if (response?.status !== STATUS_CODE.UNAUTHORIZED) {
         setStaffsData(response.data);
@@ -71,7 +73,7 @@ const Page = () => {
             <Stack direction="row" justifyContent="space-between" spacing={4}>
               <Stack spacing={1}>
                 <Typography variant="h4">Nhân viên khách sạn</Typography>
-                <Stack alignItems="center" direction="row" spacing={1}>
+                {/* <Stack alignItems="center" direction="row" spacing={1}>
                   <Button
                     color="inherit"
                     startIcon={
@@ -92,7 +94,7 @@ const Page = () => {
                   >
                     Export
                   </Button>
-                </Stack>
+                </Stack> */}
               </Stack>
             </Stack>
             <Card sx={{ p: 2 }}>
@@ -118,21 +120,30 @@ const Page = () => {
               </Stack>
             </Card>
 
-            <Grid container justifyContent="flex-end">
-              <Grid item xs={3} sx={{ display: "flex", justifyContent: "inherit", pr: 2 }}>
-                <Button
-                  startIcon={
-                    <SvgIcon fontSize="small">
-                      <ArrowPathIcon />
-                    </SvgIcon>
-                  }
-                  variant="contained"
-                  color="secondary"
-                  onClick={fetchData}
-                >
-                  Làm mới
-                </Button>
-              </Grid>
+            <Grid
+              container
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                pr: 2,
+              }}
+            >
+              <Button variant="contained" color="info">
+                Số nhân viên: {staffsData?.length}
+              </Button>
+              <Button
+                startIcon={
+                  <SvgIcon fontSize="small">
+                    <ArrowPathIcon />
+                  </SvgIcon>
+                }
+                variant="contained"
+                color="secondary"
+                onClick={fetchData}
+              >
+                Làm mới
+              </Button>
             </Grid>
 
             <StaffTable items={staffsData} onRefresh={fetchData} />

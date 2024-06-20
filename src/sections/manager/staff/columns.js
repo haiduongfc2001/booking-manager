@@ -5,7 +5,7 @@ import PencilIcon from "@heroicons/react/24/solid/PencilIcon";
 import { getInitials } from "src/utils/get-initials";
 import { SeverityPill } from "src/components/severity-pill";
 import { StatusMapRole } from "src/components/status-map";
-import { ROLE } from "src/constant/constants";
+import { MANAGER_ID_FAKE, ROLE } from "src/constant/constants";
 
 export const columns = ({ handleOpenModalDetail, handleOpenModalDelete, handleOpenModalEdit }) => {
   return [
@@ -60,10 +60,10 @@ export const columns = ({ handleOpenModalDetail, handleOpenModalDelete, handleOp
     },
     {
       field: "created_at",
-      headerName: "Ngày đăng ký",
+      headerName: "Ngày tạo",
       flex: 0.15,
       align: "right",
-      renderCell: (params) => format(new Date(params.row.created_at), "hh:mm:ss dd/MM/yyyy"),
+      renderCell: (params) => format(new Date(params.row.created_at), "dd/MM/yyyy"),
     },
     {
       field: "actions",
@@ -82,6 +82,7 @@ export const columns = ({ handleOpenModalDetail, handleOpenModalDelete, handleOp
             size="small"
             variant="contained"
             color="error"
+            disabled={params.row?.role === ROLE.MANAGER}
             sx={{
               "& .MuiButton-startIcon": { m: 0 },
             }}
@@ -95,6 +96,7 @@ export const columns = ({ handleOpenModalDetail, handleOpenModalDelete, handleOp
             }
             size="small"
             variant="contained"
+            disabled={params.row?.role === ROLE.MANAGER && params.row?.id !== MANAGER_ID_FAKE}
             sx={{
               "& .MuiButton-startIcon": { m: 0 },
             }}

@@ -40,7 +40,7 @@ const App = (props) => {
           <LocalizationProvider dateAdapter={AdapterDateFns}>
             <AuthProvider>
               <ThemeProvider theme={theme}>
-                {/* <AlertModal></AlertModal> */}
+                <AlertModal></AlertModal>
                 <CssBaseline />
                 <AuthConsumer>
                   {(auth) =>

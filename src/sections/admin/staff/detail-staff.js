@@ -39,7 +39,7 @@ const DetailStaff = (props) => {
     try {
       setLoading(true);
 
-      const response = await StaffService[API.STAFF.GET_STAFF_BY_ID]({
+      const response = await StaffService[API.HOTEL.STAFF.GET_STAFF_BY_ID]({
         hotel_id: String(hotelId).trim(),
         staff_id: String(currentId).trim(),
       });
@@ -119,8 +119,8 @@ const DetailStaff = (props) => {
                   src={staffData?.avatar}
                   sx={{
                     bgcolor: neutral[300],
-                    width: "calc(100% / 3)",
-                    height: "auto",
+                    width: 256,
+                    height: 256,
                     boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.2)",
                   }}
                 >
@@ -179,20 +179,20 @@ const DetailStaff = (props) => {
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                       <DatePicker
                         readOnly
-                        label="Ngày sinh"
-                        name="dob"
+                        label="Ngày tạo"
+                        name="created_at"
                         sx={{ width: "50%" }}
-                        value={dayjs(staffData?.dob)}
+                        value={dayjs(staffData?.created_at)}
                       />
                     </LocalizationProvider>
 
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                       <DatePicker
                         readOnly
-                        label="Ngày tạo"
-                        name="dob"
+                        label="Ngày cập nhật gần nhất"
+                        name="updated_at"
                         sx={{ width: "50%" }}
-                        value={dayjs(staffData?.created_at)}
+                        value={dayjs(staffData?.updated_at)}
                       />
                     </LocalizationProvider>
                   </Stack>

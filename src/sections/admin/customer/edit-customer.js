@@ -16,11 +16,15 @@ import {
   InputLabel,
   FormHelperText,
   Avatar,
+  FormControlLabel,
+  FormLabel,
+  RadioGroup,
+  Radio,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { API, STATUS_CODE, TOAST_KIND } from "src/constant/constants";
+import { API, GENDER, STATUS_CODE, TOAST_KIND } from "src/constant/constants";
 import * as CustomerService from "../../../services/customer-service";
 import LoadingData from "src/layouts/loading/loading-data";
 import { showCommonAlert } from "src/utils/toast-message";
@@ -103,7 +107,7 @@ const EditCustomer = (props) => {
       username: Yup.string().max(20).required("Vui lòng nhập tên người dùng!"),
       full_name: Yup.string().max(20).required("Vui lòng nhập tên!"),
       gender: Yup.mixed()
-        .oneOf(["male", "female", "other"])
+        .oneOf([GENDER.MALE, GENDER.FEMALE, GENDER.OTHER])
         .required("Vui lòng nhập địa chỉ tên người dùng!"),
       phone: Yup.string().max(12).required("Vui lòng nhập số điện thoại!"),
       address: Yup.string(),
@@ -199,8 +203,8 @@ const EditCustomer = (props) => {
                   }
                   sx={{
                     bgcolor: neutral[300],
-                    width: "calc(100% / 3)",
-                    height: "auto",
+                    width: 256,
+                    height: 256,
                     boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.2)",
                   }}
                   variant="rounded"
@@ -256,24 +260,23 @@ const EditCustomer = (props) => {
 
                   <Stack direction="row" spacing={3}>
                     <FormControl
-                      fullWidth
-                      variant="filled"
-                      sx={{ m: 1, minWidth: 120 }}
+                      sx={{ width: "100%", m: 1, minWidth: 120 }}
                       error={!!(formik.touched.gender && formik.errors.gender)}
                     >
-                      <InputLabel id="gender-label">Giới tính *</InputLabel>
-                      <Select
-                        required
-                        labelId="gender-label"
+                      <FormLabel id="radio-gender">Giới tính</FormLabel>
+                      <RadioGroup
+                        row
+                        aria-labelledby="radio-gender"
+                        defaultValue=""
                         name="gender"
                         onBlur={formik.handleBlur}
                         value={formik.values.gender}
                         onChange={formik.handleChange}
                       >
-                        <MenuItem value="male">Nam</MenuItem>
-                        <MenuItem value="female">Nữ</MenuItem>
-                        <MenuItem value="other">Khác</MenuItem>
-                      </Select>
+                        <FormControlLabel value={GENDER.MALE} control={<Radio />} label="Nam" />
+                        <FormControlLabel value={GENDER.FEMALE} control={<Radio />} label="Nữ" />
+                        <FormControlLabel value={GENDER.OTHER} control={<Radio />} label="Khác" />
+                      </RadioGroup>
                       {formik.touched.gender && formik.errors.gender && (
                         <FormHelperText>{formik.errors.gender}</FormHelperText>
                       )}

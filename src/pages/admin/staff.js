@@ -28,7 +28,7 @@ const Page = () => {
     try {
       setLoading(true);
 
-      const response = await StaffService[API.STAFF.GET_ALL_STAFFS]();
+      const response = await StaffService[API.HOTEL.STAFF.GET_ALL_STAFFS]();
 
       if (response?.status !== STATUS_CODE.UNAUTHORIZED) {
         setStaffsData(response.data);

@@ -67,7 +67,7 @@ export const columns = ({ handleOpenModalDetail, handleOpenModalDelete, handleOp
       headerName: "Ngày đăng ký",
       flex: 0.15,
       align: "right",
-      renderCell: (params) => format(new Date(params.row.created_at), "hh:mm:ss dd/MM/yyyy"),
+      renderCell: (params) => format(new Date(params.row.created_at), "dd/MM/yyyy"),
     },
     {
       field: "actions",

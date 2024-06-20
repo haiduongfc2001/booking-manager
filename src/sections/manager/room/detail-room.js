@@ -9,38 +9,30 @@ import {
   DialogActions,
   Stack,
   TextField,
-  Avatar,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { API, ROOM_STATUS, STATUS_CODE, TOAST_KIND, TOAST_MESSAGE } from "src/constant/constants";
-import LoadingData from "src/layouts/loading/loading-data";
 import * as RoomService from "../../../services/room-service";
-import { getInitials } from "src/utils/get-initials";
-import { neutral } from "src/theme/colors";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
 import Box from "@mui/material/Box";
-import ImageList from "@mui/material/ImageList";
-import ImageListItem from "@mui/material/ImageListItem";
-import { capitalizeFirstLetter } from "src/utils/capitalize-letter";
-import FormatNumber from "src/utils/format-number";
 import { SeverityPill } from "src/components/severity-pill";
 import { StatusMapRoom } from "src/components/status-map";
 import { showCommonAlert } from "src/utils/toast-message";
 import { useDispatch } from "react-redux";
+import { closeLoadingApi, openLoadingApi } from "src/redux/create-actions/loading-action";
 
 const DetailRoom = (props) => {
   const { isModalDetailRoom, setIsModalDetailRoom, hotelId, roomTypeId, currentId } = props;
   const dispatch = useDispatch();
 
   const [roomData, setRoomData] = useState([]);
-  const [loading, setLoading] = useState(false);
 
   const getRoom = async () => {
     try {
-      setLoading(true);
+      dispatch(openLoadingApi());
 
       const response = await RoomService[API.ROOM.GET_ROOM_BY_ID]({
         room_type_id: String(roomTypeId).trim(),
@@ -55,7 +47,7 @@ const DetailRoom = (props) => {
     } catch (error) {
       dispatch(showCommonAlert(TOAST_KIND.ERROR, TOAST_MESSAGE.SERVER_ERROR));
     } finally {
-      setLoading(false);
+      dispatch(closeLoadingApi());
     }
   };
 
@@ -108,68 +100,64 @@ const DetailRoom = (props) => {
         <CloseIcon />
       </IconButton>
       <DialogContent dividers>
-        {loading ? (
-          <LoadingData />
-        ) : (
-          <Stack direction="column" spacing={3} sx={{ width: "100%" }}>
-            <Stack direction="row" spacing={3} alignItems="center">
-              <TextField
-                fullWidth
-                autoFocus
-                label="Số phòng"
-                name="number"
-                InputProps={{
-                  readOnly: true,
-                }}
-                value={roomData?.number || ""}
-                sx={{ width: "50%" }}
-              />
-              <Box sx={{ width: "50%", height: "100%" }}>
-                <SeverityPill color={StatusMapRoom[roomData?.status]}>
-                  {roomData?.status === ROOM_STATUS.AVAILABLE ? "Đang có sẵn" : "Không có sẵn"}
-                </SeverityPill>
-              </Box>
-            </Stack>
-
-            <Stack direction="row" spacing={3}>
-              <TextField
-                fullWidth
-                multiline
-                label="Mô tả"
-                name="description"
-                minRows={3}
-                maxRows={5}
-                InputProps={{
-                  readOnly: true,
-                }}
-                sx={{ flex: 1 }}
-                value={roomData?.description}
-              />
-            </Stack>
-
-            <Stack direction="row" spacing={3}>
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DatePicker
-                  readOnly
-                  label="Ngày tạo"
-                  name="created_at"
-                  sx={{ width: "50%" }}
-                  value={dayjs(roomData?.created_at)}
-                />
-              </LocalizationProvider>
-
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DatePicker
-                  readOnly
-                  label="Ngày cập nhật gần nhất"
-                  name="updated_at"
-                  sx={{ width: "50%" }}
-                  value={dayjs(roomData?.updated_at)}
-                />
-              </LocalizationProvider>
-            </Stack>
+        <Stack direction="column" spacing={3} sx={{ width: "100%" }}>
+          <Stack direction="row" spacing={3} alignItems="center">
+            <TextField
+              fullWidth
+              autoFocus
+              label="Số phòng"
+              name="number"
+              InputProps={{
+                readOnly: true,
+              }}
+              value={roomData?.number || ""}
+              sx={{ width: "50%" }}
+            />
+            <Box sx={{ width: "50%", height: "100%" }}>
+              <SeverityPill color={StatusMapRoom[roomData?.status]}>
+                {roomData?.status === ROOM_STATUS.AVAILABLE ? "Đang có sẵn" : "Không có sẵn"}
+              </SeverityPill>
+            </Box>
           </Stack>
-        )}
+
+          <Stack direction="row" spacing={3}>
+            <TextField
+              fullWidth
+              multiline
+              label="Mô tả"
+              name="description"
+              minRows={3}
+              maxRows={5}
+              InputProps={{
+                readOnly: true,
+              }}
+              sx={{ flex: 1 }}
+              value={roomData?.description}
+            />
+          </Stack>
+
+          <Stack direction="row" spacing={3}>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DatePicker
+                readOnly
+                label="Ngày tạo"
+                name="created_at"
+                sx={{ width: "50%" }}
+                value={dayjs(roomData?.created_at)}
+              />
+            </LocalizationProvider>
+
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DatePicker
+                readOnly
+                label="Ngày cập nhật gần nhất"
+                name="updated_at"
+                sx={{ width: "50%" }}
+                value={dayjs(roomData?.updated_at)}
+              />
+            </LocalizationProvider>
+          </Stack>
+        </Stack>
       </DialogContent>
 
       <DialogActions sx={{ my: 3, mr: 3, display: "flex", justifyContent: "flex-end" }}>

@@ -74,6 +74,7 @@ export const API = {
     },
     STAFF: {
       GET_ALL_STAFFS: "GetAllStaffs",
+      GET_ALL_STAFFS_BY_HOTEL_ID: "GetAllStaffsByHotelId",
       GET_STAFF_BY_ID: "GetStaffById",
       CREATE_STAFF: "CreateStaff",
       DELETE_STAFF: "DeleteStaff",
@@ -116,13 +117,6 @@ export const API = {
       EDIT_AMENITY: "EditAmenity",
     },
   },
-  STAFF: {
-    GET_ALL_STAFFS: "GetAllStaffs",
-    GET_STAFF_BY_ID: "GetStaffById",
-    CREATE_STAFF: "CreateStaff",
-    DELETE_STAFF: "DeleteStaff",
-    EDIT_STAFF: "EditStaff",
-  },
   ADDRESS: {
     GET_ALL_PROVINCES: "GetAllProvinces",
     GET_ALL_DISTRICTS_BY_PROVINCE_ID: "GetAllDistrictsByProvinceId",
@@ -146,7 +140,7 @@ export const STATUS_CODE = {
  * Table Paging
  */
 export const DATAGRID_OPTIONS = {
-  PAGE_SIZE: 5,
+  PAGE_SIZE: 10,
   PAGE_SIZE_OPTIONS: [5, 10, 25],
   ROW_HEIGHT: 60,
   TABLE_HEIGHT: 420,
@@ -174,4 +168,10 @@ export const ADMIN_ID_FAKE = 1;
 export const ROOM_STATUS = {
   AVAILABLE: "AVAILABLE",
   UNAVAILABLE: "UNAVAILABLE",
+};
+
+export const GENDER = {
+  MALE: "MALE",
+  FEMALE: "FEMALE",
+  OTHER: "OTHER",
 };

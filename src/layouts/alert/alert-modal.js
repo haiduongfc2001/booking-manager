@@ -19,7 +19,7 @@ export default function AlertModal() {
   const renderAlert = (isOpen) => {
     return isOpen ? (
       <Alert onClose={handleClose} variant="filled" severity={alert.severity}>
-        <AlertTitle>{alert.title}</AlertTitle>
+        {/* <AlertTitle>{alert.title}</AlertTitle> */}
         {alert.message}
       </Alert>
     ) : (

@@ -23,7 +23,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import * as StaffService from "../../../services/staff-service";
 import * as HotelService from "../../../services/hotel-service";
-import { API, ROLE, STATUS_CODE, TOAST_KIND } from "src/constant/constants";
+import { API, GENDER, ROLE, STATUS_CODE, TOAST_KIND } from "src/constant/constants";
 import { useDispatch } from "react-redux";
 import { showCommonAlert } from "src/utils/toast-message";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -37,7 +37,6 @@ const initialData = {
   gender: "",
   phone: "",
   hotel_id: "",
-  dob: "01/01/2001",
   role: "",
 };
 
@@ -91,7 +90,9 @@ const CreateStaff = (props) => {
         .max(255)
         .required("Vui lòng nhập địa chỉ email!"),
       full_name: Yup.string().max(20).required("Vui lòng nhập họ và tên!"),
-      gender: Yup.mixed().oneOf(["male", "female", "other"]).required("Vui lòng chọn 1 giới tính!"),
+      gender: Yup.mixed()
+        .oneOf([GENDER.MALE, GENDER.FEMALE, GENDER.OTHER])
+        .required("Vui lòng chọn 1 giới tính!"),
       phone: Yup.string()
         .matches(/^[0-9]{10}$/, "Số điện thoại chỉ gồm 10 số!")
         .required("Vui lòng nhập số điện thoại!")
@@ -100,7 +101,6 @@ const CreateStaff = (props) => {
       hotel_id: Yup.string()
         .matches(/^\d+$/, "Hotel ID phải là chuỗi số!")
         .required("Vui lòng nhập chọn 1 khách sạn!"),
-      dob: Yup.string(),
       role: Yup.mixed()
         .oneOf([ROLE.MANAGER, ROLE.RECEPTIONIST])
         .required("Vui lòng lựa chọn chức vụ của nhân viên!"),
@@ -108,15 +108,12 @@ const CreateStaff = (props) => {
 
     onSubmit: async (values, helpers) => {
       try {
-        const dobValue = values.dob ? dayjs(values.dob).format("YYYY-MM-DD") : null;
-
-        const response = await StaffService[API.STAFF.CREATE_STAFF]({
+        const response = await StaffService[API.HOTEL.STAFF.CREATE_STAFF]({
           email: values.email.trim(),
           full_name: values.full_name.trim(),
           gender: values.gender.trim(),
           phone: values.phone.trim(),
           hotel_id: String(values.hotel_id).trim(),
-          dob: dobValue,
           role: values.role.trim(),
         });
 
@@ -229,22 +226,6 @@ const CreateStaff = (props) => {
                   error={!!(formik.touched.phone && formik.errors.phone)}
                   helperText={formik.touched.phone && formik.errors.phone}
                 />
-
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DatePicker
-                    required
-                    fullWidth
-                    label="Ngày sinh *"
-                    name="dob"
-                    onBlur={formik.handleBlur}
-                    value={dayjs(formik.values.dob)}
-                    onChange={(value) => {
-                      formik.setFieldValue("dob", Date.parse(value));
-                    }}
-                    error={!!(formik.touched.dob && formik.errors.dob)}
-                    helperText={formik.touched.dob && formik.errors.dob}
-                  />
-                </LocalizationProvider>
               </Stack>
 
               <Stack direction="row" spacing={3}>
@@ -262,9 +243,9 @@ const CreateStaff = (props) => {
                     value={formik.values.gender}
                     onChange={formik.handleChange}
                   >
-                    <FormControlLabel value="male" control={<Radio />} label="Nam" />
-                    <FormControlLabel value="female" control={<Radio />} label="Nữ" />
-                    <FormControlLabel value="other" control={<Radio />} label="Khác" />
+                    <FormControlLabel value={GENDER.MALE} control={<Radio />} label="Nam" />
+                    <FormControlLabel value={GENDER.FEMALE} control={<Radio />} label="Nữ" />
+                    <FormControlLabel value={GENDER.OTHER} control={<Radio />} label="Khác" />
                   </RadioGroup>
                   {formik.touched.gender && formik.errors.gender && (
                     <FormHelperText>{formik.errors.gender}</FormHelperText>

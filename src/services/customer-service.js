@@ -22,7 +22,6 @@ export const CreateCustomer = async ({
 }) => {
   return CommonService.postRequest(`${prePath}/createCustomer`, {
     email,
-    password: "Uua9D5ba",
     username,
     full_name,
     gender,
@@ -50,7 +49,6 @@ export const EditCustomer = async ({
 }) => {
   return CommonService.patchRequest(`${prePath}/${customerId}/updateCustomer`, {
     email,
-    password: "Uua9D5ba",
     username,
     full_name,
     gender,

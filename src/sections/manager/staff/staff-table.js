@@ -9,12 +9,13 @@ import { Scrollbar } from "src/components/scroll-bar";
 import { columns } from "./columns";
 import CustomDataGrid from "src/components/data-grid/custom-data-grid";
 import { ErrorOutline } from "@mui/icons-material";
+import { HOTEL_ID_FAKE } from "src/constant/constants";
 
 export const StaffTable = (props) => {
   const { items = [], loading = false, onRefresh = () => {} } = props;
 
   const [currentId, setCurrentId] = useState("");
-  const [hotelId, setHotelId] = useState("");
+  const [hotelId, setHotelId] = useState(HOTEL_ID_FAKE);
   const [isModalDeleteStaff, setIsModalDeleteStaff] = useState(false);
   const [isModalEditStaff, setIsModalEditStaff] = useState(false);
   const [isModalDetailStaff, setIsModalDetailStaff] = useState(false);
@@ -22,7 +23,6 @@ export const StaffTable = (props) => {
   const handleRowClick = (params) => {
     const clickedItem = items.find((item) => item.id === params.id);
     if (clickedItem) {
-      setHotelId(clickedItem.hotel?.id);
       setCurrentId(clickedItem?.id);
     } else {
       console.log("Item not found!");

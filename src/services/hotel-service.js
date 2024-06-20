@@ -104,7 +104,3 @@ export const EditAmenity = async ({ amenity_id, hotel_id, amenity }) => {
     amenity,
   });
 };
-
-export const GetAllStaffs = async ({ hotel_id }) => {
-  return CommonService.getRequest(`${prePath}/${hotel_id}/getAllStaffsByHotelId`);
-};

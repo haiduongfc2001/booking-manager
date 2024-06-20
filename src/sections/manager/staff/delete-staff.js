@@ -35,7 +35,7 @@ const DeleteStaff = ({
   const handleDelete = async () => {
     try {
       if (currentId === MANAGER_ID_FAKE) return;
-      const response = await StaffService[API.STAFF.DELETE_STAFF]({
+      const response = await StaffService[API.HOTEL.STAFF.DELETE_STAFF]({
         hotel_id: String(hotelId).trim(),
         staff_id: String(currentId).trim(),
       });

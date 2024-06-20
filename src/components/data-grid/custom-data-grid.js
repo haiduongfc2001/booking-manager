@@ -1,6 +1,7 @@
 import React from "react";
 import { DATAGRID_OPTIONS } from "src/constant/constants";
 import { StyledDataGrid } from "./styled-data-grid";
+import { viVN } from "@mui/x-data-grid/locales";
 
 const CustomDataGrid = ({ rows = [], columns = [], onRowClick }) => {
   const handleRowClick = (params) => {
@@ -46,6 +47,7 @@ const CustomDataGrid = ({ rows = [], columns = [], onRowClick }) => {
       }}
       hideFooterSelectedRowCount
       getRowClassName={(params) => `super-app-theme--status-${params.row.status}`}
+      localeText={viVN.components.MuiDataGrid.defaultProps.localeText}
       // pagination
       // rowCount={count}
       // onPageChange={onPageChange}

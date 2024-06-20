@@ -17,27 +17,24 @@ import {
   RadioGroup,
   FormControlLabel,
   Radio,
+  Alert,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import * as StaffService from "../../../services/staff-service";
 import * as HotelService from "../../../services/hotel-service";
-import { API, ROLE, STATUS_CODE, TOAST_KIND } from "src/constant/constants";
+import { API, GENDER, HOTEL_ID_FAKE, ROLE, STATUS_CODE, TOAST_KIND } from "src/constant/constants";
 import { useDispatch } from "react-redux";
 import { showCommonAlert } from "src/utils/toast-message";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
+import { closeLoadingApi, openLoadingApi } from "src/redux/create-actions/loading-action";
 
 const initialData = {
   email: "",
   full_name: "",
   gender: "",
   phone: "",
-  hotel_id: "",
-  dob: "01/01/2001",
   role: "",
 };
 
@@ -46,6 +43,7 @@ const CreateStaff = (props) => {
 
   const [hotelList, setHotelList] = useState([]);
   const [hotelInfo, setHotelInfo] = useState(null);
+  const [hotelId, setHotelId] = useState(HOTEL_ID_FAKE);
 
   const dispatch = useDispatch();
 
@@ -67,10 +65,12 @@ const CreateStaff = (props) => {
       if (response?.status !== STATUS_CODE.UNAUTHORIZED) {
         setHotelList(response.data);
       } else {
-        // dispatch(showCommonAlert(TOAST_KIND.ERROR, response.data.error));
+        dispatch(showCommonAlert(TOAST_KIND.ERROR, response.data.message));
+        dispatch(openLoadingApi());
       }
     } catch (error) {
-      // dispatch(showCommonAlert(TOAST_KIND.ERROR, TOAST_MESSAGE.SERVER_ERROR));
+      dispatch(showCommonAlert(TOAST_KIND.ERROR, TOAST_MESSAGE.SERVER_ERROR));
+      dispatch(closeLoadingApi());
     }
   };
 
@@ -91,16 +91,14 @@ const CreateStaff = (props) => {
         .max(255)
         .required("Vui lòng nhập địa chỉ email!"),
       full_name: Yup.string().max(20).required("Vui lòng nhập họ và tên!"),
-      gender: Yup.mixed().oneOf(["male", "female", "other"]).required("Vui lòng chọn 1 giới tính!"),
+      gender: Yup.mixed()
+        .oneOf([GENDER.MALE, GENDER.FEMALE, GENDER.OTHER])
+        .required("Vui lòng chọn 1 giới tính!"),
       phone: Yup.string()
         .matches(/^[0-9]{10}$/, "Số điện thoại chỉ gồm 10 số!")
         .required("Vui lòng nhập số điện thoại!")
         .min(10, "Số điện thoại phải dài chính xác 10 ký tự!")
         .max(10, "Số điện thoại phải dài chính xác 10 ký tự!"),
-      hotel_id: Yup.string()
-        .matches(/^\d+$/, "Hotel ID phải là chuỗi số!")
-        .required("Vui lòng nhập chọn 1 khách sạn!"),
-      dob: Yup.string(),
       role: Yup.mixed()
         .oneOf([ROLE.MANAGER, ROLE.RECEPTIONIST])
         .required("Vui lòng lựa chọn chức vụ của nhân viên!"),
@@ -108,15 +106,13 @@ const CreateStaff = (props) => {
 
     onSubmit: async (values, helpers) => {
       try {
-        const dobValue = values.dob ? dayjs(values.dob).format("YYYY-MM-DD") : null;
-
-        const response = await StaffService[API.STAFF.CREATE_STAFF]({
+        dispatch(openLoadingApi());
+        const response = await StaffService[API.HOTEL.STAFF.CREATE_STAFF]({
           email: values.email.trim(),
           full_name: values.full_name.trim(),
           gender: values.gender.trim(),
           phone: values.phone.trim(),
-          hotel_id: String(values.hotel_id).trim(),
-          dob: dobValue,
+          hotel_id: String(hotelId).trim(),
           role: values.role.trim(),
         });
 
@@ -133,6 +129,7 @@ const CreateStaff = (props) => {
         helpers.setSubmitting(false);
       } finally {
         // handleCloseModalCreate();
+        dispatch(closeLoadingApi());
       }
     },
     enableReinitialize: true,
@@ -166,7 +163,7 @@ const CreateStaff = (props) => {
         sx: {
           maxHeight: "90vh",
           height: "auto",
-          minWidth: "60%",
+          minWidth: "70%",
         },
       }}
     >
@@ -216,7 +213,7 @@ const CreateStaff = (props) => {
                 />
               </Stack>
 
-              <Stack direction={{ sm: "row", xs: "column" }} spacing={3}>
+              <Stack direction={{ md: "row", xs: "column" }} spacing={3}>
                 <TextField
                   required
                   fullWidth
@@ -229,25 +226,6 @@ const CreateStaff = (props) => {
                   error={!!(formik.touched.phone && formik.errors.phone)}
                   helperText={formik.touched.phone && formik.errors.phone}
                 />
-
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DatePicker
-                    required
-                    fullWidth
-                    label="Ngày sinh *"
-                    name="dob"
-                    onBlur={formik.handleBlur}
-                    value={dayjs(formik.values.dob)}
-                    onChange={(value) => {
-                      formik.setFieldValue("dob", Date.parse(value));
-                    }}
-                    error={!!(formik.touched.dob && formik.errors.dob)}
-                    helperText={formik.touched.dob && formik.errors.dob}
-                  />
-                </LocalizationProvider>
-              </Stack>
-
-              <Stack direction="row" spacing={3}>
                 <FormControl
                   sx={{ width: "100%", m: 1, minWidth: 120 }}
                   error={!!(formik.touched.gender && formik.errors.gender)}
@@ -262,9 +240,9 @@ const CreateStaff = (props) => {
                     value={formik.values.gender}
                     onChange={formik.handleChange}
                   >
-                    <FormControlLabel value="male" control={<Radio />} label="Nam" />
-                    <FormControlLabel value="female" control={<Radio />} label="Nữ" />
-                    <FormControlLabel value="other" control={<Radio />} label="Khác" />
+                    <FormControlLabel value={GENDER.MALE} control={<Radio />} label="Nam" />
+                    <FormControlLabel value={GENDER.FEMALE} control={<Radio />} label="Nữ" />
+                    <FormControlLabel value={GENDER.OTHER} control={<Radio />} label="Khác" />
                   </RadioGroup>
                   {formik.touched.gender && formik.errors.gender && (
                     <FormHelperText>{formik.errors.gender}</FormHelperText>
@@ -273,27 +251,6 @@ const CreateStaff = (props) => {
               </Stack>
 
               <Stack direction={{ md: "row", xs: "column" }} spacing={3}>
-                <Autocomplete
-                  {...defaultProps}
-                  fullWidth
-                  id="hotel_id"
-                  defaultValue=""
-                  value={hotelInfo}
-                  onChange={(event, newValue) => {
-                    setHotelInfo(newValue);
-                    formik.setFieldValue("hotel_id", newValue?.id || "");
-                  }}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      label="Khách sạn"
-                      onBlur={formik.handleBlur}
-                      error={!!(formik.touched.hotel_id && formik.errors.hotel_id)}
-                      helperText={formik.touched.hotel_id && formik.errors.hotel_id}
-                    />
-                  )}
-                />
-
                 <FormControl
                   fullWidth
                   sx={{ m: 1, minWidth: 120 }}
@@ -309,7 +266,7 @@ const CreateStaff = (props) => {
                     value={formik.values.role}
                     onChange={formik.handleChange}
                   >
-                    <FormControlLabel value={ROLE.MANAGER} control={<Radio />} label="Quản lý" />
+                    {/* <FormControlLabel value={ROLE.MANAGER} control={<Radio />} label="Quản lý" /> */}
                     <FormControlLabel
                       value={ROLE.RECEPTIONIST}
                       control={<Radio />}
@@ -331,19 +288,32 @@ const CreateStaff = (props) => {
         </DialogContent>
       </form>
 
-      <DialogActions sx={{ my: 3, mr: 3, display: "flex", justifyContent: "flex-end" }}>
-        <Button
-          type="submit"
-          variant="contained"
-          color="success"
-          sx={{ mr: 2 }}
-          onClick={formik.handleSubmit}
-        >
-          OK
-        </Button>
-        <Button variant="contained" color="inherit" onClick={handleCloseModalCreate}>
-          Hủy
-        </Button>
+      <DialogActions
+        sx={{
+          my: 3,
+          mr: 3,
+          display: { xs: "block", md: "flex" },
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <Alert variant="filled" severity="info">
+          Mật khẩu ngẫu nhiên sẽ được gửi tới email bạn cung cấp.
+        </Alert>
+        <Stack direction="row" sx={{ mt: 1 }} justifyContent="flex-end">
+          <Button
+            type="submit"
+            variant="contained"
+            color="success"
+            sx={{ mr: 2 }}
+            onClick={formik.handleSubmit}
+          >
+            Tạo
+          </Button>
+          <Button variant="contained" color="inherit" onClick={handleCloseModalCreate}>
+            Hủy
+          </Button>
+        </Stack>
       </DialogActions>
     </Dialog>
   );
