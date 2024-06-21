@@ -104,3 +104,34 @@ export const EditAmenity = async ({ amenity_id, hotel_id, amenity }) => {
     amenity,
   });
 };
+
+// Policy of hotel
+export const GetAllPoliciesByHotelId = async ({ hotel_id }) => {
+  return CommonService.getRequest(`${prePath}/${hotel_id}/policy/getAllPoliciesByHotelId`);
+};
+
+export const CreatePolicy = async ({ hotel_id, type, value, description }) => {
+  return CommonService.postRequest(`${prePath}/${hotel_id}/policy/createPolicy`, {
+    type,
+    value,
+    description,
+  });
+};
+
+export const CreateMultiplePolicies = async ({ hotel_id, policies }) => {
+  return CommonService.postRequest(`${prePath}/${hotel_id}/policy/createMultiplePolicies`, {
+    policies,
+  });
+};
+
+export const DeletePolicy = async ({ hotel_id, policy_id }) => {
+  return CommonService.deleteRequest(`${prePath}/${hotel_id}/policy/${policy_id}/deletePolicy`, {});
+};
+
+export const EditPolicy = async ({ policy_id, hotel_id, type, value, description }) => {
+  return CommonService.patchRequest(`${prePath}/${hotel_id}/policy/${policy_id}/updatePolicy`, {
+    type,
+    value,
+    description,
+  });
+};

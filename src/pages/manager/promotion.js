@@ -97,7 +97,7 @@ const Page = () => {
   return (
     <>
       <Head>
-        <title>Các loại phòng</title>
+        <title>Khuyến mãi</title>
       </Head>
       <Box
         component="main"
@@ -110,66 +110,19 @@ const Page = () => {
           <Stack spacing={3}>
             <Stack direction="row" justifyContent="space-between" spacing={4}>
               <Stack spacing={1}>
-                <Typography variant="h4">Các loại phòng</Typography>
-                {/* <Stack alignItems="center" direction="row" spacing={1}>
-                  <Button
-                    color="inherit"
-                    startIcon={
-                      <SvgIcon fontSize="small">
-                        <ArrowUpOnSquareIcon />
-                      </SvgIcon>
-                    }
-                  >
-                    Import
-                  </Button>
-                  <Button
-                    color="inherit"
-                    startIcon={
-                      <SvgIcon fontSize="small">
-                        <ArrowDownOnSquareIcon />
-                      </SvgIcon>
-                    }
-                  >
-                    Export
-                  </Button>
-                </Stack> */}
+                <Typography variant="h4">Danh sách khuyến mãi</Typography>
               </Stack>
             </Stack>
-            <Card sx={{ p: 2 }}>
-              <Stack
-                direction={{ xs: "column", sm: "row" }}
-                spacing={2}
-                alignItems="center"
-                justifyContent="space-between"
-              >
-                <SearchRoom />
-                <Button
-                  startIcon={
-                    <SvgIcon fontSize="small">
-                      <PlusIcon />
-                    </SvgIcon>
-                  }
-                  variant="contained"
-                  color="success"
-                  onClick={handleOpenModalCreate}
-                >
-                  Thêm
-                </Button>
-              </Stack>
-            </Card>
 
             <Grid
               container
               sx={{
                 display: "flex",
-                justifyContent: "space-between",
+                justifyContent: "flex-end",
                 alignItems: "center",
                 pr: 2,
               }}
             >
-              <Button variant="contained" color="info">
-                Số loại phòng: {numRoomTypes}
-              </Button>
               <Button
                 startIcon={
                   <SvgIcon fontSize="small">

@@ -187,7 +187,7 @@ const Page = () => {
                           roomTypeData?.roomImages?.find((image) => image.is_primary)?.url ||
                           (roomTypeData?.roomImages?.length > 0
                             ? roomTypeData?.roomImages[0]?.url
-                            : "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/2048px-No_image_available.svg.png")
+                            : "/assets/no_image_available.png")
                         }
                         sx={{
                           bgcolor: neutral[300],

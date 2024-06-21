@@ -80,6 +80,14 @@ export const API = {
       DELETE_STAFF: "DeleteStaff",
       EDIT_STAFF: "EditStaff",
     },
+    POLICY: {
+      GET_ALL_POLICIES_BY_HOTEL_ID: "GetAllPoliciesByHotelId",
+      GET_POLICY_BY_ID: "GetPolicyById",
+      CREATE_POLICY: "CreatePolicy",
+      CREATE_MULTIPLE_POLICIES: "CreateMultiplePolicies",
+      DELETE_POLICY: "DeletePolicy",
+      EDIT_POLICY: "EditPolicy",
+    },
   },
   ROOM: {
     GET_ALL_ROOMS_BY_HOTEL_ID: "GetAllRoomsByHotelId",
@@ -174,4 +182,12 @@ export const GENDER = {
   MALE: "MALE",
   FEMALE: "FEMALE",
   OTHER: "OTHER",
+};
+
+export const POLICY = {
+  SURCHARGE_RATES: "SURCHARGE_RATES",
+  TAX: "TAX",
+  SERVICE_FEE: "SERVICE_FEE",
+  CHECK_IN_TIME: "CHECK_IN_TIME",
+  CHECK_OUT_TIME: "CHECK_OUT_TIME",
 };

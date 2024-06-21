@@ -8,6 +8,7 @@ import XCircleIcon from "@heroicons/react/24/solid/XCircleIcon";
 import { SvgIcon } from "@mui/material";
 import HotelIcon from "@mui/icons-material/Hotel";
 import SensorDoorIcon from "@mui/icons-material/SensorDoor";
+import PolicyIcon from "@mui/icons-material/Policy";
 
 export const items = [
   {
@@ -70,6 +71,15 @@ export const items = [
     icon: (
       <SvgIcon fontSize="small">
         <UserIcon />
+      </SvgIcon>
+    ),
+  },
+  {
+    title: "Chính sách",
+    path: "/manager/policy",
+    icon: (
+      <SvgIcon fontSize="small">
+        <PolicyIcon />
       </SvgIcon>
     ),
   },

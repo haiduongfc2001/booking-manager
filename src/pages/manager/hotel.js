@@ -82,7 +82,8 @@ const Page = () => {
       dispatch(showCommonAlert(TOAST_KIND.ERROR, TOAST_MESSAGE.SERVER_ERROR));
     } finally {
       setLoading(false);
-      setIsEditing(false), formik.resetForm();
+      setIsEditing(false);
+      formik.resetForm();
     }
   };
 
@@ -316,7 +317,7 @@ const Page = () => {
                               hotelData?.images?.find((image) => image.is_primary)?.url ||
                               (hotelData?.images?.length > 0
                                 ? hotelData?.images[0]?.url
-                                : "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/2048px-No_image_available.svg.png")
+                                : "/assets/no_image_available.png")
                             }
                             sx={{
                               bgcolor: neutral[300],
