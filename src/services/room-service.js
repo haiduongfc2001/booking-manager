@@ -129,3 +129,68 @@ export const EditAmenity = async ({ amenity_id, room_type_id, amenity }) => {
     amenity,
   });
 };
+
+// Promotion of room type
+export const GetAllPromotionsByRoomTypeId = async ({ room_type_id }) => {
+  return CommonService.getRequest(
+    `${prePath}/room-type/${room_type_id}/promotion/getAllPromotionsByRoomTypeId`
+  );
+};
+
+export const CreatePromotion = async ({
+  room_type_id,
+  code,
+  discount_type,
+  discount_value,
+  start_date,
+  end_date,
+  is_active,
+}) => {
+  return CommonService.postRequest(
+    `${prePath}/room-type/${room_type_id}/promotion/createPromotion`,
+    {
+      code,
+      discount_type,
+      discount_value,
+      start_date,
+      end_date,
+      is_active,
+    }
+  );
+};
+
+export const GetPromotionById = async ({ room_type_id, promotion_id }) => {
+  return CommonService.getRequest(
+    `${prePath}/room-type/${room_type_id}/promotion/${promotion_id}/getPromotionById`
+  );
+};
+
+export const EditPromotion = async ({
+  room_type_id,
+  promotion_id,
+  code,
+  discount_type,
+  discount_value,
+  start_date,
+  end_date,
+  is_active,
+}) => {
+  return CommonService.patchRequest(
+    `${prePath}/room-type/${room_type_id}/promotion/${promotion_id}/updatePromotion`,
+    {
+      code,
+      discount_type,
+      discount_value,
+      start_date,
+      end_date,
+      is_active,
+    }
+  );
+};
+
+export const DeletePromotion = async ({ room_type_id, promotion_id }) => {
+  return CommonService.deleteRequest(
+    `${prePath}/room-type/${room_type_id}/promotion/${promotion_id}/deletePromotion`,
+    {}
+  );
+};

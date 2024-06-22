@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import Head from "next/head";
 import PlusIcon from "@heroicons/react/24/solid/PlusIcon";
 import ArrowPathIcon from "@heroicons/react/24/solid/ArrowPathIcon";
+import ArrowLeftIcon from "@heroicons/react/24/solid/ArrowLeftIcon";
 import {
   Box,
   Button,
@@ -44,6 +45,7 @@ import Image from "next/image";
 import { showCommonAlert } from "src/utils/toast-message";
 import EditRoomType from "src/sections/manager/room/edit-room-type";
 import RoomTypeAmenities from "src/sections/manager/room/room-type-amenity/room-type-amenity";
+import RoomTypePromotions from "src/sections/manager/room/promotion/promotion";
 
 const Page = () => {
   const router = useRouter();
@@ -122,22 +124,36 @@ const Page = () => {
       >
         <Container maxWidth="xl">
           <Stack spacing={3}>
-            <Grid container justifyContent="flex-end">
-              <Grid item xs={3} sx={{ display: "flex", justifyContent: "inherit", pr: 2 }}>
-                <Button
-                  startIcon={
-                    <SvgIcon fontSize="small">
-                      <ArrowPathIcon />
-                    </SvgIcon>
-                  }
-                  variant="contained"
-                  color="secondary"
-                  onClick={fetchData}
-                >
-                  Làm mới
-                </Button>
-              </Grid>
-            </Grid>
+            <Stack
+              direction="row"
+              spacing={3}
+              sx={{ display: "flex", justifyContent: "space-between", pr: 2 }}
+            >
+              <Button
+                startIcon={
+                  <SvgIcon fontSize="small">
+                    <ArrowLeftIcon />
+                  </SvgIcon>
+                }
+                variant="contained"
+                color="inherit"
+                onClick={() => router.push("/manager/room-type")}
+              >
+                Quay lại
+              </Button>
+              <Button
+                startIcon={
+                  <SvgIcon fontSize="small">
+                    <ArrowPathIcon />
+                  </SvgIcon>
+                }
+                variant="contained"
+                color="secondary"
+                onClick={fetchData}
+              >
+                Làm mới
+              </Button>
+            </Stack>
 
             {roomTypeId && (
               <Card key={roomTypeData?.id} sx={{ p: 2 }}>
@@ -467,6 +483,11 @@ const Page = () => {
                   roomTypeId={parseInt(roomTypeData?.id)}
                   amenities={roomTypeData?.roomTypeAmenities}
                 />
+
+                <RoomTypePromotions
+                  roomTypeId={parseInt(roomTypeData?.id)}
+                  roomTypeData={roomTypeData}
+                />
               </Card>
             )}
           </Stack>
@@ -478,15 +499,6 @@ const Page = () => {
           isModalEditRoomType={isModalEditRoomType}
           setIsModalEditRoomType={setIsModalEditRoomType}
           roomTypeData={roomTypeData}
-          onRefresh={fetchData}
-        />
-      )}
-
-      {roomTypeData.id && (
-        <CreateRoom
-          isModalCreateRoom={isModalCreateRoom}
-          setIsModalCreateRoom={setIsModalCreateRoom}
-          roomTypeId={roomTypeData.id}
           onRefresh={fetchData}
         />
       )}
@@ -506,6 +518,15 @@ const Page = () => {
           setOpenPopupAddImages={setOpenPopupAddImages}
           roomTypeData={roomTypeData}
           roomTypeId={roomTypeData.id}
+        />
+      )}
+
+      {roomTypeData.id && (
+        <CreateRoom
+          isModalCreateRoom={isModalCreateRoom}
+          setIsModalCreateRoom={setIsModalCreateRoom}
+          roomTypeId={roomTypeData.id}
+          onRefresh={fetchData}
         />
       )}
     </>

@@ -124,6 +124,14 @@ export const API = {
       DELETE_AMENITY: "DeleteAmenity",
       EDIT_AMENITY: "EditAmenity",
     },
+    PROMOTION: {
+      GET_ALL_PROMOTIONS: "GetAllPromotions",
+      GET_ALL_PROMOTIONS_BY_ROOM_TYPE_ID: "GetAllPromotionsByRoomTypeId",
+      GET_PROMOTION_BY_ID: "GetPromotionById",
+      CREATE_PROMOTION: "CreatePromotion",
+      DELETE_PROMOTION: "DeletePromotion",
+      EDIT_PROMOTION: "EditPromotion",
+    },
   },
   ADDRESS: {
     GET_ALL_PROVINCES: "GetAllProvinces",
@@ -190,4 +198,14 @@ export const POLICY = {
   SERVICE_FEE: "SERVICE_FEE",
   CHECK_IN_TIME: "CHECK_IN_TIME",
   CHECK_OUT_TIME: "CHECK_OUT_TIME",
+};
+
+export const DISCOUNT_TYPE = {
+  PERCENTAGE: "PERCENTAGE",
+  FIXED_AMOUNT: "FIXED_AMOUNT",
+};
+
+export const DISCOUNT_TYPE_TRANSLATE = {
+  PERCENTAGE: "Phần trăm tiền phòng",
+  FIXED_AMOUNT: "Khoản tiền cố định",
 };
