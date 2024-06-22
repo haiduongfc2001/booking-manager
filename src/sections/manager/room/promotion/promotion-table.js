@@ -1,32 +1,25 @@
 import PropTypes from "prop-types";
 import { Box, Card, Typography } from "@mui/material";
 import { useState } from "react";
-import LoadingData from "src/layouts/loading/loading-data";
 import { Scrollbar } from "src/components/scroll-bar";
 import { columns } from "./columns";
 import CustomDataGrid from "src/components/data-grid/custom-data-grid";
 import { ErrorOutline } from "@mui/icons-material";
 import DeletePromotion from "./delete-promotion";
-import EditPromotion from "./edit-promotion";
+import UpdatePromotion from "./update-promotion";
 import DetailPromotion from "./detail-promotion";
 
 // The table displays the list of promotions
 export const PromotionTable = (props) => {
-  const {
-    roomTypeData = {},
-    roomTypeId,
-    items = [],
-    loading = false,
-    onRefresh = () => {},
-  } = props;
+  const { roomTypeData = {}, roomTypeId, items = [], onRefresh = () => {} } = props;
 
   const [currentId, setCurrentId] = useState("");
   const [isModalDetailPromotion, setIsModalDetailPromotion] = useState(false);
   const [isModalDeletePromotion, setIsModalDeletePromotion] = useState(false);
-  const [isModalEditPromotion, setIsModalEditPromotion] = useState(false);
+  const [isModalUpdatePromotion, setIsModalUpdatePromotion] = useState(false);
 
   const handleRowClick = (params) => {
-    const clickedItem = items.find((item) => item.id === params.id);
+    const clickedItem = items?.find((item) => item.id === params.id);
     if (clickedItem) {
       setCurrentId(clickedItem?.id);
     } else {
@@ -42,8 +35,8 @@ export const PromotionTable = (props) => {
     setIsModalDeletePromotion(true);
   };
 
-  const handleOpenModalEdit = () => {
-    setIsModalEditPromotion(true);
+  const handleOpenModalUpdate = () => {
+    setIsModalUpdatePromotion(true);
   };
 
   return (
@@ -51,15 +44,13 @@ export const PromotionTable = (props) => {
       <Card>
         <Scrollbar>
           <Box sx={{ width: "100%" }}>
-            {loading ? (
-              <LoadingData />
-            ) : items && items.length > 0 ? (
+            {items?.length > 0 ? (
               <CustomDataGrid
                 rows={items}
                 columns={columns({
                   handleOpenModalDetail,
                   handleOpenModalDelete,
-                  handleOpenModalEdit,
+                  handleOpenModalUpdate,
                 })}
                 onRowClick={handleRowClick}
               />
@@ -98,9 +89,9 @@ export const PromotionTable = (props) => {
         onRefresh={onRefresh}
       />
 
-      <EditPromotion
-        isModalEditPromotion={isModalEditPromotion}
-        setIsModalEditPromotion={setIsModalEditPromotion}
+      <UpdatePromotion
+        isModalUpdatePromotion={isModalUpdatePromotion}
+        setIsModalUpdatePromotion={setIsModalUpdatePromotion}
         roomTypeData={roomTypeData}
         roomTypeId={parseInt(roomTypeId)}
         currentId={parseInt(currentId)}

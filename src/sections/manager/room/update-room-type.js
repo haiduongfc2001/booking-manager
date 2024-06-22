@@ -29,15 +29,15 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
 import { closeLoadingApi, openLoadingApi } from "src/redux/create-actions/loading-action";
 
-const EditRoomType = (props) => {
-  const { isModalEditRoomType, setIsModalEditRoomType, roomTypeData, onRefresh } = props;
+const UpdateRoomType = (props) => {
+  const { isModalUpdateRoomType, setIsModalUpdateRoomType, roomTypeData, onRefresh } = props;
 
   const [inputValue, setInputValue] = useState("");
 
   const dispatch = useDispatch();
 
-  const handleCloseModalEdit = () => {
-    setIsModalEditRoomType(false);
+  const handleCloseModalUpdate = () => {
+    setIsModalUpdateRoomType(false);
     formik.resetForm();
   };
 
@@ -112,14 +112,14 @@ const EditRoomType = (props) => {
 
         console.log(valuesToSend);
 
-        const response = await RoomService.EditRoomType({
-          hotel_id: String(roomTypeData.hotel_id).trim(),
-          room_type_id: String(roomTypeData.id).trim(),
+        const response = await RoomService.UpdateRoomType({
+          hotel_id: String(roomTypeData?.hotel_id).trim(),
+          room_type_id: String(roomTypeData?.id).trim(),
           data: valuesToSend,
         });
 
         if (response?.status === STATUS_CODE.OK) {
-          handleCloseModalEdit();
+          handleCloseModalUpdate();
           dispatch(showCommonAlert(TOAST_KIND.SUCCESS, response.message));
           onRefresh();
         } else {
@@ -157,8 +157,8 @@ const EditRoomType = (props) => {
 
   return (
     <Dialog
-      open={isModalEditRoomType}
-      onClose={handleCloseModalEdit}
+      open={isModalUpdateRoomType}
+      onClose={handleCloseModalUpdate}
       aria-labelledby="scroll-dialog-title"
       aria-describedby="scroll-dialog-description"
       maxWidth="md"
@@ -180,10 +180,10 @@ const EditRoomType = (props) => {
           borderBottom: "1px solid #e0e0e0",
         }}
       >
-        Chỉnh sửa thông tin loại phòng {roomTypeData.name}
+        Chỉnh sửa thông tin loại phòng {roomTypeData?.name}
         <IconButton
           aria-label="close"
-          onClick={handleCloseModalEdit}
+          onClick={handleCloseModalUpdate}
           sx={{
             position: "absolute",
             right: 8,
@@ -376,7 +376,7 @@ const EditRoomType = (props) => {
         >
           Lưu thay đổi
         </Button>
-        <Button variant="contained" color="inherit" onClick={handleCloseModalEdit}>
+        <Button variant="contained" color="inherit" onClick={handleCloseModalUpdate}>
           Hủy
         </Button>
       </DialogActions>
@@ -384,11 +384,11 @@ const EditRoomType = (props) => {
   );
 };
 
-export default EditRoomType;
+export default UpdateRoomType;
 
-EditRoomType.propTypes = {
-  isModalEditRoomType: PropTypes.bool.isRequired,
-  setIsModalEditRoomType: PropTypes.func.isRequired,
+UpdateRoomType.propTypes = {
+  isModalUpdateRoomType: PropTypes.bool.isRequired,
+  setIsModalUpdateRoomType: PropTypes.func.isRequired,
   roomTypeData: PropTypes.object.isRequired,
   onRefresh: PropTypes.func,
 };

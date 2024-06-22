@@ -39,11 +39,11 @@ import { closeLoadingApi, openLoadingApi } from "src/redux/create-actions/loadin
 import { neutral } from "src/theme/colors";
 import { getInitials } from "src/utils/get-initials";
 import ImageIcon from "@mui/icons-material/Image";
-import EditRoomTypeImage from "src/sections/manager/room/edit-room-type-image";
+import UpdateRoomTypeImage from "src/sections/manager/room/update-room-type-image";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import Image from "next/image";
 import { showCommonAlert } from "src/utils/toast-message";
-import EditRoomType from "src/sections/manager/room/edit-room-type";
+import UpdateRoomType from "src/sections/manager/room/update-room-type";
 import RoomTypeAmenities from "src/sections/manager/room/room-type-amenity/room-type-amenity";
 import RoomTypePromotions from "src/sections/manager/room/promotion/promotion";
 
@@ -57,7 +57,7 @@ const Page = () => {
 
   const [hotelId, setHotelId] = useState(HOTEL_ID_FAKE);
   const [roomTypeData, setRoomTypeData] = useState({});
-  const [isModalEditRoomType, setIsModalEditRoomType] = useState(false);
+  const [isModalUpdateRoomType, setIsModalUpdateRoomType] = useState(false);
   const [confirmDeleteRoomType, setConfirmDeleteRoomType] = useState(false);
   const [openPopupAddImages, setOpenPopupAddImages] = useState(false);
   const [isModalCreateRoom, setIsModalCreateRoom] = useState(false);
@@ -354,7 +354,7 @@ const Page = () => {
                         <Button
                           variant="contained"
                           sx={{ mr: 2 }}
-                          onClick={() => setIsModalEditRoomType(true)}
+                          onClick={() => setIsModalUpdateRoomType(true)}
                         >
                           Chỉnh sửa
                         </Button>
@@ -374,7 +374,7 @@ const Page = () => {
                   </Stack>
                 </Box>
 
-                {roomTypeData.roomImages && roomTypeData.roomImages.length > 0 && (
+                {roomTypeData?.roomImages && roomTypeData?.roomImages.length > 0 && (
                   <Box
                     sx={{
                       width: "100%",
@@ -384,7 +384,7 @@ const Page = () => {
                     }}
                   >
                     <ImageList variant="quilted" cols={4} gap={8} rowHeight={160}>
-                      {roomTypeData.roomImages.map((image, index) => (
+                      {roomTypeData?.roomImages.map((image, index) => (
                         <ImageListItem
                           key={image.id}
                           cols={index === 0 ? 2 : 1}
@@ -494,10 +494,10 @@ const Page = () => {
         </Container>
       </Box>
 
-      {roomTypeData.id && isModalEditRoomType && (
-        <EditRoomType
-          isModalEditRoomType={isModalEditRoomType}
-          setIsModalEditRoomType={setIsModalEditRoomType}
+      {roomTypeData?.id && isModalUpdateRoomType && (
+        <UpdateRoomType
+          isModalUpdateRoomType={isModalUpdateRoomType}
+          setIsModalUpdateRoomType={setIsModalUpdateRoomType}
           roomTypeData={roomTypeData}
           onRefresh={fetchData}
         />
@@ -512,20 +512,20 @@ const Page = () => {
       />
 
       {openPopupAddImages && roomTypeData && (
-        <EditRoomTypeImage
+        <UpdateRoomTypeImage
           onRefresh={fetchData}
           openPopupAddImages={openPopupAddImages}
           setOpenPopupAddImages={setOpenPopupAddImages}
           roomTypeData={roomTypeData}
-          roomTypeId={roomTypeData.id}
+          roomTypeId={roomTypeData?.id}
         />
       )}
 
-      {roomTypeData.id && (
+      {roomTypeData?.id && (
         <CreateRoom
           isModalCreateRoom={isModalCreateRoom}
           setIsModalCreateRoom={setIsModalCreateRoom}
-          roomTypeId={roomTypeData.id}
+          roomTypeId={roomTypeData?.id}
           onRefresh={fetchData}
         />
       )}

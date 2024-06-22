@@ -17,16 +17,16 @@ import {
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { API, IMAGE, STATUS_CODE, TOAST_KIND, TOAST_MESSAGE } from "src/constant/constants";
-import * as HotelSerivce from "src/services/hotel-service";
+import * as RoomService from "src/services/room-service";
 import { showCommonAlert } from "src/utils/toast-message";
 import { useDispatch } from "react-redux";
 import Box from "@mui/material/Box";
 
-const EditHotelImage = (props) => {
-  const { hotelData, hotelId, onRefresh, openPopupAddImages, setOpenPopupAddImages } = props;
-  const [hotelImageId, setHotelImageId] = useState("");
-  const [selectedHotelImage, setSelectedHotelImage] = useState(null);
-  const [isModalDeleteHotelImage, setIsModalDeleteHotelImage] = useState(false);
+const UpdateRoomTypeImage = (props) => {
+  const { roomTypeData, roomTypeId, onRefresh, openPopupAddImages, setOpenPopupAddImages } = props;
+  const [roomTypeImageId, setRoomTypeImageId] = useState("");
+  const [selectedRoomTypeImage, setSelectedRoomTypeImage] = useState(null);
+  const [isModalDeleteRoomTypeImage, setIsModalDeleteRoomTypeImage] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -42,10 +42,12 @@ const EditHotelImage = (props) => {
 
       // Prioritize early return for error handling
       if (
-        selectedImages.length + formikAddImage.values.images.length + hotelData?.images?.length >
+        selectedImages.length +
+          formikAddImage.values.images.length +
+          roomTypeData?.roomImages?.length >
         5
       ) {
-        const images = 5 - hotelData.images.length;
+        const images = 5 - roomTypeData?.roomImages.length;
         dispatch(showCommonAlert(TOAST_KIND.ERROR, `Chỉ được thêm tối đa ${images} ảnh!`));
         return;
       }
@@ -106,44 +108,44 @@ const EditHotelImage = (props) => {
     });
   };
 
-  const handleOpenModalDeleteHotelImage = (image_id) => {
-    setHotelImageId(image_id);
-    setIsModalDeleteHotelImage(true);
+  const handleOpenModalDeleteRoomTypeImage = (image_id) => {
+    setRoomTypeImageId(image_id);
+    setIsModalDeleteRoomTypeImage(true);
   };
 
-  const handleCloseModalDeleteHotelImage = () => {
-    setHotelImageId("");
-    setIsModalDeleteHotelImage(false);
+  const handleCloseModalDeleteRoomTypeImage = () => {
+    setRoomTypeImageId("");
+    setIsModalDeleteRoomTypeImage(false);
   };
 
-  const handleDeleteHotelImage = async () => {
+  const handleDeleteRoomTypeImage = async () => {
     try {
-      const response = await HotelSerivce[API.HOTEL.DELETE_HOTEL_IMAGE_BY_ID]({
-        hotel_id: String(hotelId).trim(),
-        hotel_image_id: String(hotelImageId).trim(),
+      const response = await RoomService[API.ROOM_TYPE.DELETE_ROOM_TYPE_IMAGE_BY_ID]({
+        room_type_id: String(roomTypeId).trim(),
+        room_type_image_id: String(roomTypeImageId).trim(),
       });
 
       if (response?.status === STATUS_CODE.OK) {
-        dispatch(showCommonAlert(TOAST_KIND.SUCCESS, response.message));
         onRefresh();
+        dispatch(showCommonAlert(TOAST_KIND.SUCCESS, response.message));
       } else {
         dispatch(showCommonAlert(TOAST_KIND.ERROR, response.data.message));
       }
     } catch (error) {
       dispatch(showCommonAlert(TOAST_KIND.ERROR, TOAST_MESSAGE.SERVER_ERROR));
     } finally {
-      handleCloseModalDeleteHotelImage();
+      handleCloseModalDeleteRoomTypeImage();
     }
   };
 
-  const handleEditHotelImage = (image) => {
-    setSelectedHotelImage(image);
+  const handleUpdateRoomTypeImageImage = (image) => {
+    setSelectedRoomTypeImage(image);
   };
 
   const formikUpdateImage = useFormik({
     initialValues: {
-      caption: selectedHotelImage ? selectedHotelImage.caption : "",
-      is_primary: selectedHotelImage ? selectedHotelImage.is_primary : false,
+      caption: selectedRoomTypeImage ? selectedRoomTypeImage.caption : "",
+      is_primary: selectedRoomTypeImage ? selectedRoomTypeImage.is_primary : false,
     },
     validationSchema: Yup.object({
       caption: Yup.string().required("Cần có chú thích cho ảnh!"),
@@ -152,16 +154,16 @@ const EditHotelImage = (props) => {
 
     onSubmit: async (values, helpers) => {
       try {
-        const response = await HotelSerivce[API.HOTEL.UPDATE_HOTEL_IMAGE_BY_ID]({
-          hotel_id: String(hotelId).trim(),
-          hotel_image_id: String(selectedHotelImage.id).trim(),
+        const response = await RoomService[API.ROOM_TYPE.UPDATE_ROOM_TYPE_IMAGE_BY_ID]({
+          room_type_id: String(roomTypeId).trim(),
+          room_type_image_id: String(selectedRoomTypeImage.id).trim(),
           caption: values.caption,
           is_primary: values.is_primary,
         });
 
         if (response?.status === STATUS_CODE.OK) {
-          dispatch(showCommonAlert(TOAST_KIND.SUCCESS, response.message));
           onRefresh();
+          dispatch(showCommonAlert(TOAST_KIND.SUCCESS, response.message));
         } else {
           dispatch(showCommonAlert(TOAST_KIND.ERROR, response.data.message));
         }
@@ -175,8 +177,8 @@ const EditHotelImage = (props) => {
     validateOnBlur: false,
   });
 
-  const handleCancelEdit = () => {
-    setSelectedHotelImage(null);
+  const handleCancelUpdate = () => {
+    setSelectedRoomTypeImage(null);
   };
 
   const formikAddImage = useFormik({
@@ -188,8 +190,8 @@ const EditHotelImage = (props) => {
     },
     validationSchema: Yup.object({
       images: Yup.array().max(
-        IMAGE.MAX_NUMBER_OF_IMAGES - hotelData?.images?.length,
-        `Cho phép tối đa ${IMAGE.MAX_NUMBER_OF_IMAGES - hotelData?.images?.length} hình ảnh!`
+        IMAGE.MAX_NUMBER_OF_IMAGES - roomTypeData?.roomImages?.length,
+        `Cho phép tối đa ${IMAGE.MAX_NUMBER_OF_IMAGES - roomTypeData?.roomImages?.length} hình ảnh!`
       ),
       captions: Yup.array().of(Yup.string().required("Cần có chú thích cho ảnh!")),
       is_primarys: Yup.array().of(Yup.boolean()),
@@ -204,8 +206,9 @@ const EditHotelImage = (props) => {
       });
 
       try {
-        const response = await HotelSerivce[API.HOTEL.CREATE_HOTEL_IMAGE]({
-          hotel_id: String(hotelId).trim(),
+        const response = await RoomService[API.ROOM_TYPE.CREATE_ROOM_TYPE_IMAGES]({
+          hotel_id: String(roomTypeData?.hotel_id).trim(),
+          room_type_id: String(roomTypeId).trim(),
           formData,
         });
 
@@ -245,9 +248,7 @@ const EditHotelImage = (props) => {
         },
       }}
     >
-      <DialogTitle id="scroll-dialog-title">
-        Chỉnh sửa thông tin ảnh của khách sạn {hotelData.name}
-      </DialogTitle>
+      <DialogTitle id="scroll-dialog-title">Chỉnh sửa thông tin ảnh</DialogTitle>
       <DialogContent>
         <Box
           sx={{
@@ -258,7 +259,7 @@ const EditHotelImage = (props) => {
           }}
         >
           <Grid container spacing={2} justifyContent="center">
-            {hotelData?.images?.map((image, index) => (
+            {roomTypeData?.roomImages?.map((image, index) => (
               <Grid item xs={12} key={index} sx={{ p: "0 !important", mt: 2 }}>
                 <Grid container spacing={2} alignItems="center" direction="column">
                   <Grid
@@ -281,22 +282,8 @@ const EditHotelImage = (props) => {
                         mr: 2,
                       }}
                     />
-                    {selectedHotelImage !== image && (
-                      <TextField
-                        fullWidth
-                        required
-                        multiline
-                        label="Mô tả ảnh"
-                        name={`caption-${index}`}
-                        type="text"
-                        minRows={3}
-                        maxRows={5}
-                        sx={{ backgroundColor: "white", mr: 2 }}
-                        value={image.caption}
-                      />
-                    )}
 
-                    {selectedHotelImage === image ? (
+                    {selectedRoomTypeImage === image ? (
                       <>
                         <TextField
                           fullWidth
@@ -345,7 +332,7 @@ const EditHotelImage = (props) => {
                           variant="contained"
                           color="inherit"
                           sx={{ mx: 1 }}
-                          onClick={handleCancelEdit}
+                          onClick={handleCancelUpdate}
                         >
                           Hủy
                         </Button>
@@ -355,7 +342,7 @@ const EditHotelImage = (props) => {
                         <Button
                           variant="contained"
                           color="primary"
-                          onClick={() => handleEditHotelImage(image)}
+                          onClick={() => handleUpdateRoomTypeImageImage(image)}
                         >
                           Sửa
                         </Button>
@@ -363,7 +350,7 @@ const EditHotelImage = (props) => {
                           variant="contained"
                           color="error"
                           sx={{ mx: 2 }}
-                          onClick={() => handleOpenModalDeleteHotelImage(image.id)}
+                          onClick={() => handleOpenModalDeleteRoomTypeImage(image.id)}
                         >
                           Xóa
                         </Button>
@@ -473,12 +460,12 @@ const EditHotelImage = (props) => {
             </Grid>
           </Grid>
 
-          {isModalDeleteHotelImage && hotelImageId && (
+          {isModalDeleteRoomTypeImage && roomTypeImageId && (
             <Dialog
-              open={isModalDeleteHotelImage}
-              onClose={handleCloseModalDeleteHotelImage}
-              aria-labelledby="scroll-dialog-title-delete-hotel-image"
-              aria-describedby="scroll-dialog-description-delete-hotel-image"
+              open={isModalDeleteRoomTypeImage}
+              onClose={handleCloseModalDeleteRoomTypeImage}
+              aria-labelledby="scroll-dialog-title-delete-room-type-image"
+              aria-describedby="scroll-dialog-description-delete-room-type-image"
               maxWidth="md"
               PaperProps={{
                 sx: {
@@ -489,7 +476,7 @@ const EditHotelImage = (props) => {
               }}
             >
               <DialogTitle
-                id="scroll-dialog-title-delete-hotel-image"
+                id="scroll-dialog-title-delete-room-type-image"
                 sx={{
                   position: "sticky",
                   top: 0,
@@ -511,14 +498,14 @@ const EditHotelImage = (props) => {
                   variant="contained"
                   color="error"
                   sx={{ mr: 2 }}
-                  onClick={handleDeleteHotelImage}
+                  onClick={handleDeleteRoomTypeImage}
                 >
                   Xóa
                 </Button>
                 <Button
                   variant="contained"
                   color="inherit"
-                  onClick={handleCloseModalDeleteHotelImage}
+                  onClick={handleCloseModalDeleteRoomTypeImage}
                 >
                   Hủy
                 </Button>
@@ -539,9 +526,9 @@ const EditHotelImage = (props) => {
   );
 };
 
-export default EditHotelImage;
+export default UpdateRoomTypeImage;
 
-EditHotelImage.propTypes = {
-  hotelData: PropTypes.object.isRequired,
-  hotelId: PropTypes.number.isRequired,
+UpdateRoomTypeImage.propTypes = {
+  roomTypeData: PropTypes.object.isRequired,
+  roomTypeId: PropTypes.number.isRequired,
 };

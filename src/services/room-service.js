@@ -26,7 +26,7 @@ export const DeleteRoom = async ({ room_type_id, room_id }) => {
   );
 };
 
-export const EditRoom = async ({ room_type_id, room_id, number, description }) => {
+export const UpdateRoom = async ({ room_type_id, room_id, number, description }) => {
   return CommonService.patchRequest(
     `${prePath}/room_type/${room_type_id}/room/${room_id}/updateRoom`,
     {
@@ -78,7 +78,7 @@ export const GetRoomTypeById = async ({ hotel_id, room_type_id }) => {
   );
 };
 
-export const EditRoomType = async ({ hotel_id, room_type_id, data }) => {
+export const UpdateRoomType = async ({ hotel_id, room_type_id, data }) => {
   return CommonService.patchRequest(
     `${prePath}/${hotel_id}/room_type/${room_type_id}/updateRoomType`,
     data
@@ -99,7 +99,7 @@ export const CreateBed = async ({ room_type_id, type, description, quantity }) =
   });
 };
 
-export const EditBed = async ({ bed_id, room_type_id, type, description, quantity }) => {
+export const UpdateBed = async ({ bed_id, room_type_id, type, description, quantity }) => {
   return CommonService.patchRequest(`${prePath}/room-type/${bed_id}/updateBed`, {
     room_type_id,
     type,
@@ -123,7 +123,7 @@ export const CreateAmenity = async ({ room_type_id, amenity }) => {
   );
 };
 
-export const EditAmenity = async ({ amenity_id, room_type_id, amenity }) => {
+export const UpdateAmenity = async ({ amenity_id, room_type_id, amenity }) => {
   return CommonService.patchRequest(`${prePath}/room-type/${amenity_id}/updateAmenity`, {
     room_type_id,
     amenity,
@@ -165,7 +165,7 @@ export const GetPromotionById = async ({ room_type_id, promotion_id }) => {
   );
 };
 
-export const EditPromotion = async ({
+export const UpdatePromotion = async ({
   room_type_id,
   promotion_id,
   code,

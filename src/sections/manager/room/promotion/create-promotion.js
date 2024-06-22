@@ -73,8 +73,8 @@ const CreatePromotion = (props) => {
             : schema
                 .min(1, "Giá trị giảm giá phải lớn hơn 0!")
                 .max(
-                  roomTypeData.base_price,
-                  `Giá trị giảm giá không được vượt quá ${roomTypeData.base_price}!`
+                  roomTypeData?.base_price,
+                  `Giá trị giảm giá không được vượt quá ${roomTypeData?.base_price}!`
                 );
         })
         .required("Vui lòng nhập giá trị!"),

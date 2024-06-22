@@ -8,15 +8,19 @@ import { Box, Button, Container, Stack, SvgIcon, Typography, Card, Grid } from "
 import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
 import { CustomerTable } from "src/sections/admin/customer/customer-table";
 import { SearchCustomer } from "src/sections/admin/customer/search-customer";
-import { STATUS_CODE } from "src/constant/constants";
+import { STATUS_CODE, TOAST_KIND, TOAST_MESSAGE } from "src/constant/constants";
 import CreateCustomer from "src/sections/admin/customer/create-customer";
 import * as CustomerService from "src/services/customer-service";
 import { API } from "src/constant/constants";
+import { useDispatch } from "react-redux";
+import { closeLoadingApi, openLoadingApi } from "src/redux/create-actions/loading-action";
+import { showCommonAlert } from "src/utils/toast-message";
 
 const Page = () => {
-  const [loading, setLoading] = useState(false);
   const [customersData, setCustomersData] = useState([]);
   const [isModalCreateCustomer, setIsModalCreateCustomer] = useState(false);
+
+  const dispatch = useDispatch();
 
   const fetchData = async () => {
     if (fetchData.current) {
@@ -26,19 +30,19 @@ const Page = () => {
     fetchData.current = true;
 
     try {
-      setLoading(true);
+      dispatch(openLoadingApi());
 
       const response = await CustomerService[API.CUSTOMER.GET_ALL_CUSTOMERS]();
 
       if (response?.status !== STATUS_CODE.UNAUTHORIZED) {
         setCustomersData(response.data);
       } else {
-        // dispatch(showCommonAlert(TOAST_KIND.ERROR, response.data.error));
+        dispatch(showCommonAlert(TOAST_KIND.ERROR, response.data.error));
       }
     } catch (error) {
-      // dispatch(showCommonAlert(TOAST_KIND.ERROR, TOAST_MESSAGE.SERVER_ERROR));
+      dispatch(showCommonAlert(TOAST_KIND.ERROR, TOAST_MESSAGE.SERVER_ERROR));
     } finally {
-      setLoading(false);
+      dispatch(closeLoadingApi());
     }
   };
 
@@ -131,7 +135,7 @@ const Page = () => {
               </Grid>
             </Grid>
 
-            <CustomerTable items={customersData} loading={loading} onRefresh={fetchData} />
+            <CustomerTable items={customersData} onRefresh={fetchData} />
           </Stack>
         </Container>
       </Box>

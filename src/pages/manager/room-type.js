@@ -185,7 +185,7 @@ const Page = () => {
             </Grid>
 
             {roomTypesData?.length > 0 &&
-              roomTypesData.map((roomType) => {
+              roomTypesData?.map((roomType) => {
                 return (
                   <Card key={roomType.id} sx={{ p: 2 }}>
                     <Stack

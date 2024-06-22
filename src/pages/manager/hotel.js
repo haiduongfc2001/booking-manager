@@ -41,14 +41,14 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import ImageIcon from "@mui/icons-material/Image";
-import EditHotelImage from "src/sections/manager/hotel/edit-hotel-image";
+import UpdateHotelImage from "src/sections/manager/hotel/update-hotel-image";
 import HotelAmenities from "src/sections/manager/hotel/hotel-amenity";
+import { closeLoadingApi, openLoadingApi } from "src/redux/create-actions/loading-action";
 
 const Page = () => {
   const [hotelId, setHotelId] = useState(HOTEL_ID_FAKE);
   const [hotelData, setHotelData] = useState({});
-  const [loading, setLoading] = useState(false);
-  const [isEditing, setIsEditing] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(false);
 
   const [provinces, setProvinces] = useState([]);
   const [districts, setDistricts] = useState([]);
@@ -67,7 +67,7 @@ const Page = () => {
     getHotel.current = true;
 
     try {
-      setLoading(true);
+      dispatch(openLoadingApi());
 
       const response = await HotelService[API.HOTEL.GET_HOTEL_BY_ID]({
         hotel_id: hotelId,
@@ -81,8 +81,8 @@ const Page = () => {
     } catch (error) {
       dispatch(showCommonAlert(TOAST_KIND.ERROR, TOAST_MESSAGE.SERVER_ERROR));
     } finally {
-      setLoading(false);
-      setIsEditing(false);
+      dispatch(closeLoadingApi());
+      setIsUpdating(false);
       formik.resetForm();
     }
   };
@@ -121,18 +121,18 @@ const Page = () => {
   }, []);
 
   useEffect(() => {
-    if (isEditing && inputRef.current) {
+    if (isUpdating && inputRef.current) {
       inputRef.current.focus();
     }
-  }, [isEditing]);
+  }, [isUpdating]);
 
-  const handleCancelEdit = () => {
+  const handleCancelUpdate = () => {
     formik.resetForm();
-    setIsEditing(false);
+    setIsUpdating(false);
   };
 
-  const handleEdit = () => {
-    setIsEditing(true);
+  const handleUpdate = () => {
+    setIsUpdating(true);
   };
 
   const initialValues = useMemo(
@@ -180,7 +180,7 @@ const Page = () => {
         const selectedProvince = provinces.find((province) => province.id === values.province);
         const selectedDistrict = districts.find((district) => district.id === values.district);
 
-        const response = await HotelService[API.HOTEL.EDIT_HOTEL]({
+        const response = await HotelService[API.HOTEL.UPDATE_HOTEL]({
           hotel_id: hotelId,
           name: values.name.trim(),
           contact: values.contact.trim(),
@@ -202,7 +202,7 @@ const Page = () => {
         helpers.setErrors({ submit: err.message });
         helpers.setSubmitting(false);
       } finally {
-        handleCancelEdit();
+        handleCancelUpdate();
       }
     },
     enableReinitialize: true,
@@ -344,14 +344,14 @@ const Page = () => {
                           <Stack direction={{ xs: "column", sm: "row" }} spacing={3}>
                             <TextField
                               inputRef={inputRef}
-                              autoFocus={!isEditing}
+                              autoFocus={!isUpdating}
                               fullWidth
-                              required={isEditing}
+                              required={isUpdating}
                               label="Tên khách sạn"
                               name="name"
                               type="text"
                               InputProps={{
-                                readOnly: !isEditing,
+                                readOnly: !isUpdating,
                               }}
                               onBlur={formik.handleBlur}
                               value={formik.values.name}
@@ -362,12 +362,12 @@ const Page = () => {
 
                             <TextField
                               fullWidth
-                              required={isEditing}
+                              required={isUpdating}
                               label="Liên hệ"
                               name="contact"
                               type="text"
                               InputProps={{
-                                readOnly: !isEditing,
+                                readOnly: !isUpdating,
                               }}
                               onBlur={formik.handleBlur}
                               value={formik.values.contact}
@@ -377,7 +377,7 @@ const Page = () => {
                             />
                           </Stack>
 
-                          {isEditing ? (
+                          {isUpdating ? (
                             <>
                               <Stack direction="row" spacing={3} mt={3}>
                                 <FormControl fullWidth required>
@@ -390,7 +390,7 @@ const Page = () => {
                                       formik.handleChange(e);
                                       fetchDistricts(e.target.value);
                                     }}
-                                    disabled={!isEditing}
+                                    disabled={!isUpdating}
                                   >
                                     {provinces.map((province) => (
                                       <MenuItem key={province.id} value={province.id}>
@@ -411,7 +411,7 @@ const Page = () => {
                                       formik.handleChange(e);
                                       fetchWards(e.target.value);
                                     }}
-                                    disabled={!isEditing || !formik.values.province}
+                                    disabled={!isUpdating || !formik.values.province}
                                   >
                                     {districts.map((district) => (
                                       <MenuItem key={district.id} value={district.id}>
@@ -429,7 +429,7 @@ const Page = () => {
                                     name="ward"
                                     value={formik.values.ward}
                                     onChange={formik.handleChange}
-                                    disabled={!isEditing || !formik.values.district}
+                                    disabled={!isUpdating || !formik.values.district}
                                   >
                                     {wards.map((ward) => (
                                       <MenuItem key={ward.id} value={ward.name}>
@@ -447,7 +447,7 @@ const Page = () => {
                                   name="street"
                                   type="text"
                                   InputProps={{
-                                    readOnly: !isEditing,
+                                    readOnly: !isUpdating,
                                   }}
                                   onBlur={formik.handleBlur}
                                   value={formik.values.street}
@@ -462,15 +462,15 @@ const Page = () => {
                               <Stack direction="row" spacing={3}>
                                 <TextField
                                   fullWidth
-                                  required={isEditing}
+                                  required={isUpdating}
                                   readOnly
                                   label="Địa chỉ"
                                   name="address"
                                   type="text"
                                   InputProps={{
-                                    readOnly: !isEditing,
+                                    readOnly: !isUpdating,
                                   }}
-                                  value={`${hotelData.street}, ${hotelData.ward}, ${hotelData.district}, ${hotelData.province}`}
+                                  value={`${hotelData?.street}, ${hotelData?.ward}, ${hotelData?.district}, ${hotelData?.province}`}
                                 />
                               </Stack>{" "}
                             </>
@@ -486,7 +486,7 @@ const Page = () => {
                               minRows={3}
                               maxRows={5}
                               InputProps={{
-                                readOnly: !isEditing,
+                                readOnly: !isUpdating,
                               }}
                               onBlur={formik.handleBlur}
                               onChange={formik.handleChange}
@@ -521,7 +521,7 @@ const Page = () => {
                             sx={{ display: "flex", justifyContent: "flex-end" }}
                             spacing={3}
                           >
-                            {isEditing ? (
+                            {isUpdating ? (
                               <Box
                                 sx={{ my: 3, mr: 3, display: "flex", justifyContent: "flex-end" }}
                               >
@@ -537,13 +537,13 @@ const Page = () => {
                                 <Button
                                   variant="contained"
                                   color="inherit"
-                                  onClick={handleCancelEdit}
+                                  onClick={handleCancelUpdate}
                                 >
                                   Hủy
                                 </Button>
                               </Box>
                             ) : (
-                              <Button variant="contained" sx={{ mr: 2 }} onClick={handleEdit}>
+                              <Button variant="contained" sx={{ mr: 2 }} onClick={handleUpdate}>
                                 Chỉnh sửa
                               </Button>
                             )}
@@ -560,7 +560,7 @@ const Page = () => {
                   </form>
                 </Box>
 
-                {hotelData.images && hotelData.images.length > 0 && (
+                {hotelData?.images && hotelData?.images.length > 0 && (
                   <Box
                     sx={{
                       width: "100%",
@@ -570,7 +570,7 @@ const Page = () => {
                     }}
                   >
                     <ImageList variant="quilted" cols={4} gap={8} rowHeight={160}>
-                      {hotelData.images.map((image, index) => (
+                      {hotelData?.images.map((image, index) => (
                         <ImageListItem
                           key={image.id}
                           cols={index === 0 ? 2 : 1}
@@ -657,12 +657,12 @@ const Page = () => {
       </Box>
 
       {openPopupAddImages && hotelData && (
-        <EditHotelImage
+        <UpdateHotelImage
           onRefresh={getHotel}
           openPopupAddImages={openPopupAddImages}
           setOpenPopupAddImages={setOpenPopupAddImages}
           hotelData={hotelData}
-          hotelId={hotelData.id}
+          hotelId={hotelData?.id}
         />
       )}
     </>

@@ -96,7 +96,7 @@ export const SideNav = (props) => {
               m: 0,
             }}
           >
-            {items.map((item) => {
+            {items?.map((item) => {
               const active = item.path ? pathname === item.path : false;
 
               return (

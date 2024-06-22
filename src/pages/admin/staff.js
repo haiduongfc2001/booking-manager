@@ -8,15 +8,19 @@ import { Box, Button, Container, Stack, SvgIcon, Typography, Card, Grid } from "
 import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
 import { StaffTable } from "src/sections/admin/staff/staff-table";
 import { SearchStaff } from "src/sections/admin/staff/search-staff";
-import { STATUS_CODE } from "src/constant/constants";
+import { STATUS_CODE, TOAST_KIND, TOAST_MESSAGE } from "src/constant/constants";
 import CreateStaff from "src/sections/admin/staff/create-staff";
 import * as StaffService from "../../services/staff-service";
 import { API } from "src/constant/constants";
+import { closeLoadingApi, openLoadingApi } from "src/redux/create-actions/loading-action";
+import { showCommonAlert } from "src/utils/toast-message";
+import { useDispatch } from "react-redux";
 
 const Page = () => {
-  const [loading, setLoading] = useState(false);
   const [staffsData, setStaffsData] = useState([]);
   const [isModalCreateStaff, setIsModalCreateStaff] = useState(false);
+
+  const dispatch = useDispatch();
 
   const fetchData = async () => {
     if (fetchData.current) {
@@ -26,19 +30,19 @@ const Page = () => {
     fetchData.current = true;
 
     try {
-      setLoading(true);
+      dispatch(openLoadingApi());
 
       const response = await StaffService[API.HOTEL.STAFF.GET_ALL_STAFFS]();
 
       if (response?.status !== STATUS_CODE.UNAUTHORIZED) {
         setStaffsData(response.data);
       } else {
-        // dispatch(showCommonAlert(TOAST_KIND.ERROR, response.data.error));
+        dispatch(showCommonAlert(TOAST_KIND.ERROR, response.data.error));
       }
     } catch (error) {
-      // dispatch(showCommonAlert(TOAST_KIND.ERROR, TOAST_MESSAGE.SERVER_ERROR));
+      dispatch(showCommonAlert(TOAST_KIND.ERROR, TOAST_MESSAGE.SERVER_ERROR));
     } finally {
-      setLoading(false);
+      dispatch(closeLoadingApi());
     }
   };
 
@@ -131,7 +135,7 @@ const Page = () => {
               </Grid>
             </Grid>
 
-            <StaffTable items={staffsData} loading={loading} onRefresh={fetchData} />
+            <StaffTable items={staffsData} onRefresh={fetchData} />
           </Stack>
         </Container>
       </Box>

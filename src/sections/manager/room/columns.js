@@ -7,7 +7,11 @@ import { StatusMapRoom } from "src/components/status-map";
 import dayjs from "dayjs";
 import { ROOM_STATUS } from "src/constant/constants";
 
-export const columns = ({ handleOpenModalDetail, handleOpenModalDelete, handleOpenModalEdit }) => {
+export const columns = ({
+  handleOpenModalDetail,
+  handleOpenModalDelete,
+  handleOpenModalUpdate,
+}) => {
   return [
     {
       field: "id",
@@ -98,7 +102,7 @@ export const columns = ({ handleOpenModalDetail, handleOpenModalDelete, handleOp
               sx={{
                 "& .MuiButton-startIcon": { m: 0 },
               }}
-              onClick={handleOpenModalEdit}
+              onClick={handleOpenModalUpdate}
             />
           </Tooltip>
           <Tooltip title="Xóa">

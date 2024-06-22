@@ -24,8 +24,6 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { API, GENDER, ROLE, STATUS_CODE, TOAST_KIND } from "src/constant/constants";
 import * as StaffService from "../../../services/staff-service";
-import * as HotelService from "../../../services/hotel-service";
-import LoadingData from "src/layouts/loading/loading-data";
 import { showCommonAlert } from "src/utils/toast-message";
 import { useDispatch } from "react-redux";
 import { neutral } from "src/theme/colors";
@@ -38,8 +36,8 @@ import { closeLoadingApi, openLoadingApi } from "src/redux/create-actions/loadin
 import { SeverityPill } from "src/components/severity-pill";
 import { StatusMapRole } from "src/components/status-map";
 
-const EditStaff = (props) => {
-  const { isModalEditStaff, setIsModalEditStaff, hotelId, currentId, onRefresh } = props;
+const UpdateStaff = (props) => {
+  const { isModalUpdateStaff, setIsModalUpdateStaff, hotelId, currentId, onRefresh } = props;
 
   const [staffData, setStaffData] = useState([]);
 
@@ -67,13 +65,13 @@ const EditStaff = (props) => {
   };
 
   useEffect(() => {
-    if (isModalEditStaff && hotelId && currentId) {
+    if (isModalUpdateStaff && hotelId && currentId) {
       getStaff();
     }
-  }, [isModalEditStaff, hotelId, currentId]);
+  }, [isModalUpdateStaff, hotelId, currentId]);
 
-  const handleCloseModalEdit = () => {
-    setIsModalEditStaff(false);
+  const handleCloseModalUpdate = () => {
+    setIsModalUpdateStaff(false);
     formik.resetForm();
   };
 
@@ -117,7 +115,7 @@ const EditStaff = (props) => {
     onSubmit: async (values, helpers) => {
       try {
         dispatch(openLoadingApi());
-        const response = await StaffService[API.HOTEL.STAFF.EDIT_STAFF]({
+        const response = await StaffService[API.HOTEL.STAFF.UPDATE_STAFF]({
           staff_id: String(currentId).trim(),
           email: values.email.trim(),
           full_name: values.full_name.trim(),
@@ -128,7 +126,7 @@ const EditStaff = (props) => {
         });
 
         if (response?.status === STATUS_CODE.OK) {
-          handleCloseModalEdit();
+          handleCloseModalUpdate();
           onRefresh();
           dispatch(showCommonAlert(TOAST_KIND.SUCCESS, response.message));
         } else {
@@ -148,18 +146,18 @@ const EditStaff = (props) => {
 
   const descriptionElementRef = useRef(null);
   useEffect(() => {
-    if (isModalEditStaff) {
+    if (isModalUpdateStaff) {
       const { current: descriptionElement } = descriptionElementRef;
       if (descriptionElement !== null) {
         descriptionElement.focus();
       }
     }
-  }, [isModalEditStaff]);
+  }, [isModalUpdateStaff]);
 
   return (
     <Dialog
-      open={isModalEditStaff}
-      onClose={handleCloseModalEdit}
+      open={isModalUpdateStaff}
+      onClose={handleCloseModalUpdate}
       aria-labelledby="scroll-dialog-title"
       aria-describedby="scroll-dialog-description"
       maxWidth="md"
@@ -176,7 +174,7 @@ const EditStaff = (props) => {
       </DialogTitle>
       <IconButton
         aria-label="close"
-        onClick={handleCloseModalEdit}
+        onClick={handleCloseModalUpdate}
         sx={{
           position: "absolute",
           right: 8,
@@ -323,7 +321,7 @@ const EditStaff = (props) => {
         >
           OK
         </Button>
-        <Button variant="contained" color="inherit" onClick={handleCloseModalEdit}>
+        <Button variant="contained" color="inherit" onClick={handleCloseModalUpdate}>
           Hủy
         </Button>
       </DialogActions>
@@ -331,11 +329,11 @@ const EditStaff = (props) => {
   );
 };
 
-export default EditStaff;
+export default UpdateStaff;
 
-EditStaff.propTypes = {
-  isModalEditStaff: PropTypes.bool.isRequired,
-  setIsModalEditStaff: PropTypes.func.isRequired,
+UpdateStaff.propTypes = {
+  isModalUpdateStaff: PropTypes.bool.isRequired,
+  setIsModalUpdateStaff: PropTypes.func.isRequired,
   hotelId: PropTypes.number.isRequired,
   currentId: PropTypes.number.isRequired,
 };

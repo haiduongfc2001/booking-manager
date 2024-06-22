@@ -7,7 +7,7 @@ import { showCommonAlert } from "src/utils/toast-message";
 import { closeLoadingApi, openLoadingApi } from "src/redux/create-actions/loading-action";
 
 const RoomTypeAmenities = ({ roomTypeId, amenities = [] }) => {
-  const [editableAmenities, setEditableAmenities] = useState(amenities);
+  const [updatableAmenities, setUpdatableAmenities] = useState(amenities);
   const [newAmenity, setNewAmenity] = useState({
     room_type_id: roomTypeId,
     amenity: "",
@@ -25,7 +25,7 @@ const RoomTypeAmenities = ({ roomTypeId, amenities = [] }) => {
 
       if (response?.status === STATUS_CODE.OK) {
         dispatch(showCommonAlert(TOAST_KIND.SUCCESS, response.message));
-        setEditableAmenities(editableAmenities.filter((amenity) => amenity.id !== amenity_id));
+        setUpdatableAmenities(updatableAmenities.filter((amenity) => amenity.id !== amenity_id));
       } else {
         const errorMessage =
           typeof response.data.error === "string"
@@ -46,7 +46,7 @@ const RoomTypeAmenities = ({ roomTypeId, amenities = [] }) => {
       const response = await AmenityService[API.ROOM_TYPE.AMENITY.CREATE_AMENITY](newAmenity);
       if (response?.status === STATUS_CODE.CREATED) {
         dispatch(showCommonAlert(TOAST_KIND.SUCCESS, response.message));
-        setEditableAmenities([...editableAmenities, response.data]);
+        setUpdatableAmenities([...updatableAmenities, response.data]);
         setNewAmenity({ room_type_id: roomTypeId, amenity: "" });
       } else {
         const errorMessage =
@@ -79,7 +79,7 @@ const RoomTypeAmenities = ({ roomTypeId, amenities = [] }) => {
       </Typography>
 
       <Stack direction="row" flexWrap="wrap" spacing={1} my={2}>
-        {editableAmenities.map((amenity) => (
+        {updatableAmenities.map((amenity) => (
           <Chip
             key={amenity.id}
             label={amenity.amenity}

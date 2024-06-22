@@ -27,7 +27,6 @@ import {
   TOAST_KIND,
 } from "src/constant/constants";
 import * as RoomService from "src/services/room-service";
-import LoadingData from "src/layouts/loading/loading-data";
 import { showCommonAlert } from "src/utils/toast-message";
 import { useDispatch } from "react-redux";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -40,10 +39,10 @@ import { StatusMap } from "src/components/status-map";
 import { closeLoadingApi, openLoadingApi } from "src/redux/create-actions/loading-action";
 import { DateTimePicker, MobileDateTimePicker, renderTimeViewClock } from "@mui/x-date-pickers";
 
-const EditPromotion = (props) => {
+const UpdatePromotion = (props) => {
   const {
-    isModalEditPromotion,
-    setIsModalEditPromotion,
+    isModalUpdatePromotion,
+    setIsModalUpdatePromotion,
     roomTypeData,
     roomTypeId,
     currentId,
@@ -76,13 +75,13 @@ const EditPromotion = (props) => {
   };
 
   useEffect(() => {
-    if (isModalEditPromotion && roomTypeId && currentId) {
+    if (isModalUpdatePromotion && roomTypeId && currentId) {
       getPromotion();
     }
-  }, [isModalEditPromotion, roomTypeId, currentId]);
+  }, [isModalUpdatePromotion, roomTypeId, currentId]);
 
-  const handleCloseModalEdit = () => {
-    setIsModalEditPromotion(false);
+  const handleCloseModalUpdate = () => {
+    setIsModalUpdatePromotion(false);
     formik.resetForm();
   };
 
@@ -126,8 +125,8 @@ const EditPromotion = (props) => {
             : schema
                 .min(1, "Giá trị giảm giá phải lớn hơn 0!")
                 .max(
-                  roomTypeData.base_price,
-                  `Giá trị giảm giá không được vượt quá ${roomTypeData.base_price}!`
+                  roomTypeData?.base_price,
+                  `Giá trị giảm giá không được vượt quá ${roomTypeData?.base_price}!`
                 );
         })
         .required("Vui lòng nhập giá trị!"),
@@ -149,7 +148,7 @@ const EditPromotion = (props) => {
       try {
         dispatch(openLoadingApi());
 
-        const response = await RoomService[API.ROOM_TYPE.PROMOTION.EDIT_PROMOTION]({
+        const response = await RoomService[API.ROOM_TYPE.PROMOTION.UPDATE_PROMOTION]({
           room_type_id: String(roomTypeId).trim(),
           promotion_id: String(currentId).trim(),
           code: values.code.trim(),
@@ -161,7 +160,7 @@ const EditPromotion = (props) => {
         });
 
         if (response?.status === STATUS_CODE.OK) {
-          handleCloseModalEdit();
+          handleCloseModalUpdate();
           dispatch(showCommonAlert(TOAST_KIND.SUCCESS, response.message));
           onRefresh();
         } else {
@@ -192,8 +191,8 @@ const EditPromotion = (props) => {
 
   return (
     <Dialog
-      open={isModalEditPromotion}
-      onClose={handleCloseModalEdit}
+      open={isModalUpdatePromotion}
+      onClose={handleCloseModalUpdate}
       aria-labelledby="scroll-dialog-title"
       aria-describedby="scroll-dialog-description"
       maxWidth="md"
@@ -209,7 +208,7 @@ const EditPromotion = (props) => {
         Chỉnh sửa thông tin phòng
         <IconButton
           aria-label="close"
-          onClick={handleCloseModalEdit}
+          onClick={handleCloseModalUpdate}
           sx={{
             position: "absolute",
             right: 8,
@@ -411,7 +410,7 @@ const EditPromotion = (props) => {
         >
           Lưu thay đổi
         </Button>
-        <Button variant="contained" color="inherit" onClick={handleCloseModalEdit}>
+        <Button variant="contained" color="inherit" onClick={handleCloseModalUpdate}>
           Hủy
         </Button>
       </DialogActions>
@@ -419,11 +418,11 @@ const EditPromotion = (props) => {
   );
 };
 
-export default EditPromotion;
+export default UpdatePromotion;
 
-EditPromotion.propTypes = {
-  isModalEditPromotion: PropTypes.bool.isRequired,
-  setIsModalEditPromotion: PropTypes.func.isRequired,
+UpdatePromotion.propTypes = {
+  isModalUpdatePromotion: PropTypes.bool.isRequired,
+  setIsModalUpdatePromotion: PropTypes.func.isRequired,
   hotelId: PropTypes.number.isRequired,
   currentId: PropTypes.number.isRequired,
 };

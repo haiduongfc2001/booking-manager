@@ -15,7 +15,6 @@ import CloseIcon from "@mui/icons-material/Close";
 import { SeverityPill } from "src/components/severity-pill";
 import { StatusMapRole } from "src/components/status-map";
 import { API, ROLE, STATUS_CODE, TOAST_KIND, TOAST_MESSAGE } from "src/constant/constants";
-import LoadingData from "src/layouts/loading/loading-data";
 import * as StaffService from "../../../services/staff-service";
 import { getInitials } from "src/utils/get-initials";
 import { neutral } from "src/theme/colors";
@@ -26,18 +25,18 @@ import dayjs from "dayjs";
 import { getGenderLabel } from "src/utils/get-gender-label";
 import { useDispatch } from "react-redux";
 import { showCommonAlert } from "src/utils/toast-message";
+import { closeLoadingApi, openLoadingApi } from "src/redux/create-actions/loading-action";
 
 const DetailStaff = (props) => {
   const { isModalDetailStaff, setIsModalDetailStaff, hotelId, currentId } = props;
 
   const [staffData, setStaffData] = useState([]);
-  const [loading, setLoading] = useState(false);
 
   const dispatch = useDispatch();
 
   const getStaff = async () => {
     try {
-      setLoading(true);
+      dispatch(openLoadingApi());
 
       const response = await StaffService[API.HOTEL.STAFF.GET_STAFF_BY_ID]({
         hotel_id: String(hotelId).trim(),
@@ -52,7 +51,7 @@ const DetailStaff = (props) => {
     } catch (error) {
       dispatch(showCommonAlert(TOAST_KIND.ERROR, TOAST_MESSAGE.SERVER_ERROR));
     } finally {
-      setLoading(false);
+      dispatch(closeLoadingApi());
     }
   };
 
@@ -105,108 +104,102 @@ const DetailStaff = (props) => {
         <CloseIcon />
       </IconButton>
       <DialogContent dividers>
-        {loading ? (
-          <LoadingData />
-        ) : (
-          <>
-            <Stack spacing={3} sx={{ mt: 3 }}>
-              <Stack
-                direction={{ xs: "column", sm: "row" }}
-                spacing={3}
-                alignItems={{ xs: "center", sm: "flex-start" }}
-              >
-                <Avatar
-                  src={staffData?.avatar}
-                  sx={{
-                    bgcolor: neutral[300],
-                    width: 256,
-                    height: 256,
-                    boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.2)",
+        <Stack spacing={3} sx={{ mt: 3 }}>
+          <Stack
+            direction={{ xs: "column", sm: "row" }}
+            spacing={3}
+            alignItems={{ xs: "center", sm: "flex-start" }}
+          >
+            <Avatar
+              src={staffData?.avatar}
+              sx={{
+                bgcolor: neutral[300],
+                width: 256,
+                height: 256,
+                boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.2)",
+              }}
+            >
+              {getInitials(staffData?.full_name)}
+            </Avatar>
+
+            <Stack direction="column" spacing={3} sx={{ width: "100%" }}>
+              <Stack direction="row" spacing={3}>
+                <TextField
+                  autoFocus
+                  fullWidth
+                  label="Email"
+                  name="email"
+                  InputProps={{
+                    readOnly: true,
                   }}
-                >
-                  {getInitials(staffData?.full_name)}
-                </Avatar>
+                  sx={{ flex: 1 }}
+                  value={staffData?.email}
+                />
+              </Stack>
 
-                <Stack direction="column" spacing={3} sx={{ width: "100%" }}>
-                  <Stack direction="row" spacing={3}>
-                    <TextField
-                      autoFocus
-                      fullWidth
-                      label="Email"
-                      name="email"
-                      InputProps={{
-                        readOnly: true,
-                      }}
-                      sx={{ flex: 1 }}
-                      value={staffData?.email}
-                    />
-                  </Stack>
+              <Stack direction="row" spacing={3}>
+                <TextField
+                  fullWidth
+                  label="Họ và tên"
+                  name="full_name"
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                  value={staffData?.full_name}
+                />
+              </Stack>
 
-                  <Stack direction="row" spacing={3}>
-                    <TextField
-                      fullWidth
-                      label="Họ và tên"
-                      name="full_name"
-                      InputProps={{
-                        readOnly: true,
-                      }}
-                      value={staffData?.full_name}
-                    />
-                  </Stack>
+              <Stack direction="row" spacing={3}>
+                <TextField
+                  fullWidth
+                  label="Giới tính"
+                  name="gender"
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                  value={getGenderLabel(staffData?.gender)}
+                />
+                <TextField
+                  fullWidth
+                  label="Số điện thoại"
+                  name="phone"
+                  value={staffData?.phone}
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                />
+              </Stack>
 
-                  <Stack direction="row" spacing={3}>
-                    <TextField
-                      fullWidth
-                      label="Giới tính"
-                      name="gender"
-                      InputProps={{
-                        readOnly: true,
-                      }}
-                      value={getGenderLabel(staffData?.gender)}
-                    />
-                    <TextField
-                      fullWidth
-                      label="Số điện thoại"
-                      name="phone"
-                      value={staffData?.phone}
-                      InputProps={{
-                        readOnly: true,
-                      }}
-                    />
-                  </Stack>
+              <Stack direction="row" spacing={3}>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DatePicker
+                    readOnly
+                    label="Ngày tạo"
+                    name="created_at"
+                    sx={{ width: "50%" }}
+                    value={dayjs(staffData?.created_at)}
+                  />
+                </LocalizationProvider>
 
-                  <Stack direction="row" spacing={3}>
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                      <DatePicker
-                        readOnly
-                        label="Ngày tạo"
-                        name="created_at"
-                        sx={{ width: "50%" }}
-                        value={dayjs(staffData?.created_at)}
-                      />
-                    </LocalizationProvider>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DatePicker
+                    readOnly
+                    label="Ngày cập nhật gần nhất"
+                    name="updated_at"
+                    sx={{ width: "50%" }}
+                    value={dayjs(staffData?.updated_at)}
+                  />
+                </LocalizationProvider>
+              </Stack>
 
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                      <DatePicker
-                        readOnly
-                        label="Ngày cập nhật gần nhất"
-                        name="updated_at"
-                        sx={{ width: "50%" }}
-                        value={dayjs(staffData?.updated_at)}
-                      />
-                    </LocalizationProvider>
-                  </Stack>
-
-                  <Stack direction="column" spacing={3} sx={{ width: "100%" }}>
-                    <SeverityPill color={StatusMapRole[staffData?.role]}>
-                      {staffData?.role === ROLE.MANAGER ? "Quản lý" : "Lễ tân"}
-                    </SeverityPill>
-                  </Stack>
-                </Stack>
+              <Stack direction="column" spacing={3} sx={{ width: "100%" }}>
+                <SeverityPill color={StatusMapRole[staffData?.role]}>
+                  {staffData?.role === ROLE.MANAGER ? "Quản lý" : "Lễ tân"}
+                </SeverityPill>
               </Stack>
             </Stack>
-          </>
-        )}
+          </Stack>
+        </Stack>
       </DialogContent>
 
       <DialogActions sx={{ my: 3, mr: 3, display: "flex", justifyContent: "flex-end" }}>

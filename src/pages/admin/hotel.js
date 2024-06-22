@@ -8,15 +8,19 @@ import { Box, Button, Container, Stack, SvgIcon, Typography, Card, Grid } from "
 import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
 import { HotelTable } from "src/sections/admin/hotel/hotel-table";
 import { SearchHotel } from "src/sections/admin/hotel/search-hotel";
-import { STATUS_CODE } from "src/constant/constants";
+import { STATUS_CODE, TOAST_KIND, TOAST_MESSAGE } from "src/constant/constants";
 import CreateHotel from "src/sections/admin/hotel/create-hotel";
 import * as HotelService from "src/services/hotel-service";
 import { API } from "src/constant/constants";
+import { useDispatch } from "react-redux";
+import { closeLoadingApi, openLoadingApi } from "src/redux/create-actions/loading-action";
+import { showCommonAlert } from "src/utils/toast-message";
 
 const Page = () => {
-  const [loading, setLoading] = useState(false);
   const [hotelsData, setHotelsData] = useState([]);
   const [isModalCreateHotel, setIsModalCreateHotel] = useState(false);
+
+  const dispatch = useDispatch();
 
   const fetchData = async () => {
     if (fetchData.current) {
@@ -26,19 +30,19 @@ const Page = () => {
     fetchData.current = true;
 
     try {
-      setLoading(true);
+      dispatch(openLoadingApi());
 
       const response = await HotelService[API.HOTEL.GET_ALL_HOTELS]();
 
       if (response?.status !== STATUS_CODE.UNAUTHORIZED) {
         setHotelsData(response.data);
       } else {
-        // dispatch(showCommonAlert(TOAST_KIND.ERROR, response.data.error));
+        dispatch(showCommonAlert(TOAST_KIND.ERROR, response.data.error));
       }
     } catch (error) {
-      // dispatch(showCommonAlert(TOAST_KIND.ERROR, TOAST_MESSAGE.SERVER_ERROR));
+      dispatch(showCommonAlert(TOAST_KIND.ERROR, TOAST_MESSAGE.SERVER_ERROR));
     } finally {
-      setLoading(false);
+      dispatch(closeLoadingApi());
     }
   };
 
@@ -131,7 +135,7 @@ const Page = () => {
               </Grid>
             </Grid>
 
-            <HotelTable items={hotelsData} loading={loading} onRefresh={fetchData} />
+            <HotelTable items={hotelsData} onRefresh={fetchData} />
           </Stack>
         </Container>
       </Box>

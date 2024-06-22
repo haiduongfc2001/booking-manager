@@ -4,7 +4,11 @@ import TrashIcon from "@heroicons/react/24/solid/TrashIcon";
 import PencilIcon from "@heroicons/react/24/solid/PencilIcon";
 import { getInitials } from "src/utils/get-initials";
 
-export const columns = ({ handleOpenModalDetail, handleOpenModalDelete, handleOpenModalEdit }) => {
+export const columns = ({
+  handleOpenModalDetail,
+  handleOpenModalDelete,
+  handleOpenModalUpdate,
+}) => {
   return [
     {
       field: "id",
@@ -97,7 +101,7 @@ export const columns = ({ handleOpenModalDetail, handleOpenModalDelete, handleOp
             sx={{
               "& .MuiButton-startIcon": { m: 0 },
             }}
-            onClick={handleOpenModalEdit}
+            onClick={handleOpenModalUpdate}
           />
         </Stack>
       ),

@@ -2,25 +2,24 @@ import PropTypes from "prop-types";
 import { Box, Card, Typography } from "@mui/material";
 import { useState } from "react";
 import DeleteStaff from "./delete-staff";
-import EditStaff from "./edit-staff";
+import UpdateStaff from "./update-staff";
 import DetailStaff from "./detail-staff";
-import LoadingData from "src/layouts/loading/loading-data";
 import { Scrollbar } from "src/components/scroll-bar";
 import { columns } from "./columns";
 import CustomDataGrid from "src/components/data-grid/custom-data-grid";
 import { ErrorOutline } from "@mui/icons-material";
 
 export const StaffTable = (props) => {
-  const { items = [], loading = false, onRefresh = () => {} } = props;
+  const { items = [], onRefresh = () => {} } = props;
 
   const [currentId, setCurrentId] = useState("");
   const [hotelId, setHotelId] = useState("");
   const [isModalDeleteStaff, setIsModalDeleteStaff] = useState(false);
-  const [isModalEditStaff, setIsModalEditStaff] = useState(false);
+  const [isModalUpdateStaff, setIsModalUpdateStaff] = useState(false);
   const [isModalDetailStaff, setIsModalDetailStaff] = useState(false);
 
   const handleRowClick = (params) => {
-    const clickedItem = items.find((item) => item.id === params.id);
+    const clickedItem = items?.find((item) => item.id === params.id);
     if (clickedItem) {
       setHotelId(clickedItem.hotel?.id);
       setCurrentId(clickedItem?.id);
@@ -37,8 +36,8 @@ export const StaffTable = (props) => {
     setIsModalDeleteStaff(true);
   };
 
-  const handleOpenModalEdit = () => {
-    setIsModalEditStaff(true);
+  const handleOpenModalUpdate = () => {
+    setIsModalUpdateStaff(true);
   };
 
   return (
@@ -46,15 +45,13 @@ export const StaffTable = (props) => {
       <Card>
         <Scrollbar>
           <Box sx={{ width: "100%" }}>
-            {loading ? (
-              <LoadingData />
-            ) : items && items.length > 0 ? (
+            {items?.length > 0 ? (
               <CustomDataGrid
                 rows={items}
                 columns={columns({
                   handleOpenModalDetail,
                   handleOpenModalDelete,
-                  handleOpenModalEdit,
+                  handleOpenModalUpdate,
                 })}
                 onRowClick={handleRowClick}
               />
@@ -85,9 +82,9 @@ export const StaffTable = (props) => {
         currentId={parseInt(currentId)}
         onRefresh={onRefresh}
       />
-      <EditStaff
-        isModalEditStaff={isModalEditStaff}
-        setIsModalEditStaff={setIsModalEditStaff}
+      <UpdateStaff
+        isModalUpdateStaff={isModalUpdateStaff}
+        setIsModalUpdateStaff={setIsModalUpdateStaff}
         hotelId={parseInt(hotelId)}
         currentId={parseInt(currentId)}
         onRefresh={onRefresh}

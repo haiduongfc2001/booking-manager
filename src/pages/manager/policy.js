@@ -61,8 +61,8 @@ const dayjsToTimeString = (date) => {
 const Page = () => {
   const [hotelId, setHotelId] = useState(HOTEL_ID_FAKE);
   const [policiesData, setPoliciesData] = useState([]);
-  const [isEditMode, setIsEditMode] = useState(false);
-  const [editablePolicies, setEditablePolicies] = useState([]);
+  const [isUpdateMode, setIsUpdateMode] = useState(false);
+  const [updatablePolicies, setUpdatablePolicies] = useState([]);
   const [newPolicy, setNewPolicy] = useState({
     hotel_id: hotelId,
     type: "",
@@ -88,7 +88,7 @@ const Page = () => {
 
       if (response?.status === STATUS_CODE.OK) {
         setPoliciesData(response.data);
-        setEditablePolicies(response.data);
+        setUpdatablePolicies(response.data);
       } else {
         dispatch(showCommonAlert(TOAST_KIND.ERROR, response.data.message));
       }
@@ -97,7 +97,7 @@ const Page = () => {
     } finally {
       dispatch(closeLoadingApi());
       fetchDataRef.current = false;
-      setIsEditMode(false);
+      setIsUpdateMode(false);
     }
   };
 
@@ -111,7 +111,7 @@ const Page = () => {
   const handleDeletePolicy = async (policy_id) => {
     dispatch(openLoadingApi());
     try {
-      const policyToDelete = editablePolicies.find((policy) => policy.id === policy_id);
+      const policyToDelete = updatablePolicies.find((policy) => policy.id === policy_id);
       if (mandatoryPolicies.includes(policyToDelete.type)) {
         dispatch(
           showCommonAlert(TOAST_KIND.ERROR, "Không thể xóa chính sách bắt buộc đã được tạo.")
@@ -124,7 +124,7 @@ const Page = () => {
 
         if (response?.status === STATUS_CODE.OK) {
           dispatch(showCommonAlert(TOAST_KIND.SUCCESS, response.message));
-          setEditablePolicies(editablePolicies.filter((policy) => policy.id !== policy_id));
+          setUpdatablePolicies(updatablePolicies.filter((policy) => policy.id !== policy_id));
         } else {
           const errorMessage =
             typeof response.data.error === "string"
@@ -142,10 +142,10 @@ const Page = () => {
 
   const handleSaveChanges = async (policy_id) => {
     dispatch(openLoadingApi());
-    const policyToUpdate = editablePolicies.find((policy) => policy.id === policy_id);
+    const policyToUpdate = updatablePolicies.find((policy) => policy.id === policy_id);
 
     try {
-      const response = await HotelService[API.HOTEL.POLICY.EDIT_POLICY]({
+      const response = await HotelService[API.HOTEL.POLICY.UPDATE_POLICY]({
         ...policyToUpdate,
         policy_id,
       });
@@ -168,8 +168,8 @@ const Page = () => {
   };
 
   const handleChange = (id, field, value) => {
-    setEditablePolicies(
-      editablePolicies.map((policy) => (policy.id === id ? { ...policy, [field]: value } : policy))
+    setUpdatablePolicies(
+      updatablePolicies.map((policy) => (policy.id === id ? { ...policy, [field]: value } : policy))
     );
   };
 
@@ -179,7 +179,7 @@ const Page = () => {
       const response = await HotelService[API.HOTEL.POLICY.CREATE_POLICY](newPolicy);
       if (response?.status === STATUS_CODE.CREATED) {
         dispatch(showCommonAlert(TOAST_KIND.SUCCESS, response.message));
-        setEditablePolicies([...editablePolicies, response.data]);
+        setUpdatablePolicies([...updatablePolicies, response.data]);
         setNewPolicy({ hotel_id: hotelId, type: "", value: "", description: "" });
         setIsAdding(false);
       } else {
@@ -226,7 +226,7 @@ const Page = () => {
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <TimePicker
               ampm={false}
-              readOnly={!isEditMode}
+              readOnly={!isUpdateMode}
               label="Thời gian"
               value={timeStringToDayjs(policy.value)}
               onChange={(newValue) => handleChange(policy.id, "value", dayjsToTimeString(newValue))}
@@ -239,7 +239,7 @@ const Page = () => {
                   {...params}
                   fullWidth
                   InputProps={{
-                    readOnly: !isEditMode,
+                    readOnly: !isUpdateMode,
                   }}
                   sx={{
                     flex: 1,
@@ -257,7 +257,7 @@ const Page = () => {
             name="value"
             type="text"
             InputProps={{
-              readOnly: !isEditMode,
+              readOnly: !isUpdateMode,
               endAdornment: (POLICY.TAX === policy.type || POLICY.SERVICE_FEE === policy.type) && (
                 <InputAdornment position="end">%</InputAdornment>
               ),
@@ -342,9 +342,9 @@ const Page = () => {
                 </Alert>
               )}
 
-              {editablePolicies.length > 0 ? (
+              {updatablePolicies.length > 0 ? (
                 <>
-                  {editablePolicies.map((policy) =>
+                  {updatablePolicies.map((policy) =>
                     policy ? (
                       <Stack
                         key={policy.id}
@@ -354,12 +354,12 @@ const Page = () => {
                       >
                         <TextField
                           fullWidth
-                          required={!isEditMode || mandatoryPolicies.includes(policy.type)}
+                          required={!isUpdateMode || mandatoryPolicies.includes(policy.type)}
                           label="Loại chính sách"
                           name="type"
                           type="text"
                           InputProps={{
-                            readOnly: !isEditMode,
+                            readOnly: !isUpdateMode,
                           }}
                           value={policyTypeLabels[policy.type] || policy.type}
                           onChange={(e) => handleChange(policy.id, "type", e.target.value)}
@@ -373,14 +373,14 @@ const Page = () => {
                         <TextField
                           fullWidth
                           multiline
-                          required={!isEditMode || mandatoryPolicies.includes(policy.type)}
+                          required={!isUpdateMode || mandatoryPolicies.includes(policy.type)}
                           minRows={1}
                           maxRows={6}
                           label="Mô tả"
                           name="description"
                           type="text"
                           InputProps={{
-                            readOnly: !isEditMode,
+                            readOnly: !isUpdateMode,
                           }}
                           value={policy.description}
                           onChange={(e) => handleChange(policy.id, "description", e.target.value)}
@@ -389,7 +389,7 @@ const Page = () => {
                           }}
                         />
 
-                        {isEditMode && (
+                        {isUpdateMode && (
                           <Stack direction="row" spacing={2} display={"flex"} alignItems={"center"}>
                             <Button
                               size="small"
@@ -479,9 +479,9 @@ const Page = () => {
                       variant="contained"
                       color="primary"
                       sx={{ mr: 2 }}
-                      onClick={() => setIsEditMode(!isEditMode)}
+                      onClick={() => setIsUpdateMode(!isUpdateMode)}
                     >
-                      {isEditMode ? "Hủy" : "Chỉnh sửa"}
+                      {isUpdateMode ? "Hủy" : "Chỉnh sửa"}
                     </Button>
                     {!isAdding && (
                       <Button
@@ -490,7 +490,7 @@ const Page = () => {
                         sx={{ mr: 2 }}
                         onClick={() => {
                           setIsAdding(true);
-                          setIsEditMode(false);
+                          setIsUpdateMode(false);
                         }}
                       >
                         Thêm

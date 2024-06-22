@@ -7,8 +7,8 @@ import { showCommonAlert } from "src/utils/toast-message";
 import { closeLoadingApi, openLoadingApi } from "src/redux/create-actions/loading-action";
 
 const RoomTypeBeds = ({ roomTypeId, beds = [] }) => {
-  const [isEditMode, setIsEditMode] = useState(false);
-  const [editableBeds, setEditableBeds] = useState(beds);
+  const [isUpdateMode, setIsUpdateMode] = useState(false);
+  const [updatableBeds, setUpdatableBeds] = useState(beds);
   const [newBed, setNewBed] = useState({
     room_type_id: roomTypeId,
     type: "",
@@ -26,7 +26,7 @@ const RoomTypeBeds = ({ roomTypeId, beds = [] }) => {
 
       if (response?.status === STATUS_CODE.OK) {
         dispatch(showCommonAlert(TOAST_KIND.SUCCESS, response.message));
-        setEditableBeds(editableBeds.filter((bed) => bed.id !== bed_id));
+        setUpdatableBeds(updatableBeds.filter((bed) => bed.id !== bed_id));
       } else {
         const errorMessage =
           typeof response.data.error === "string"
@@ -43,10 +43,10 @@ const RoomTypeBeds = ({ roomTypeId, beds = [] }) => {
 
   const handleSaveChanges = async (bed_id) => {
     dispatch(openLoadingApi());
-    const bedToUpdate = editableBeds.find((bed) => bed.id === bed_id);
+    const bedToUpdate = updatableBeds.find((bed) => bed.id === bed_id);
 
     try {
-      const response = await BedService[API.ROOM_TYPE.BED.EDIT_BED]({
+      const response = await BedService[API.ROOM_TYPE.BED.UPDATE_BED]({
         ...bedToUpdate,
         bed_id,
       });
@@ -68,7 +68,9 @@ const RoomTypeBeds = ({ roomTypeId, beds = [] }) => {
   };
 
   const handleChange = (id, field, value) => {
-    setEditableBeds(editableBeds.map((bed) => (bed.id === id ? { ...bed, [field]: value } : bed)));
+    setUpdatableBeds(
+      updatableBeds.map((bed) => (bed.id === id ? { ...bed, [field]: value } : bed))
+    );
   };
 
   const handleAddNewBed = async () => {
@@ -77,7 +79,7 @@ const RoomTypeBeds = ({ roomTypeId, beds = [] }) => {
       const response = await BedService[API.ROOM_TYPE.BED.CREATE_BED](newBed);
       if (response?.status === STATUS_CODE.CREATED) {
         dispatch(showCommonAlert(TOAST_KIND.SUCCESS, response.message));
-        setEditableBeds([...editableBeds, response.data]);
+        setUpdatableBeds([...updatableBeds, response.data]);
         setNewBed({ room_type_id: roomTypeId, type: "", description: "", quantity: "" });
         setIsAdding(false);
       } else {
@@ -104,9 +106,9 @@ const RoomTypeBeds = ({ roomTypeId, beds = [] }) => {
         Các loại giường
       </Typography>
 
-      {editableBeds.length > 0 ? (
+      {updatableBeds.length > 0 ? (
         <>
-          {editableBeds.map((bed) =>
+          {updatableBeds.map((bed) =>
             bed ? (
               <Stack key={bed.id} direction={{ xs: "column", sm: "row" }} spacing={3} my={2}>
                 <TextField
@@ -115,7 +117,7 @@ const RoomTypeBeds = ({ roomTypeId, beds = [] }) => {
                   name="type"
                   type="text"
                   InputProps={{
-                    readOnly: !isEditMode,
+                    readOnly: !isUpdateMode,
                   }}
                   value={bed.type}
                   onChange={(e) => handleChange(bed.id, "type", e.target.value)}
@@ -127,7 +129,7 @@ const RoomTypeBeds = ({ roomTypeId, beds = [] }) => {
                   name="description"
                   type="text"
                   InputProps={{
-                    readOnly: !isEditMode,
+                    readOnly: !isUpdateMode,
                   }}
                   value={bed.description}
                   onChange={(e) => handleChange(bed.id, "description", e.target.value)}
@@ -139,14 +141,14 @@ const RoomTypeBeds = ({ roomTypeId, beds = [] }) => {
                   name="quantity"
                   type="text"
                   InputProps={{
-                    readOnly: !isEditMode,
+                    readOnly: !isUpdateMode,
                   }}
                   value={bed.quantity}
                   onChange={(e) => handleChange(bed.id, "quantity", e.target.value)}
                   sx={{ flex: 1, bgcolor: "background.paper", borderRadius: 1 }}
                 />
 
-                {isEditMode && (
+                {isUpdateMode && (
                   <Stack direction="row" spacing={2} display={"flex"} alignItems={"center"}>
                     <Button
                       size="small"
@@ -233,9 +235,9 @@ const RoomTypeBeds = ({ roomTypeId, beds = [] }) => {
               variant="contained"
               color="primary"
               sx={{ mr: 2 }}
-              onClick={() => setIsEditMode(!isEditMode)}
+              onClick={() => setIsUpdateMode(!isUpdateMode)}
             >
-              {isEditMode ? "Hủy" : "Chỉnh sửa"}
+              {isUpdateMode ? "Hủy" : "Chỉnh sửa"}
             </Button>
             {!isAdding && (
               <Button

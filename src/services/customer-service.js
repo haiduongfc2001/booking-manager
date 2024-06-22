@@ -36,7 +36,7 @@ export const DeleteCustomer = async ({ customerId }) => {
   return CommonService.deleteRequest(`${prePath}/${customerId}/deleteCustomer`, {});
 };
 
-export const EditCustomer = async ({
+export const UpdateCustomer = async ({
   customerId,
   email,
   username,

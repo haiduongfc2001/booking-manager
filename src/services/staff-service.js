@@ -24,7 +24,15 @@ export const DeleteStaff = async ({ hotel_id, staff_id }) => {
   return CommonService.deleteRequest(`${prePath}/${hotel_id}/staff/${staff_id}/deleteStaff`, {});
 };
 
-export const EditStaff = async ({ hotel_id, staff_id, email, full_name, gender, phone, role }) => {
+export const UpdateStaff = async ({
+  hotel_id,
+  staff_id,
+  email,
+  full_name,
+  gender,
+  phone,
+  role,
+}) => {
   return CommonService.patchRequest(`${prePath}/${hotel_id}/staff/${staff_id}/updateStaff`, {
     email,
     full_name,

@@ -6,7 +6,11 @@ import { SeverityPill } from "src/components/severity-pill";
 import { getInitials } from "src/utils/get-initials";
 import { StatusMap } from "src/components/status-map";
 
-export const columns = ({ handleOpenModalDetail, handleOpenModalDelete, handleOpenModalEdit }) => {
+export const columns = ({
+  handleOpenModalDetail,
+  handleOpenModalDelete,
+  handleOpenModalUpdate,
+}) => {
   return [
     {
       field: "id",
@@ -102,7 +106,7 @@ export const columns = ({ handleOpenModalDetail, handleOpenModalDelete, handleOp
             sx={{
               "& .MuiButton-startIcon": { m: 0 },
             }}
-            onClick={handleOpenModalEdit}
+            onClick={handleOpenModalUpdate}
           />
         </Stack>
       ),

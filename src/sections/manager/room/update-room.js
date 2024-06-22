@@ -22,11 +22,8 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { API, ROOM_STATUS, STATUS_CODE, TOAST_KIND } from "src/constant/constants";
 import * as RoomService from "../../../services/room-service";
-import LoadingData from "src/layouts/loading/loading-data";
 import { showCommonAlert } from "src/utils/toast-message";
 import { useDispatch } from "react-redux";
-import { neutral } from "src/theme/colors";
-import { getInitials } from "src/utils/get-initials";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -34,18 +31,19 @@ import dayjs from "dayjs";
 import Box from "@mui/material/Box";
 import { SeverityPill } from "src/components/severity-pill";
 import { StatusMapRoom } from "src/components/status-map";
+import { closeLoadingApi, openLoadingApi } from "src/redux/create-actions/loading-action";
 
-const EditRoom = (props) => {
-  const { isModalEditRoom, setIsModalEditRoom, hotelId, roomTypeId, currentId, onRefresh } = props;
+const UpdateRoom = (props) => {
+  const { isModalUpdateRoom, setIsModalUpdateRoom, hotelId, roomTypeId, currentId, onRefresh } =
+    props;
 
   const [roomData, setRoomData] = useState([]);
-  const [loading, setLoading] = useState(false);
 
   const dispatch = useDispatch();
 
   const getRoom = async () => {
     try {
-      setLoading(true);
+      dispatch(openLoadingApi());
 
       const response = await RoomService[API.ROOM.GET_ROOM_BY_ID]({
         room_type_id: String(roomTypeId).trim(),
@@ -60,18 +58,18 @@ const EditRoom = (props) => {
     } catch (error) {
       dispatch(showCommonAlert(TOAST_KIND.ERROR, TOAST_MESSAGE.SERVER_ERROR));
     } finally {
-      setLoading(false);
+      dispatch(closeLoadingApi());
     }
   };
 
   useEffect(() => {
-    if (isModalEditRoom && roomTypeId && currentId) {
+    if (isModalUpdateRoom && roomTypeId && currentId) {
       getRoom();
     }
-  }, [isModalEditRoom, roomTypeId, currentId]);
+  }, [isModalUpdateRoom, roomTypeId, currentId]);
 
-  const handleCloseModalEdit = () => {
-    setIsModalEditRoom(false);
+  const handleCloseModalUpdate = () => {
+    setIsModalUpdateRoom(false);
     formik.resetForm();
   };
 
@@ -102,7 +100,7 @@ const EditRoom = (props) => {
         // formData.append("description", values.description.trim());
         // formData.append("status", ROOM_STATUS.AVAILABLE);
 
-        const response = await RoomService[API.ROOM.EDIT_ROOM]({
+        const response = await RoomService[API.ROOM.UPDATE_ROOM]({
           room_type_id: String(roomTypeId).trim(),
           room_id: String(currentId).trim(),
           // formData,
@@ -111,7 +109,7 @@ const EditRoom = (props) => {
         });
 
         if (response?.status === STATUS_CODE.OK) {
-          handleCloseModalEdit();
+          handleCloseModalUpdate();
           dispatch(showCommonAlert(TOAST_KIND.SUCCESS, response.message));
           onRefresh();
         } else {
@@ -129,8 +127,8 @@ const EditRoom = (props) => {
 
   return (
     <Dialog
-      open={isModalEditRoom}
-      onClose={handleCloseModalEdit}
+      open={isModalUpdateRoom}
+      onClose={handleCloseModalUpdate}
       aria-labelledby="scroll-dialog-title"
       aria-describedby="scroll-dialog-description"
       maxWidth="md"
@@ -155,7 +153,7 @@ const EditRoom = (props) => {
         Chỉnh sửa thông tin phòng
         <IconButton
           aria-label="close"
-          onClick={handleCloseModalEdit}
+          onClick={handleCloseModalUpdate}
           sx={{
             position: "absolute",
             right: 8,
@@ -168,80 +166,74 @@ const EditRoom = (props) => {
       </DialogTitle>
 
       <DialogContent dividers>
-        {loading ? (
-          <LoadingData />
-        ) : (
-          <>
-            <form noValidate onSubmit={formik.handleSubmit}>
-              <Stack direction="column" spacing={3} sx={{ width: "100%" }}>
-                <Stack direction="row" spacing={3} alignItems="center">
-                  <TextField
-                    autoFocus
-                    fullWidth
-                    required
-                    label="Số phòng"
-                    name="number"
-                    type="text"
-                    onBlur={formik.handleBlur}
-                    value={formik.values.number}
-                    onChange={formik.handleChange}
-                    error={!!(formik.touched.number && formik.errors.number)}
-                    helperText={formik.touched.number && formik.errors.number}
-                    sx={{ width: "50%" }}
-                  />
-                  <Box sx={{ width: "50%", height: "100%" }}>
-                    <SeverityPill color={StatusMapRoom[roomData?.status]}>
-                      {roomData?.status === ROOM_STATUS.AVAILABLE ? "Đang có sẵn" : "Không có sẵn"}
-                    </SeverityPill>
-                  </Box>
-                </Stack>
+        <form noValidate onSubmit={formik.handleSubmit}>
+          <Stack direction="column" spacing={3} sx={{ width: "100%" }}>
+            <Stack direction="row" spacing={3} alignItems="center">
+              <TextField
+                autoFocus
+                fullWidth
+                required
+                label="Số phòng"
+                name="number"
+                type="text"
+                onBlur={formik.handleBlur}
+                value={formik.values.number}
+                onChange={formik.handleChange}
+                error={!!(formik.touched.number && formik.errors.number)}
+                helperText={formik.touched.number && formik.errors.number}
+                sx={{ width: "50%" }}
+              />
+              <Box sx={{ width: "50%", height: "100%" }}>
+                <SeverityPill color={StatusMapRoom[roomData?.status]}>
+                  {roomData?.status === ROOM_STATUS.AVAILABLE ? "Đang có sẵn" : "Không có sẵn"}
+                </SeverityPill>
+              </Box>
+            </Stack>
 
-                <Stack direction="row" spacing={3}>
-                  <TextField
-                    fullWidth
-                    required
-                    multiline
-                    label="Mô tả"
-                    name="description"
-                    type="text"
-                    minRows={3}
-                    maxRows={5}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.description}
-                    onChange={formik.handleChange}
-                    error={!!(formik.touched.description && formik.errors.description)}
-                    helperText={formik.touched.description && formik.errors.description}
-                  />
-                </Stack>
+            <Stack direction="row" spacing={3}>
+              <TextField
+                fullWidth
+                required
+                multiline
+                label="Mô tả"
+                name="description"
+                type="text"
+                minRows={3}
+                maxRows={5}
+                onBlur={formik.handleBlur}
+                value={formik.values.description}
+                onChange={formik.handleChange}
+                error={!!(formik.touched.description && formik.errors.description)}
+                helperText={formik.touched.description && formik.errors.description}
+              />
+            </Stack>
 
-                <Stack direction={{ xs: "column", sm: "row", width: "100%" }} spacing={3}>
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DatePicker
-                      readOnly
-                      label="Ngày tạo"
-                      name="created_at"
-                      value={dayjs(roomData?.created_at)}
-                    />
-                  </LocalizationProvider>
+            <Stack direction={{ xs: "column", sm: "row", width: "100%" }} spacing={3}>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DatePicker
+                  readOnly
+                  label="Ngày tạo"
+                  name="created_at"
+                  value={dayjs(roomData?.created_at)}
+                />
+              </LocalizationProvider>
 
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DatePicker
-                      readOnly
-                      label="Ngày cập nhật gần nhất"
-                      name="updated_at"
-                      value={dayjs(roomData?.updated_at)}
-                    />
-                  </LocalizationProvider>
-                </Stack>
-              </Stack>
-              {formik.errors.submit && (
-                <Typography color="error" sx={{ mt: 3 }} variant="body2">
-                  {formik.errors.submit}
-                </Typography>
-              )}
-            </form>
-          </>
-        )}
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DatePicker
+                  readOnly
+                  label="Ngày cập nhật gần nhất"
+                  name="updated_at"
+                  value={dayjs(roomData?.updated_at)}
+                />
+              </LocalizationProvider>
+            </Stack>
+          </Stack>
+          {formik.errors.submit && (
+            <Typography color="error" sx={{ mt: 3 }} variant="body2">
+              {formik.errors.submit}
+            </Typography>
+          )}
+        </form>
       </DialogContent>
 
       <DialogActions sx={{ my: 3, mr: 3, display: "flex", justifyContent: "flex-end" }}>
@@ -254,7 +246,7 @@ const EditRoom = (props) => {
         >
           OK
         </Button>
-        <Button variant="contained" color="inherit" onClick={handleCloseModalEdit}>
+        <Button variant="contained" color="inherit" onClick={handleCloseModalUpdate}>
           Hủy
         </Button>
       </DialogActions>
@@ -262,11 +254,11 @@ const EditRoom = (props) => {
   );
 };
 
-export default EditRoom;
+export default UpdateRoom;
 
-EditRoom.propTypes = {
-  isModalEditRoom: PropTypes.bool.isRequired,
-  setIsModalEditRoom: PropTypes.func.isRequired,
+UpdateRoom.propTypes = {
+  isModalUpdateRoom: PropTypes.bool.isRequired,
+  setIsModalUpdateRoom: PropTypes.func.isRequired,
   hotelId: PropTypes.number.isRequired,
   currentId: PropTypes.number.isRequired,
 };

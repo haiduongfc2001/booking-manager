@@ -40,7 +40,7 @@ export const DeleteHotel = async ({ hotel_id }) => {
   return CommonService.deleteRequest(`${prePath}/${hotel_id}/deleteHotel`, {});
 };
 
-export const EditHotel = async ({
+export const UpdateHotel = async ({
   hotel_id,
   name,
   province,
@@ -98,7 +98,7 @@ export const CreateAmenity = async ({ hotel_id, amenity }) => {
   });
 };
 
-export const EditAmenity = async ({ amenity_id, hotel_id, amenity }) => {
+export const UpdateAmenity = async ({ amenity_id, hotel_id, amenity }) => {
   return CommonService.patchRequest(`${prePath}/${amenity_id}/updateAmenity`, {
     hotel_id,
     amenity,
@@ -128,7 +128,7 @@ export const DeletePolicy = async ({ hotel_id, policy_id }) => {
   return CommonService.deleteRequest(`${prePath}/${hotel_id}/policy/${policy_id}/deletePolicy`, {});
 };
 
-export const EditPolicy = async ({ policy_id, hotel_id, type, value, description }) => {
+export const UpdatePolicy = async ({ policy_id, hotel_id, type, value, description }) => {
   return CommonService.patchRequest(`${prePath}/${hotel_id}/policy/${policy_id}/updatePolicy`, {
     type,
     value,

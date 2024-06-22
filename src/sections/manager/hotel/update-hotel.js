@@ -23,7 +23,7 @@ import { useDispatch } from "react-redux";
 import Box from "@mui/material/Box";
 import { hotelData } from "src/components/data";
 
-const EditHotel = (props) => {
+const UpdateHotel = (props) => {
   const { hotelData, hotelId, onRefresh } = props;
   const [hotelImageId, setHotelImageId] = useState("");
   const [selectedHotelImage, setSelectedHotelImage] = useState(null);
@@ -46,7 +46,7 @@ const EditHotel = (props) => {
         selectedImages.length + formikAddImage.values.images.length + hotelData?.images?.length >
         5
       ) {
-        const images = 5 - hotelData.images.length;
+        const images = 5 - hotelData?.images.length;
         dispatch(showCommonAlert(TOAST_KIND.ERROR, `Chỉ được thêm tối đa ${images} ảnh!`));
         return;
       }
@@ -137,7 +137,7 @@ const EditHotel = (props) => {
     }
   };
 
-  const handleEditHotelImage = (image) => {
+  const handleUpdateHotelImage = (image) => {
     setSelectedHotelImage(image);
   };
 
@@ -176,7 +176,7 @@ const EditHotel = (props) => {
     validateOnBlur: false,
   });
 
-  const handleCancelEdit = () => {
+  const handleCancelUpdate = () => {
     setSelectedHotelImage(null);
   };
 
@@ -237,7 +237,7 @@ const EditHotel = (props) => {
       }}
     >
       <Grid container spacing={2} justifyContent="center">
-        {hotelData.images?.map((image, index) => (
+        {hotelData?.images?.map((image, index) => (
           <Grid item xs={12} key={index} sx={{ p: "0 !important", mt: 2 }}>
             <Grid container spacing={2} alignItems="center" direction="column">
               <Grid
@@ -306,7 +306,7 @@ const EditHotel = (props) => {
                       variant="contained"
                       color="inherit"
                       sx={{ mx: 1 }}
-                      onClick={handleCancelEdit}
+                      onClick={handleCancelUpdate}
                     >
                       Hủy
                     </Button>
@@ -316,7 +316,7 @@ const EditHotel = (props) => {
                     <Button
                       variant="contained"
                       color="primary"
-                      onClick={() => handleEditHotelImage(image)}
+                      onClick={() => handleUpdateHotelImage(image)}
                     >
                       Sửa
                     </Button>
@@ -486,9 +486,9 @@ const EditHotel = (props) => {
   );
 };
 
-export default EditHotel;
+export default UpdateHotel;
 
-EditHotel.propTypes = {
+UpdateHotel.propTypes = {
   hotelData: PropTypes.object.isRequired,
   hotelId: PropTypes.number.isRequired,
 };
