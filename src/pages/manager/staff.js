@@ -10,7 +10,7 @@ import { StaffTable } from "src/sections/manager/staff/staff-table";
 import { SearchStaff } from "src/sections/manager/staff/search-staff";
 import { HOTEL_ID_FAKE, STATUS_CODE } from "src/constant/constants";
 import CreateStaff from "src/sections/manager/staff/create-staff";
-import * as StaffService from "../../services/staff-service";
+import * as StaffService from "src/services/staff-service";
 import { API } from "src/constant/constants";
 import { closeLoadingApi, openLoadingApi } from "src/redux/create-actions/loading-action";
 import { useDispatch } from "react-redux";

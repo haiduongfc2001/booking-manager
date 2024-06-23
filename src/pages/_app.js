@@ -36,6 +36,7 @@ const App = (props) => {
           <Head>
             <title>DHD</title>
             <meta name="viewport" content="initial-scale=1, width=device-width" />
+            <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"></meta>
           </Head>
           <LocalizationProvider dateAdapter={AdapterDateFns}>
             <AuthProvider>

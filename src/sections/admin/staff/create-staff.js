@@ -21,8 +21,8 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import * as StaffService from "../../../services/staff-service";
-import * as HotelService from "../../../services/hotel-service";
+import * as StaffService from "src/services/staff-service";
+import * as HotelService from "src/services/hotel-service";
 import { API, GENDER, ROLE, STATUS_CODE, TOAST_KIND } from "src/constant/constants";
 import { useDispatch } from "react-redux";
 import { showCommonAlert } from "src/utils/toast-message";
@@ -89,7 +89,7 @@ const CreateStaff = (props) => {
         .email("Vui lòng nhập địa chỉ email hợp lệ!")
         .max(255)
         .required("Vui lòng nhập địa chỉ email!"),
-      full_name: Yup.string().max(20).required("Vui lòng nhập họ và tên!"),
+      full_name: Yup.string().max(30).required("Vui lòng nhập họ và tên!"),
       gender: Yup.mixed()
         .oneOf([GENDER.MALE, GENDER.FEMALE, GENDER.OTHER])
         .required("Vui lòng chọn 1 giới tính!"),

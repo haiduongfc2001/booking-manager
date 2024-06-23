@@ -15,7 +15,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import { SeverityPill } from "src/components/severity-pill";
 import { StatusMapRole } from "src/components/status-map";
 import { API, ROLE, STATUS_CODE, TOAST_KIND, TOAST_MESSAGE } from "src/constant/constants";
-import * as StaffService from "../../../services/staff-service";
+import * as StaffService from "src/services/staff-service";
 import { getInitials } from "src/utils/get-initials";
 import { neutral } from "src/theme/colors";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -176,9 +176,10 @@ const DetailStaff = (props) => {
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DatePicker
                     readOnly
-                    label="Ngày tạo"
+                    format="HH:mm:ss DD/MM/YYYY"
+                    sx={{ width: { xs: "100%", md: "50%" } }}
+                    label="Thời gian tạo"
                     name="created_at"
-                    sx={{ width: "50%" }}
                     value={dayjs(staffData?.created_at)}
                   />
                 </LocalizationProvider>
@@ -186,9 +187,10 @@ const DetailStaff = (props) => {
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DatePicker
                     readOnly
-                    label="Ngày cập nhật gần nhất"
+                    format="HH:mm:ss DD/MM/YYYY"
+                    sx={{ width: { xs: "100%", md: "50%" } }}
+                    label="Cập nhật gần nhất"
                     name="updated_at"
-                    sx={{ width: "50%" }}
                     value={dayjs(staffData?.updated_at)}
                   />
                 </LocalizationProvider>

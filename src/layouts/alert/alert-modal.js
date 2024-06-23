@@ -4,7 +4,7 @@ import Snackbar from "@mui/material/Snackbar";
 import Stack from "@mui/material/Stack";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { closeAlert } from "../../redux/create-actions/alert-action";
+import { closeAlert } from "src/redux/create-actions/alert-action";
 
 const stackStyle = { width: "100%", textAlign: "left" };
 

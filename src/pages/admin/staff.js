@@ -10,7 +10,7 @@ import { StaffTable } from "src/sections/admin/staff/staff-table";
 import { SearchStaff } from "src/sections/admin/staff/search-staff";
 import { STATUS_CODE, TOAST_KIND, TOAST_MESSAGE } from "src/constant/constants";
 import CreateStaff from "src/sections/admin/staff/create-staff";
-import * as StaffService from "../../services/staff-service";
+import * as StaffService from "src/services/staff-service";
 import { API } from "src/constant/constants";
 import { closeLoadingApi, openLoadingApi } from "src/redux/create-actions/loading-action";
 import { showCommonAlert } from "src/utils/toast-message";

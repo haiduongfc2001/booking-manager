@@ -6,7 +6,7 @@ import { SeverityPill } from "src/components/severity-pill";
 import { StatusMap } from "src/components/status-map";
 import dayjs from "dayjs";
 import { DISCOUNT_TYPE, DISCOUNT_TYPE_TRANSLATE, ROOM_STATUS } from "src/constant/constants";
-import formatCurrency from "src/utils/format-currency";
+import FormatCurrency from "src/utils/format-currency";
 
 export const columns = ({
   handleOpenModalDetail,
@@ -52,7 +52,7 @@ export const columns = ({
         if (params.row.discount_type === DISCOUNT_TYPE.PERCENTAGE) {
           return `${params.row.discount_value}%`;
         } else if (params.row.discount_type === DISCOUNT_TYPE.FIXED_AMOUNT) {
-          return `${formatCurrency(params.row.discount_value)}`;
+          return `${FormatCurrency(params.row.discount_value)}`;
         } else {
           return "";
         }

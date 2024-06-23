@@ -19,7 +19,7 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import * as CustomerService from "../../../services/customer-service";
+import * as CustomerService from "src/services/customer-service";
 import { API, GENDER, STATUS_CODE, TOAST_KIND } from "src/constant/constants";
 import { useDispatch } from "react-redux";
 import { showCommonAlert } from "src/utils/toast-message";
@@ -249,6 +249,7 @@ const CreateCustomer = (props) => {
                     required
                     label="Ngày sinh *"
                     name="dob"
+                    format="DD/MM/YYYY"
                     onBlur={formik.handleBlur}
                     value={dayjs(formik.values.dob)}
                     onChange={(value) => {

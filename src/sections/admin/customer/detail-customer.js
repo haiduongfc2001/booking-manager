@@ -15,7 +15,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import { SeverityPill } from "src/components/severity-pill";
 import { StatusMap } from "src/components/status-map";
 import { API, STATUS_CODE, TOAST_KIND, TOAST_MESSAGE } from "src/constant/constants";
-import * as CustomerService from "../../../services/customer-service";
+import * as CustomerService from "src/services/customer-service";
 import { getInitials } from "src/utils/get-initials";
 import { neutral } from "src/theme/colors";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -194,6 +194,7 @@ const DetailCustomer = (props) => {
                     readOnly
                     label="Ngày sinh"
                     name="dob"
+                    format="DD/MM/YYYY"
                     value={dayjs(customerData?.dob)}
                   />
                 </LocalizationProvider>

@@ -8,12 +8,12 @@ export const GetAllRoomTypesByHotelId = async ({ hotel_id }) => {
 
 export const GetRoomById = async ({ room_type_id, room_id }) => {
   return CommonService.getRequest(
-    `${prePath}/room_type/${room_type_id}/room/${room_id}/getRoomById`
+    `${prePath}/room-type/${room_type_id}/room/${room_id}/getRoomById`
   );
 };
 
 export const CreateRoom = async ({ room_type_id, number, description }) => {
-  return CommonService.postRequest(`${prePath}/room_type/${room_type_id}/room/createRoom`, {
+  return CommonService.postRequest(`${prePath}/room-type/${room_type_id}/room/createRoom`, {
     number,
     description,
   });
@@ -21,14 +21,14 @@ export const CreateRoom = async ({ room_type_id, number, description }) => {
 
 export const DeleteRoom = async ({ room_type_id, room_id }) => {
   return CommonService.deleteRequest(
-    `${prePath}/room_type/${room_type_id}/room/${room_id}/deleteRoom`,
+    `${prePath}/room-type/${room_type_id}/room/${room_id}/deleteRoom`,
     {}
   );
 };
 
 export const UpdateRoom = async ({ room_type_id, room_id, number, description }) => {
   return CommonService.patchRequest(
-    `${prePath}/room_type/${room_type_id}/room/${room_id}/updateRoom`,
+    `${prePath}/room-type/${room_type_id}/room/${room_id}/updateRoom`,
     {
       number,
       description,
@@ -65,6 +65,11 @@ export const CreateRoomTypeImages = async ({ hotel_id, room_type_id, formData })
   );
 };
 
+// Room Type
+export const CreateRoomType = async ({ hotel_id, data }) => {
+  return CommonService.postRequest(`${prePath}/${hotel_id}/room-type/createRoomType`, data);
+};
+
 export const DeleteRoomType = async ({ hotel_id, room_type_id }) => {
   return CommonService.deleteRequest(
     `${prePath}/${hotel_id}/room-type/${room_type_id}/deleteRoomType`,
@@ -74,13 +79,13 @@ export const DeleteRoomType = async ({ hotel_id, room_type_id }) => {
 
 export const GetRoomTypeById = async ({ hotel_id, room_type_id }) => {
   return CommonService.getRequest(
-    `${prePath}/${hotel_id}/room_type/${room_type_id}/getRoomTypeById`
+    `${prePath}/${hotel_id}/room-type/${room_type_id}/getRoomTypeById`
   );
 };
 
 export const UpdateRoomType = async ({ hotel_id, room_type_id, data }) => {
   return CommonService.patchRequest(
-    `${prePath}/${hotel_id}/room_type/${room_type_id}/updateRoomType`,
+    `${prePath}/${hotel_id}/room-type/${room_type_id}/updateRoomType`,
     data
   );
 };

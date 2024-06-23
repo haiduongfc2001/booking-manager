@@ -1,6 +1,6 @@
 import { Box, CircularProgress, Grid, Typography } from "@mui/material";
-import { TableStyle } from "../table-style";
-import FontSize from "../font-size";
+import { TableStyle } from "src/layouts/table-style";
+import FontSize from "src/layouts/font-size";
 
 // LoadingData component
 function LoadingData() {

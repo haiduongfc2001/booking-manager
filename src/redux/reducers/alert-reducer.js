@@ -1,4 +1,4 @@
-import * as actionTypes from "../actions/Actions";
+import * as actionTypes from "src/redux/actions/Actions";
 
 export const initialState = {
   data: {

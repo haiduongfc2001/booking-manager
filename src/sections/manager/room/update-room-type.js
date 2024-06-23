@@ -13,12 +13,16 @@ import {
   Avatar,
   Chip,
   InputAdornment,
+  FormControl,
+  FormLabel,
+  FormControlLabel,
+  Switch,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { API, STATUS_CODE, TOAST_KIND } from "src/constant/constants";
-import * as RoomService from "../../../services/room-service";
+import * as RoomService from "src/services/room-service";
 import { showCommonAlert } from "src/utils/toast-message";
 import { useDispatch } from "react-redux";
 import { neutral } from "src/theme/colors";
@@ -109,8 +113,6 @@ const UpdateRoomType = (props) => {
           views: values.views ? values.views : [],
           area: values.area ? Number(String(values.area).trim()) : null,
         };
-
-        console.log(valuesToSend);
 
         const response = await RoomService.UpdateRoomType({
           hotel_id: String(roomTypeData?.hotel_id).trim(),
@@ -236,6 +238,52 @@ const UpdateRoomType = (props) => {
                     helperText={formik.touched.name && formik.errors.name}
                   />
                 </Stack>
+                <Stack direction={{ xs: "column", sm: "row" }} spacing={3} alignItems="center">
+                  <TextField
+                    fullWidth
+                    required
+                    label="Giá phòng"
+                    name="base_price"
+                    type="text"
+                    InputProps={{
+                      endAdornment: <InputAdornment position="end">vnđ/đêm</InputAdornment>,
+                    }}
+                    onBlur={formik.handleBlur}
+                    value={formik.values.base_price}
+                    onChange={formik.handleChange}
+                    error={!!(formik.touched.base_price && formik.errors.base_price)}
+                    helperText={formik.touched.base_price && formik.errors.base_price}
+                  />
+                  <FormControl
+                    component="fieldset"
+                    fullWidth
+                    sx={{ display: "flex", alignItems: "center" }}
+                  >
+                    <FormControlLabel
+                      control={
+                        <Switch
+                          checked={formik.values.free_breakfast}
+                          onChange={(event) =>
+                            formik.setFieldValue("free_breakfast", event.target.checked)
+                          }
+                          name="free_breakfast"
+                          color="primary"
+                        />
+                      }
+                      label={
+                        formik.values.free_breakfast
+                          ? "Giá đã bao gồm bữa sáng"
+                          : "Giá chưa bao gồm bữa sáng"
+                      }
+                      sx={{ marginLeft: 0 }}
+                    />
+                    {formik.touched.free_breakfast && formik.errors.free_breakfast && (
+                      <Typography color="error" variant="body2" sx={{ marginTop: 1 }}>
+                        {formik.errors.free_breakfast}
+                      </Typography>
+                    )}
+                  </FormControl>
+                </Stack>
 
                 <Stack direction="row" spacing={3}>
                   <TextField
@@ -340,7 +388,9 @@ const UpdateRoomType = (props) => {
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DatePicker
                       readOnly
-                      label="Ngày tạo"
+                      format="HH:mm:ss DD/MM/YYYY"
+                      sx={{ width: { xs: "100%", md: "50%" } }}
+                      label="Thời gian tạo"
                       name="created_at"
                       value={dayjs(roomTypeData?.created_at)}
                     />
@@ -349,7 +399,9 @@ const UpdateRoomType = (props) => {
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DatePicker
                       readOnly
-                      label="Ngày cập nhật gần nhất"
+                      format="HH:mm:ss DD/MM/YYYY"
+                      sx={{ width: { xs: "100%", md: "50%" } }}
+                      label="Cập nhật gần nhất"
                       name="updated_at"
                       value={dayjs(roomTypeData?.updated_at)}
                     />

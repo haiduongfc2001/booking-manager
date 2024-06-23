@@ -138,6 +138,14 @@ export const API = {
     GET_ALL_DISTRICTS_BY_PROVINCE_ID: "GetAllDistrictsByProvinceId",
     GET_ALL_WARDS_BY_DISTRICT_ID: "GetAllWardsByDistrictId",
   },
+  BOOKING: {
+    GET_ALL_BOOKINGS: "GetAllBookings",
+    GET_ALL_BOOKINGS_BY_HOTEL_ID: "GetAllBookingsByHotelId",
+    GET_BOOKING_BY_ID: "GetBookingById",
+    CREATE_BOOKING: "CreateBooking",
+    DELETE_BOOKING: "DeleteBooking",
+    UPDATE_BOOKING: "UpdateBooking",
+  },
 };
 
 /**
@@ -208,4 +216,27 @@ export const DISCOUNT_TYPE = {
 export const DISCOUNT_TYPE_TRANSLATE = {
   PERCENTAGE: "Phần trăm tiền phòng",
   FIXED_AMOUNT: "Khoản tiền cố định",
+};
+
+export const BOOKING_STATUS = {
+  PENDING: "PENDING",
+  CONFIRMED: "CONFIRMED",
+  CHECKED_IN: "CHECKED_IN",
+  CHECKED_OUT: "CHECKED_OUT",
+  CANCELLED: "CANCELLED",
+};
+
+export const PAYMENT_STATUS = {
+  PENDING: "PENDING",
+  COMPLETED: "COMPLETED",
+  FAILED: "FAILED",
+  CANCELLED: "CANCELLED",
+  REFUNDED: "REFUNDED",
+  EXPIRED: "EXPIRED",
+};
+
+export const REFUND_STATUS = {
+  PENDING: "PENDING",
+  COMPLETED: "COMPLETED",
+  FAILED: "FAILED",
 };

@@ -12,14 +12,7 @@ import {
   InputAdornment,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import {
-  API,
-  DISCOUNT_TYPE,
-  PROMOTION_STATUS,
-  STATUS_CODE,
-  TOAST_KIND,
-  TOAST_MESSAGE,
-} from "src/constant/constants";
+import { API, DISCOUNT_TYPE, STATUS_CODE, TOAST_KIND, TOAST_MESSAGE } from "src/constant/constants";
 import * as RoomService from "src/services/room-service";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -208,9 +201,9 @@ const DetailPromotion = (props) => {
               <DateTimePicker
                 readOnly
                 format="HH:mm:ss DD/MM/YYYY"
-                label="Ngày tạo"
-                name="created_at"
                 sx={{ width: { xs: "100%", md: "50%" } }}
+                label="Thời gian tạo"
+                name="created_at"
                 value={dayjs(promotionData?.created_at)}
               />
             </LocalizationProvider>
@@ -219,9 +212,9 @@ const DetailPromotion = (props) => {
               <DateTimePicker
                 readOnly
                 format="HH:mm:ss DD/MM/YYYY"
-                label="Ngày cập nhật gần nhất"
-                name="updated_at"
                 sx={{ width: { xs: "100%", md: "50%" } }}
+                label="Cập nhật gần nhất"
+                name="updated_at"
                 value={dayjs(promotionData?.updated_at)}
               />
             </LocalizationProvider>

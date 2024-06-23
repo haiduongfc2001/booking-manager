@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { API, ROOM_STATUS, STATUS_CODE, TOAST_KIND, TOAST_MESSAGE } from "src/constant/constants";
-import * as RoomService from "../../../services/room-service";
+import * as RoomService from "src/services/room-service";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -140,9 +140,10 @@ const DetailRoom = (props) => {
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker
                 readOnly
-                label="Ngày tạo"
+                format="HH:mm:ss DD/MM/YYYY"
+                sx={{ width: { xs: "100%", md: "50%" } }}
+                label="Thời gian tạo"
                 name="created_at"
-                sx={{ width: "50%" }}
                 value={dayjs(roomData?.created_at)}
               />
             </LocalizationProvider>
@@ -150,9 +151,10 @@ const DetailRoom = (props) => {
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker
                 readOnly
-                label="Ngày cập nhật gần nhất"
+                format="HH:mm:ss DD/MM/YYYY"
+                sx={{ width: { xs: "100%", md: "50%" } }}
+                label="Cập nhật gần nhất"
                 name="updated_at"
-                sx={{ width: "50%" }}
                 value={dayjs(roomData?.updated_at)}
               />
             </LocalizationProvider>

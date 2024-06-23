@@ -23,7 +23,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { API, GENDER, ROLE, STATUS_CODE, TOAST_KIND } from "src/constant/constants";
-import * as StaffService from "../../../services/staff-service";
+import * as StaffService from "src/services/staff-service";
 import { showCommonAlert } from "src/utils/toast-message";
 import { useDispatch } from "react-redux";
 import { neutral } from "src/theme/colors";
@@ -283,9 +283,10 @@ const UpdateStaff = (props) => {
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DatePicker
                       readOnly
-                      label="Ngày tạo"
+                      format="HH:mm:ss DD/MM/YYYY"
+                      sx={{ width: { xs: "100%", md: "50%" } }}
+                      label="Thời gian tạo"
                       name="created_at"
-                      sx={{ width: "50%" }}
                       value={dayjs(staffData?.created_at)}
                     />
                   </LocalizationProvider>
@@ -293,9 +294,10 @@ const UpdateStaff = (props) => {
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DatePicker
                       readOnly
-                      label="Ngày cập nhật gần nhất"
+                      format="HH:mm:ss DD/MM/YYYY"
+                      sx={{ width: { xs: "100%", md: "50%" } }}
+                      label="Cập nhật gần nhất"
                       name="updated_at"
-                      sx={{ width: "50%" }}
                       value={dayjs(staffData?.updated_at)}
                     />
                   </LocalizationProvider>

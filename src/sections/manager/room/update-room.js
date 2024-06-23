@@ -21,7 +21,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { API, ROOM_STATUS, STATUS_CODE, TOAST_KIND } from "src/constant/constants";
-import * as RoomService from "../../../services/room-service";
+import * as RoomService from "src/services/room-service";
 import { showCommonAlert } from "src/utils/toast-message";
 import { useDispatch } from "react-redux";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -212,7 +212,9 @@ const UpdateRoom = (props) => {
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DatePicker
                   readOnly
-                  label="Ngày tạo"
+                  format="HH:mm:ss DD/MM/YYYY"
+                  sx={{ width: { xs: "100%", md: "50%" } }}
+                  label="Thời gian tạo"
                   name="created_at"
                   value={dayjs(roomData?.created_at)}
                 />
@@ -221,7 +223,9 @@ const UpdateRoom = (props) => {
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DatePicker
                   readOnly
-                  label="Ngày cập nhật gần nhất"
+                  format="HH:mm:ss DD/MM/YYYY"
+                  sx={{ width: { xs: "100%", md: "50%" } }}
+                  label="Cập nhật gần nhất"
                   name="updated_at"
                   value={dayjs(roomData?.updated_at)}
                 />

@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { API, STATUS_CODE, TOAST_KIND, TOAST_MESSAGE } from "src/constant/constants";
-import * as HotelService from "../../../services/hotel-service";
+import * as HotelService from "src/services/hotel-service";
 import { getInitials } from "src/utils/get-initials";
 import { neutral } from "src/theme/colors";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -184,7 +184,9 @@ const DetailHotel = (props) => {
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DatePicker
                     readOnly
-                    label="Ngày tạo"
+                    format="HH:mm:ss DD/MM/YYYY"
+                    sx={{ width: { xs: "100%", md: "50%" } }}
+                    label="Thời gian tạo"
                     name="created_at"
                     value={dayjs(hotelData?.created_at)}
                   />
@@ -193,7 +195,9 @@ const DetailHotel = (props) => {
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DatePicker
                     readOnly
-                    label="Ngày cập nhật gần nhất"
+                    format="HH:mm:ss DD/MM/YYYY"
+                    sx={{ width: { xs: "100%", md: "50%" } }}
+                    label="Cập nhật gần nhất"
                     name="updated_at"
                     value={dayjs(hotelData?.updated_at)}
                   />

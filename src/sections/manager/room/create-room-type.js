@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import React, { useEffect, useRef } from "react";
+import React, { useMemo, useState } from "react";
 import {
   Button,
   Dialog,
@@ -10,124 +10,45 @@ import {
   Typography,
   Stack,
   TextField,
-  Box,
-  Grid,
-  CardMedia,
-  RadioGroup,
+  Avatar,
+  Chip,
+  InputAdornment,
+  FormControl,
   FormControlLabel,
-  Radio,
+  Switch,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import * as RoomService from "../../../services/room-service";
-import { API, IMAGE, STATUS_CODE, TOAST_KIND } from "src/constant/constants";
-import { useDispatch } from "react-redux";
+import { API, STATUS_CODE, TOAST_KIND } from "src/constant/constants";
+import * as RoomService from "src/services/room-service";
 import { showCommonAlert } from "src/utils/toast-message";
+import { useDispatch } from "react-redux";
+import { closeLoadingApi, openLoadingApi } from "src/redux/create-actions/loading-action";
 
 const initialData = {
-  number: "",
-  type: "",
-  price: "",
-  discount: "",
-  capacity: "",
+  name: "",
   description: "",
-  images: [],
-  captions: [],
-  is_primarys: [],
+  base_price: "",
+  free_breakfast: true,
+  standard_occupant: "",
+  max_children: "",
+  max_occupant: "",
+  max_extra_bed: 0,
+  views: [],
+  area: "",
 };
 
-const imageSchema = Yup.object().shape({
-  file: Yup.mixed()
-    .required("Hình ảnh là bắt buộc")
-    .test("fileSize", "Kích thước ảnh không được vượt quá 100KB", (value) => {
-      return value && value.size <= IMAGE.MAX_FILE_SIZE;
-    })
-    .test("fileType", "Chỉ cho phép JPG và PNG", (value) => {
-      return value && ["image/jpeg", "image/png", "image/jpg"].includes(value.type);
-    }),
-});
+const CreateRoomType = (props) => {
+  const { isModalCreateRoomType, setIsModalCreateRoomType, hotelId, onRefresh } = props;
 
-const CreateRoom = (props) => {
-  const { isModalCreateRoom, setIsModalCreateRoom, hotelId, onRefresh } = props;
+  const [inputValue, setInputValue] = useState("");
 
   const dispatch = useDispatch();
 
   const handleCloseModalCreate = () => {
-    setIsModalCreateRoom(false);
+    setIsModalCreateRoomType(false);
     formik.resetForm();
-  };
-
-  const handleAddImage = () => {
-    const input = document.createElement("input");
-    input.type = "file";
-    input.name = "images";
-    input.multiple = true;
-    input.accept = "image/*";
-
-    input.addEventListener("change", (event) => {
-      const selectedImages = Array.from(event.target.files);
-
-      // Prioritize early return for error handling
-      if (selectedImages.length + formik.values.images.length > 5) {
-        dispatch(showCommonAlert(TOAST_KIND.ERROR, "Chỉ được thêm tối đa 5 ảnh!"));
-        return;
-      }
-
-      // Directly update formik with concise spread syntax
-      formik.setValues((prevValues) => ({
-        ...prevValues,
-        images: [...prevValues.images, ...selectedImages],
-        captions: [...prevValues.captions, ...new Array(selectedImages.length).fill("")], // Initialize captions for new images
-        is_primarys: [...prevValues.is_primarys, ...new Array(selectedImages.length).fill(false)], // Initialize is_primarys for new images
-      }));
-    });
-
-    // Trigger file selection dialog immediately
-    input.click();
-  };
-
-  const handleRemoveImage = (index) => {
-    formik.setValues((prevData) => {
-      const updatedImages = [...prevData.images];
-      const updatedCaptions = [...prevData.captions];
-      const updatedIsPrimarys = [...prevData.is_primarys];
-
-      updatedImages.splice(index, 1);
-      updatedCaptions.splice(index, 1);
-      updatedIsPrimarys.splice(index, 1);
-
-      return {
-        ...prevData,
-        images: updatedImages,
-        captions: updatedCaptions,
-        is_primarys: updatedIsPrimarys,
-      };
-    });
-  };
-
-  const handleCaptionChange = (index, caption) => {
-    formik.setValues((prevData) => {
-      const updatedCaptions = [...prevData.captions];
-      updatedCaptions[index] = caption;
-
-      return { ...prevData, captions: updatedCaptions };
-    });
-  };
-
-  const handleIsPrimaryChange = (index) => {
-    formik.setValues((prevData) => {
-      const updatedIsPrimarys = [...prevData.is_primarys];
-      updatedIsPrimarys.fill(false); // Reset all to false
-      updatedIsPrimarys[index] = true;
-
-      // If all is_primarys are false, default to the first image
-      if (!updatedIsPrimarys.some((value) => value)) {
-        updatedIsPrimarys[0] = true;
-      }
-
-      return { ...prevData, is_primarys: updatedIsPrimarys };
-    });
   };
 
   const formik = useFormik({
@@ -136,85 +57,90 @@ const CreateRoom = (props) => {
       submit: null,
     },
     validationSchema: Yup.object({
-      number: Yup.string()
-        .max(255, "Tên phòng không được vượt quá 255 ký tự")
-        .required("Vui lòng nhập tên phòng!"),
-      type: Yup.string().required("Vui lòng nhập loại phòng!"),
-      price: Yup.number()
-        .required("Vui lòng nhập giá phòng!")
-        .min(0, "Giá phòng phải lớn hơn hoặc bằng 0"),
-      discount: Yup.number()
-        .when("price", (price, schema) => {
-          return price
-            ? schema
-                .min(0, "Giá giảm phải lớn hơn hoặc bằng 0")
-                .max(price, "Giá giảm không được lớn hơn giá phòng")
-            : schema;
-        })
-        .required("Vui lòng nhập giá phòng khi đã giảm giá!"),
-      capacity: Yup.number()
-        .required("Vui lòng nhập sức chứa của phòng!")
-        .integer("Sức chứa phải là số nguyên!")
-        .min(1, "Sức chứa phải lớn hơn hoặc bằng 1"),
-      description: Yup.string()
-        .min(10, "Mô tả phòng phải có ít nhất 10 ký tự!")
-        .required("Vui lòng nhập mô tả về phòng!"),
-      images: Yup.array()
-        // .of(imageSchema)
-        .max(IMAGE.MAX_NUMBER_OF_IMAGES, "Cho phép tối đa 5 hình ảnh!"),
-      captions: Yup.array().of(Yup.string().required("Cần có chú thích cho ảnh!")),
-      is_primarys: Yup.array().of(Yup.boolean()),
+      name: Yup.string().required("Tên là bắt buộc"),
+      description: Yup.string().required("Mô tả là bắt buộc"),
+      base_price: Yup.number()
+        .required("Giá cơ bản là bắt buộc")
+        .positive("Giá cơ bản phải là một số dương"),
+      free_breakfast: Yup.boolean().required("Thông tin bữa sáng miễn phí là bắt buộc"),
+      standard_occupant: Yup.number()
+        .required("Số người tiêu chuẩn là bắt buộc")
+        .positive("Số người tiêu chuẩn phải là một số dương"),
+      max_children: Yup.number()
+        .required("Số trẻ em tối đa là bắt buộc")
+        .min(0, "Số trẻ em tối đa phải ít nhất là 0"),
+      max_occupant: Yup.number()
+        .required("Sức chứa tối đa là bắt buộc")
+        .positive("Sức chứa tối đa phải là một số dương"),
+      max_extra_bed: Yup.number()
+        .required("Số giường phụ tối đa là bắt buộc")
+        .min(0, "Số giường phụ tối đa phải ít nhất là 0"),
+      views: Yup.array().of(Yup.string()).nullable(),
+      area: Yup.number().nullable().positive("Diện tích phải là một số dương"),
     }),
 
     onSubmit: async (values, helpers) => {
-      const formData = new FormData();
-      formData.append("number", values.number.trim());
-      formData.append("type", values.type.trim());
-      formData.append("price", Number(values.price.trim()));
-      formData.append("discount", Number(values.discount.trim()));
-      formData.append("capacity", Number(values.capacity.trim()));
-      formData.append("description", values.description.trim());
-      formData.append("status", "available");
-
-      values.images.forEach((image, index) => {
-        formData.append("images", image);
-        formData.append("captions", values.captions[index]);
-        formData.append("is_primarys", values.is_primarys[index]);
-      });
-
       try {
-        const response = await RoomService[API.ROOM.CREATE_ROOM]({ hotel_id: hotelId, formData });
+        const valuesToSend = {
+          name: values.name.trim(),
+          description: values.description.trim(),
+          base_price: Number(String(values.base_price).trim()),
+          free_breakfast: values.free_breakfast,
+          standard_occupant: Number(String(values.standard_occupant).trim()),
+          max_children: Number(String(values.max_children).trim()),
+          max_occupant: Number(String(values.max_occupant).trim()),
+          max_extra_bed: 0,
+          views: values.views ? values.views : [],
+          area: values.area ? Number(String(values.area).trim()) : null,
+        };
+
+        dispatch(openLoadingApi());
+
+        const response = await RoomService[API.ROOM_TYPE.CREATE_ROOM_TYPE]({
+          hotel_id: String(hotelId).trim(),
+          data: valuesToSend,
+        });
 
         if (response?.status === STATUS_CODE.CREATED) {
           handleCloseModalCreate();
-          onRefresh();
           dispatch(showCommonAlert(TOAST_KIND.SUCCESS, response.message));
+          onRefresh();
         } else {
+          helpers.setErrors({ submit: response.data.message });
           dispatch(showCommonAlert(TOAST_KIND.ERROR, response.data.message));
         }
       } catch (err) {
         helpers.setStatus({ success: false });
         helpers.setErrors({ submit: err.message });
         helpers.setSubmitting(false);
+      } finally {
+        dispatch(closeLoadingApi());
       }
     },
     enableReinitialize: true,
     validateOnBlur: false,
   });
 
-  const numberElementRef = useRef(null);
-  useEffect(() => {
-    if (isModalCreateRoom) {
-      const { current: numberElement } = numberElementRef;
-      if (numberElement !== null) {
-        numberElement.focus();
-      }
+  const handleViewsChange = (event) => {
+    setInputValue(event.target.value);
+  };
+
+  const handleInputKeyPress = (event) => {
+    if (event.key === "Enter" && inputValue.trim() !== "") {
+      const newViews = [...formik.values.views, inputValue.trim()];
+      formik.setFieldValue("views", newViews);
+      setInputValue("");
     }
-  }, [isModalCreateRoom]);
+  };
+
+  const handleDeleteView = (viewToDelete) => {
+    const createdViews = formik.values.views.filter((view) => view !== viewToDelete);
+    formik.setFieldValue("views", createdViews);
+  };
 
   return (
     <Dialog
-      open={isModalCreateRoom}
+      open={isModalCreateRoomType}
       onClose={handleCloseModalCreate}
       aria-labelledby="scroll-dialog-title"
       aria-describedby="scroll-dialog-description"
@@ -237,7 +163,7 @@ const CreateRoom = (props) => {
           borderBottom: "1px solid #e0e0e0",
         }}
       >
-        Tạo phòng mới
+        Tạo loại phòng mới
         <IconButton
           aria-label="close"
           onClick={handleCloseModalCreate}
@@ -261,67 +187,61 @@ const CreateRoom = (props) => {
                   autoFocus
                   fullWidth
                   required
-                  label="Số phòng"
-                  name="number"
-                  type="text"
-                  ref={numberElementRef}
-                  onBlur={formik.handleBlur}
-                  value={formik.values.number}
-                  onChange={formik.handleChange}
-                  error={!!(formik.touched.number && formik.errors.number)}
-                  helperText={formik.touched.number && formik.errors.number}
-                />
-                <TextField
-                  fullWidth
-                  required
                   label="Loại phòng"
-                  name="type"
+                  name="name"
                   type="text"
                   onBlur={formik.handleBlur}
-                  value={formik.values.type}
+                  value={formik.values.name}
                   onChange={formik.handleChange}
-                  error={!!(formik.touched.type && formik.errors.type)}
-                  helperText={formik.touched.type && formik.errors.type}
+                  error={!!(formik.touched.name && formik.errors.name)}
+                  helperText={formik.touched.name && formik.errors.name}
                 />
               </Stack>
-
-              <Stack direction="row" spacing={3}>
+              <Stack direction={{ xs: "column", sm: "row" }} spacing={3} alignItems="center">
                 <TextField
                   fullWidth
                   required
-                  label="Sức chứa"
-                  name="capacity"
+                  label="Giá phòng"
+                  name="base_price"
                   type="text"
+                  InputProps={{
+                    endAdornment: <InputAdornment position="end">vnđ/đêm</InputAdornment>,
+                  }}
                   onBlur={formik.handleBlur}
-                  value={formik.values.capacity}
+                  value={formik.values.base_price}
                   onChange={formik.handleChange}
-                  error={!!(formik.touched.capacity && formik.errors.capacity)}
-                  helperText={formik.touched.capacity && formik.errors.capacity}
+                  error={!!(formik.touched.base_price && formik.errors.base_price)}
+                  helperText={formik.touched.base_price && formik.errors.base_price}
                 />
-                <TextField
+                <FormControl
+                  component="fieldset"
                   fullWidth
-                  required
-                  label="Giá gốc"
-                  name="price"
-                  type="text"
-                  onBlur={formik.handleBlur}
-                  onChange={formik.handleChange}
-                  value={formik.values.price}
-                  error={!!(formik.touched.price && formik.errors.price)}
-                  helperText={formik.touched.price && formik.errors.price}
-                />
-                <TextField
-                  fullWidth
-                  required
-                  label="Giảm giá"
-                  name="discount"
-                  type="text"
-                  onBlur={formik.handleBlur}
-                  value={formik.values.discount}
-                  onChange={formik.handleChange}
-                  error={!!(formik.touched.discount && formik.errors.discount)}
-                  helperText={formik.touched.discount && formik.errors.discount}
-                />
+                  sx={{ display: "flex", alignItems: "center" }}
+                >
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        checked={formik.values.free_breakfast}
+                        onChange={(event) =>
+                          formik.setFieldValue("free_breakfast", event.target.checked)
+                        }
+                        name="free_breakfast"
+                        color="primary"
+                      />
+                    }
+                    label={
+                      formik.values.free_breakfast
+                        ? "Giá đã bao gồm bữa sáng"
+                        : "Giá chưa bao gồm bữa sáng"
+                    }
+                    sx={{ marginLeft: 0 }}
+                  />
+                  {formik.touched.free_breakfast && formik.errors.free_breakfast && (
+                    <Typography color="error" variant="body2" sx={{ marginTop: 1 }}>
+                      {formik.errors.free_breakfast}
+                    </Typography>
+                  )}
+                </FormControl>
               </Stack>
 
               <Stack direction="row" spacing={3}>
@@ -341,107 +261,89 @@ const CreateRoom = (props) => {
                   helperText={formik.touched.description && formik.errors.description}
                 />
               </Stack>
+
+              <Stack direction="row" spacing={3}>
+                <TextField
+                  fullWidth
+                  required
+                  label="Số người tiêu chuẩn"
+                  name="standard_occupant"
+                  type="text"
+                  onBlur={formik.handleBlur}
+                  value={formik.values.standard_occupant}
+                  onChange={formik.handleChange}
+                  error={!!(formik.touched.standard_occupant && formik.errors.standard_occupant)}
+                  helperText={formik.touched.standard_occupant && formik.errors.standard_occupant}
+                />
+                <TextField
+                  fullWidth
+                  required
+                  label="Số trẻ em thêm tối đa"
+                  name="max_children"
+                  type="text"
+                  onBlur={formik.handleBlur}
+                  onChange={formik.handleChange}
+                  value={formik.values.max_children}
+                  error={!!(formik.touched.max_children && formik.errors.max_children)}
+                  helperText={formik.touched.max_children && formik.errors.max_children}
+                />
+                <TextField
+                  fullWidth
+                  required
+                  label="Sức chứa tối đa"
+                  name="max_occupant"
+                  type="text"
+                  onBlur={formik.handleBlur}
+                  value={formik.values.max_occupant}
+                  onChange={formik.handleChange}
+                  error={!!(formik.touched.max_occupant && formik.errors.max_occupant)}
+                  helperText={formik.touched.max_occupant && formik.errors.max_occupant}
+                />
+              </Stack>
+
+              <Stack direction="row" spacing={3}>
+                <TextField
+                  fullWidth
+                  required
+                  label="Diện tích"
+                  name="area"
+                  type="text"
+                  InputProps={{
+                    endAdornment: <InputAdornment position="end">m&sup2;</InputAdornment>,
+                  }}
+                  onBlur={formik.handleBlur}
+                  onChange={formik.handleChange}
+                  value={formik.values.area}
+                  error={!!(formik.touched.area && formik.errors.area)}
+                  helperText={formik.touched.area && formik.errors.area}
+                />
+              </Stack>
+              <Stack direction="row" spacing={3} display="flex">
+                <TextField
+                  fullWidth
+                  label="Hướng nhìn (nhập và nhấn Enter để thêm)..."
+                  name="views"
+                  onBlur={formik.handleBlur}
+                  value={inputValue}
+                  onChange={handleViewsChange}
+                  onKeyDown={handleInputKeyPress}
+                  error={!!(formik.touched.views && formik.errors.views)}
+                  helperText={formik.touched.views && formik.errors.views}
+                />
+              </Stack>
+              <Stack spacing={2} direction={"row"}>
+                {formik.values.views.map((view, index) => (
+                  <Chip
+                    key={index}
+                    label={view}
+                    onDelete={() => handleDeleteView(view)}
+                    sx={{ margin: "1px", width: "fit-content" }}
+                    color="primary"
+                  />
+                ))}
+              </Stack>
             </Stack>
           </Stack>
-
-          {/* Add images for room */}
-          <Box
-            sx={{
-              my: 4,
-              bgcolor: "background.default",
-              width: "100%",
-              borderRadius: 4,
-            }}
-          >
-            <Grid container spacing={2} justifyContent="center">
-              {formik.values.images.map((image, index) => (
-                <Grid item xs={12} key={index} sx={{ pt: "0 !important", pl: "0 !important" }}>
-                  <Grid container spacing={2} alignItems="center" direction="column">
-                    <Grid
-                      item
-                      display="flex"
-                      alignItems="center"
-                      justifyContent="center"
-                      sx={{ mx: 2, mt: 1 }}
-                    >
-                      <CardMedia
-                        component="img"
-                        src={URL.createObjectURL(image)}
-                        alt={`${index + 1}`}
-                        sx={{
-                          width: 160,
-                          height: 160,
-                          objectFit: "cover",
-                          mb: 2,
-                          borderRadius: "20%",
-                          mr: 2,
-                        }}
-                      />
-                      <TextField
-                        fullWidth
-                        required
-                        multiline
-                        label="Mô tả ảnh"
-                        name={`captions[${index}]`}
-                        type="text"
-                        minRows={3}
-                        maxRows={5}
-                        sx={{ backgroundColor: "white", mr: 2 }}
-                        onBlur={formik.handleBlur}
-                        value={formik.values.captions[index]}
-                        onChange={(event) => handleCaptionChange(index, event.target.value)}
-                        error={
-                          !!(
-                            formik.touched.captions &&
-                            formik.errors.captions &&
-                            formik.errors.captions[index]
-                          )
-                        }
-                        helperText={
-                          (formik.touched.captions &&
-                            formik.errors.captions &&
-                            formik.errors.captions[index]) ||
-                          ""
-                        }
-                      />
-                      <RadioGroup
-                        aria-label="is_primarys"
-                        name={`is_primarys[${index}]`}
-                        value={formik.values.is_primarys[index]}
-                        onChange={() => handleIsPrimaryChange(index)}
-                      >
-                        <FormControlLabel value={true} control={<Radio />} label="Ảnh đại diện" />
-                      </RadioGroup>
-                      <Button
-                        variant="contained"
-                        color="error"
-                        sx={{ mx: 2 }}
-                        onClick={() => handleRemoveImage(index)}
-                      >
-                        Xóa
-                      </Button>
-                    </Grid>
-                  </Grid>
-                </Grid>
-              ))}
-              <Grid
-                item
-                xs={12}
-                sx={{
-                  m: 2,
-                  p: "0 !important",
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <Button variant="contained" color="primary" onClick={handleAddImage}>
-                  Thêm ảnh
-                </Button>
-              </Grid>
-            </Grid>
-          </Box>
-
           {formik.errors.submit && (
             <Typography color="error" sx={{ mt: 3 }} variant="body2">
               {formik.errors.submit}
@@ -450,17 +352,7 @@ const CreateRoom = (props) => {
         </form>
       </DialogContent>
 
-      <DialogActions
-        sx={{
-          position: "sticky",
-          bottom: 0,
-          zIndex: 1100,
-          my: 3,
-          mr: 3,
-          display: "flex",
-          justifyContent: "flex-end",
-        }}
-      >
+      <DialogActions sx={{ my: 3, mr: 3, display: "flex", justifyContent: "flex-end" }}>
         <Button
           type="submit"
           variant="contained"
@@ -468,7 +360,7 @@ const CreateRoom = (props) => {
           sx={{ mr: 2 }}
           onClick={formik.handleSubmit}
         >
-          OK
+          Tạo
         </Button>
         <Button variant="contained" color="inherit" onClick={handleCloseModalCreate}>
           Hủy
@@ -478,11 +370,11 @@ const CreateRoom = (props) => {
   );
 };
 
-export default CreateRoom;
+export default CreateRoomType;
 
-CreateRoom.propTypes = {
-  isModalCreateRoom: PropTypes.bool.isRequired,
-  setIsModalCreateRoom: PropTypes.func.isRequired,
+CreateRoomType.propTypes = {
+  isModalCreateRoomType: PropTypes.bool.isRequired,
+  setIsModalCreateRoomType: PropTypes.func.isRequired,
   hotelId: PropTypes.number.isRequired,
   onRefresh: PropTypes.func,
 };

@@ -63,7 +63,7 @@ export const columns = ({
     },
     {
       field: "created_at",
-      headerName: "Ngày tạo",
+      headerName: "Thời gian tạo",
       flex: 0.15,
       align: "right",
       renderCell: (params) => format(new Date(params.row.created_at), "dd/MM/yyyy"),

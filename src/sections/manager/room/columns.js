@@ -47,7 +47,7 @@ export const columns = ({
     },
     {
       field: "created_at",
-      headerName: "Ngày tạo",
+      headerName: "Thời gian tạo",
       width: 150,
       align: "center",
       renderCell: (params) => {

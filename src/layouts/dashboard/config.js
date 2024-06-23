@@ -84,6 +84,15 @@ export const items = [
     ),
   },
   {
+    title: "Đơn đặt phòng",
+    path: "/manager/booking",
+    icon: (
+      <SvgIcon fontSize="small">
+        <PolicyIcon />
+      </SvgIcon>
+    ),
+  },
+  {
     title: "Tài khoản",
     path: "/account",
     icon: (

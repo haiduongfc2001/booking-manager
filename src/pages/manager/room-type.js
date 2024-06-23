@@ -23,12 +23,11 @@ import { SearchRoom } from "src/sections/manager/room/search-room";
 import { HOTEL_ID_FAKE, STATUS_CODE, TOAST_KIND, TOAST_MESSAGE } from "src/constant/constants";
 import * as RoomService from "src/services/room-service";
 import { API } from "src/constant/constants";
-import CreateRoom from "src/sections/manager/room/create-room";
+import CreateRoomType from "src/sections/manager/room/create-room-type";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
-import FormatNumber from "src/utils/format-number";
 import { useRouter } from "next/navigation";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
@@ -38,14 +37,18 @@ import { closeLoadingApi, openLoadingApi } from "src/redux/create-actions/loadin
 import { neutral } from "src/theme/colors";
 import { getInitials } from "src/utils/get-initials";
 import { showCommonAlert } from "src/utils/toast-message";
+import FormatCurrency from "src/utils/format-currency";
+import DeleteRoomType from "src/sections/manager/room/delete-room-type";
 
 const Page = () => {
   const [hotelId, setHotelId] = useState(HOTEL_ID_FAKE);
+  const [roomTypeId, setRoomTypeId] = useState(null);
   const [roomTypesData, setRoomTypesData] = useState([]);
   const [numRoomTypes, setNumRoomTypes] = useState(0);
 
-  const [isModalCreateRoom, setIsModalCreateRoom] = useState(false);
+  const [isModalCreateRoomType, setIsModalCreateRoomType] = useState(false);
   const [expandedRoomTypeId, setExpandedRoomTypeId] = useState(null);
+  const [confirmDeleteRoomType, setConfirmDeleteRoomType] = useState(false);
 
   const inputRef = useRef(null);
   const router = useRouter();
@@ -83,7 +86,7 @@ const Page = () => {
   }, []);
 
   const handleOpenModalCreate = () => {
-    setIsModalCreateRoom(true);
+    setIsModalCreateRoomType(true);
   };
 
   const handleRoomTypeClick = (roomTypeId) => {
@@ -187,7 +190,7 @@ const Page = () => {
             {roomTypesData?.length > 0 &&
               roomTypesData?.map((roomType) => {
                 return (
-                  <Card key={roomType.id} sx={{ p: 2 }}>
+                  <Card key={roomType?.id} sx={{ p: 2 }}>
                     <Stack
                       direction={"row"}
                       spacing={2}
@@ -212,13 +215,13 @@ const Page = () => {
                         >
                           {getInitials(roomType?.name)}
                         </Avatar>
-                        <Typography variant="h6">{roomType.name}</Typography>
+                        <Typography variant="h6">{roomType?.name}</Typography>
                       </Stack>
                       <IconButton
-                        onClick={() => handleToggleExpand(roomType.id)}
+                        onClick={() => handleToggleExpand(roomType?.id)}
                         sx={{ color: "primary.main" }}
                       >
-                        {expandedRoomTypeId === roomType.id ? (
+                        {expandedRoomTypeId === roomType?.id ? (
                           <ExpandLessIcon />
                         ) : (
                           <ExpandMoreIcon />
@@ -236,25 +239,38 @@ const Page = () => {
                       <Button variant="contained" color="info" sx={{ width: "auto", mt: 1 }}>
                         Số phòng: {roomType?.totalRooms}
                       </Button>
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        endIcon={
-                          <SvgIcon fontSize="small">
-                            <ArrowForwardIcon />
-                          </SvgIcon>
-                        }
-                        onClick={() => handleRoomTypeClick(roomType.id)}
-                      >
-                        Xem chi tiết
-                      </Button>
+                      <Stack spacing={2} direction="row">
+                        <Button
+                          variant="contained"
+                          color="error"
+                          sx={{ width: "auto", mt: 1 }}
+                          onClick={() => {
+                            setConfirmDeleteRoomType(true);
+                            setRoomTypeId(roomType?.id);
+                          }}
+                        >
+                          Xóa
+                        </Button>
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          endIcon={
+                            <SvgIcon fontSize="small">
+                              <ArrowForwardIcon />
+                            </SvgIcon>
+                          }
+                          onClick={() => handleRoomTypeClick(roomType?.id)}
+                        >
+                          Xem chi tiết
+                        </Button>
+                      </Stack>
                     </Stack>
 
-                    {expandedRoomTypeId === roomType.id && (
+                    {expandedRoomTypeId === roomType?.id && (
                       <Box>
                         <Stack spacing={3} sx={{ mt: 3 }}>
                           <Stack direction="column" spacing={3} sx={{ width: "100%" }}>
-                            <Stack direction={{ xs: "column", sm: "row" }} spacing={3}>
+                            <Stack direction={{ xs: "column", md: "row" }} spacing={3}>
                               <TextField
                                 // inputRef={inputRef}
                                 // autoFocus
@@ -265,8 +281,10 @@ const Page = () => {
                                 InputProps={{
                                   readOnly: true,
                                 }}
-                                value={roomType.name}
+                                value={roomType?.name}
                               />
+                            </Stack>
+                            <Stack direction={{ xs: "column", md: "row" }} spacing={3}>
                               <TextField
                                 fullWidth
                                 label="Giá phòng"
@@ -274,8 +292,25 @@ const Page = () => {
                                 type="text"
                                 InputProps={{
                                   readOnly: true,
+                                  endAdornment: (
+                                    <InputAdornment position="end">/đêm</InputAdornment>
+                                  ),
                                 }}
-                                value={FormatNumber(roomType.base_price)}
+                                value={FormatCurrency(roomType?.base_price)}
+                              />
+                              <TextField
+                                fullWidth
+                                label="Bữa sáng"
+                                name="free_breakfast"
+                                type="text"
+                                InputProps={{
+                                  readOnly: true,
+                                }}
+                                value={
+                                  roomType?.free_breakfast
+                                    ? "Giá đã bao gồm bữa sáng"
+                                    : "Giá chưa bao gồm bữa sáng"
+                                }
                               />
                             </Stack>
 
@@ -291,7 +326,7 @@ const Page = () => {
                                 }}
                                 minRows={3}
                                 maxRows={5}
-                                value={roomType.description}
+                                value={roomType?.description}
                               />
                             </Stack>
 
@@ -304,7 +339,7 @@ const Page = () => {
                                 InputProps={{
                                   readOnly: true,
                                 }}
-                                value={roomType.standard_occupant}
+                                value={roomType?.standard_occupant}
                               />
                               <TextField
                                 fullWidth
@@ -314,7 +349,7 @@ const Page = () => {
                                 InputProps={{
                                   readOnly: true,
                                 }}
-                                value={roomType.max_children}
+                                value={roomType?.max_children}
                               />
                               <TextField
                                 fullWidth
@@ -324,7 +359,7 @@ const Page = () => {
                                 InputProps={{
                                   readOnly: true,
                                 }}
-                                value={roomType.max_occupant}
+                                value={roomType?.max_occupant}
                               />
                             </Stack>
 
@@ -337,7 +372,7 @@ const Page = () => {
                                 InputProps={{
                                   readOnly: true,
                                 }}
-                                value={roomType.views}
+                                value={roomType?.views}
                               />
                               <TextField
                                 fullWidth
@@ -350,7 +385,7 @@ const Page = () => {
                                     <InputAdornment position="end">m&sup2;</InputAdornment>
                                   ),
                                 }}
-                                value={roomType.area}
+                                value={roomType?.area}
                               />
                             </Stack>
 
@@ -358,7 +393,9 @@ const Page = () => {
                               <LocalizationProvider dateAdapter={AdapterDayjs}>
                                 <DatePicker
                                   readOnly
-                                  label="Ngày tạo"
+                                  format="HH:mm:ss DD/MM/YYYY"
+                                  sx={{ width: { xs: "100%", md: "50%" } }}
+                                  label="Thời gian tạo"
                                   name="created_at"
                                   value={dayjs(roomType?.created_at)}
                                 />
@@ -367,7 +404,9 @@ const Page = () => {
                               <LocalizationProvider dateAdapter={AdapterDayjs}>
                                 <DatePicker
                                   readOnly
-                                  label="Ngày cập nhật gần nhất"
+                                  format="HH:mm:ss DD/MM/YYYY"
+                                  sx={{ width: { xs: "100%", md: "50%" } }}
+                                  label="Cập nhật gần nhất"
                                   name="updated_at"
                                   value={dayjs(roomType?.updated_at)}
                                 />
@@ -375,10 +414,10 @@ const Page = () => {
                             </Stack>
                           </Stack>
 
-                          {roomType.images && roomType.images.length > 0 && (
+                          {roomType?.images && roomType?.images.length > 0 && (
                             <Box sx={{ width: "100%", height: "100%", overflowY: "scroll" }}>
                               <ImageList variant="masonry" cols={3} gap={8}>
-                                {roomType.images.map((item) => (
+                                {roomType?.images.map((item) => (
                                   <ImageListItem key={item.id}>
                                     <img
                                       srcSet={item.url}
@@ -401,10 +440,18 @@ const Page = () => {
         </Container>
       </Box>
 
-      <CreateRoom
-        isModalCreateRoom={isModalCreateRoom}
-        setIsModalCreateRoom={setIsModalCreateRoom}
+      <CreateRoomType
+        isModalCreateRoomType={isModalCreateRoomType}
+        setIsModalCreateRoomType={setIsModalCreateRoomType}
         hotelId={hotelId}
+        onRefresh={fetchData}
+      />
+
+      <DeleteRoomType
+        confirmDeleteRoomType={confirmDeleteRoomType}
+        setConfirmDeleteRoomType={setConfirmDeleteRoomType}
+        hotelId={parseInt(hotelId)}
+        currentId={parseInt(roomTypeId)}
         onRefresh={fetchData}
       />
     </>

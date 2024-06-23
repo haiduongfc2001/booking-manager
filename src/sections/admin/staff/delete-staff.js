@@ -1,7 +1,7 @@
 import React from "react";
 import { Button, Modal, Box, Typography } from "@mui/material";
 import { API, STATUS_CODE, TOAST_KIND } from "src/constant/constants";
-import * as StaffService from "../../../services/staff-service";
+import * as StaffService from "src/services/staff-service";
 import { useDispatch } from "react-redux";
 import { showCommonAlert } from "src/utils/toast-message";
 import PropTypes from "prop-types";

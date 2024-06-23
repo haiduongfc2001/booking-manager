@@ -13,7 +13,7 @@
  * @param {FormatOptions} [options] - Optional settings for formatting.
  * @returns {string} - The formatted number as a string.
  */
-function formatCurrency(number, options) {
+function FormatCurrency(number, options) {
   const defaultOptions = {
     locale: "vi-VN",
     currency: "VND",
@@ -30,4 +30,4 @@ function formatCurrency(number, options) {
   }).format(number);
 }
 
-export default formatCurrency;
+export default FormatCurrency;

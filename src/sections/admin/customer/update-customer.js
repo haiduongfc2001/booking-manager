@@ -25,7 +25,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { API, GENDER, STATUS_CODE, TOAST_KIND } from "src/constant/constants";
-import * as CustomerService from "../../../services/customer-service";
+import * as CustomerService from "src/services/customer-service";
 import { showCommonAlert } from "src/utils/toast-message";
 import { useDispatch } from "react-redux";
 import { neutral } from "src/theme/colors";
@@ -306,6 +306,7 @@ const UpdateCustomer = (props) => {
                       required
                       label="Ngày sinh"
                       name="dob"
+                      format="DD/MM/YYYY"
                       onBlur={formik.handleBlur}
                       value={dayjs(formik.values.dob)}
                       onChange={formik.handleChange}

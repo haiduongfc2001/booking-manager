@@ -4,7 +4,7 @@ import { ExtractErrorInfo } from "src/utils/extract-error-info";
 
 // Create Base URL
 const commonService = axios.create({
-  baseURL: "http://localhost:5000/api/v1",
+  baseURL: "http://dhd-booking.io.vn/api/v1",
 });
 
 // Create Base GET method

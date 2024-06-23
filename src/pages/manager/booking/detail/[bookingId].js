@@ -24,27 +24,27 @@ import {
 import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
 import { RoomTable } from "src/sections/manager/room/room-table";
 import { HOTEL_ID_FAKE, STATUS_CODE, TOAST_KIND, TOAST_MESSAGE } from "src/constant/constants";
-import * as RoomService from "src/services/room-service";
+import * as BookingService from "src/services/room-service";
 import { API } from "src/constant/constants";
 import CreateRoom from "src/sections/manager/room/create-room";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
-import DeleteRoomType from "src/sections/manager/room/delete-room-type";
-import RoomTypeBeds from "src/sections/manager/room/bed/bed";
+import DeleteBooking from "src/sections/manager/room/delete-room-type";
+import BookingBeds from "src/sections/manager/room/bed/bed";
 import { useDispatch } from "react-redux";
 import { closeLoadingApi, openLoadingApi } from "src/redux/create-actions/loading-action";
 import { neutral } from "src/theme/colors";
 import { getInitials } from "src/utils/get-initials";
 import ImageIcon from "@mui/icons-material/Image";
-import UpdateRoomTypeImage from "src/sections/manager/room/update-room-type-image";
+import UpdateBookingImage from "src/sections/manager/room/update-room-type-image";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import Image from "next/image";
 import { showCommonAlert } from "src/utils/toast-message";
-import UpdateRoomType from "src/sections/manager/room/update-room-type";
-import RoomTypeAmenities from "src/sections/manager/room/room-type-amenity/room-type-amenity";
-import RoomTypePromotions from "src/sections/manager/room/promotion/promotion";
+import UpdateBooking from "src/sections/manager/room/update-room-type";
+import BookingAmenities from "src/sections/manager/room/room-type-amenity/room-type-amenity";
+import BookingPromotions from "src/sections/manager/room/promotion/promotion";
 import FormatCurrency from "src/utils/format-currency";
 
 const Page = () => {
@@ -53,14 +53,11 @@ const Page = () => {
   const dispatch = useDispatch();
   const listRoomsRef = useRef(null);
 
-  const roomTypeId = params.roomTypeId;
+  const bookingId = params.bookingId;
 
   const [hotelId, setHotelId] = useState(HOTEL_ID_FAKE);
-  const [roomTypeData, setRoomTypeData] = useState({});
-  const [isModalUpdateRoomType, setIsModalUpdateRoomType] = useState(false);
-  const [confirmDeleteRoomType, setConfirmDeleteRoomType] = useState(false);
-  const [openPopupAddImages, setOpenPopupAddImages] = useState(false);
-  const [isModalCreateRoom, setIsModalCreateRoom] = useState(false);
+  const [bookingData, setBookingData] = useState({});
+  const [isModalUpdateBooking, setIsModalUpdateBooking] = useState(false);
 
   const fetchData = async () => {
     if (fetchData.current) {
@@ -72,13 +69,12 @@ const Page = () => {
     try {
       dispatch(openLoadingApi());
 
-      const response = await RoomService[API.ROOM_TYPE.GET_ROOM_TYPE_BY_ID]({
-        hotel_id: hotelId,
-        room_type_id: roomTypeId,
+      const response = await BookingService[API.BOOKING.GET_BOOKING_BY_ID]({
+        booking_id: bookingId,
       });
 
       if (response?.status === STATUS_CODE.OK) {
-        setRoomTypeData(response.data);
+        setBookingData(response.data);
       } else {
         dispatch(showCommonAlert(TOAST_KIND.ERROR, response.data.message));
       }
@@ -92,23 +88,6 @@ const Page = () => {
   useEffect(() => {
     fetchData();
   }, []);
-
-  const scrollToListRooms = () => {
-    const offset = 64;
-    const elementPosition = listRoomsRef.current?.offsetTop;
-    const offsetPosition = elementPosition - offset;
-
-    if (typeof window !== "undefined") {
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: "smooth",
-      });
-    }
-  };
-
-  const handleOpenModalCreate = () => {
-    setIsModalCreateRoom(true);
-  };
 
   return (
     <>
@@ -155,8 +134,8 @@ const Page = () => {
               </Button>
             </Stack>
 
-            {roomTypeId && (
-              <Card key={roomTypeData?.id} sx={{ p: 2 }}>
+            {bookingId && (
+              <Card key={bookingData?.id} sx={{ p: 2 }}>
                 <Stack
                   direction={"row"}
                   spacing={2}
@@ -164,16 +143,7 @@ const Page = () => {
                   justifyContent="space-between"
                   sx={{ mb: 2 }}
                 >
-                  <Typography variant="h6">{roomTypeData?.name}</Typography>
-
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    sx={{ width: "auto", mt: 1 }}
-                    onClick={() => scrollToListRooms()}
-                  >
-                    <Typography variant="body1">Số phòng: {roomTypeData?.totalRooms}</Typography>
-                  </Button>
+                  <Typography variant="h6">{bookingData?.name}</Typography>
                 </Stack>
 
                 <Box
@@ -200,9 +170,9 @@ const Page = () => {
                     >
                       <Avatar
                         src={
-                          roomTypeData?.roomImages?.find((image) => image.is_primary)?.url ||
-                          (roomTypeData?.roomImages?.length > 0
-                            ? roomTypeData?.roomImages[0]?.url
+                          bookingData?.roomImages?.find((image) => image.is_primary)?.url ||
+                          (bookingData?.roomImages?.length > 0
+                            ? bookingData?.roomImages[0]?.url
                             : "/assets/no_image_available.png")
                         }
                         sx={{
@@ -213,18 +183,8 @@ const Page = () => {
                         }}
                         variant="rounded"
                       >
-                        {getInitials(roomTypeData?.name)}
+                        {getInitials(bookingData?.name)}
                       </Avatar>
-                      {roomTypeData?.roomImages?.length <= 0 && (
-                        <Button
-                          variant="contained"
-                          color="success"
-                          endIcon={<ImageIcon />}
-                          onClick={() => setOpenPopupAddImages(true)}
-                        >
-                          Thêm ảnh
-                        </Button>
-                      )}
                     </Stack>
 
                     <Stack spacing={3} direction="column">
@@ -239,7 +199,7 @@ const Page = () => {
                           InputProps={{
                             readOnly: true,
                           }}
-                          value={roomTypeData?.name}
+                          value={bookingData?.name}
                         />
                       </Stack>
                       <Stack direction={{ xs: "column", md: "row" }} spacing={3}>
@@ -252,7 +212,7 @@ const Page = () => {
                             readOnly: true,
                             endAdornment: <InputAdornment position="end">/đêm</InputAdornment>,
                           }}
-                          value={FormatCurrency(roomTypeData?.base_price)}
+                          value={FormatCurrency(bookingData?.base_price)}
                         />
                         <TextField
                           fullWidth
@@ -263,7 +223,7 @@ const Page = () => {
                             readOnly: true,
                           }}
                           value={
-                            roomTypeData?.free_breakfast
+                            bookingData?.free_breakfast
                               ? "Giá đã bao gồm bữa sáng"
                               : "Giá chưa bao gồm bữa sáng"
                           }
@@ -281,7 +241,7 @@ const Page = () => {
                           }}
                           minRows={3}
                           maxRows={5}
-                          value={roomTypeData?.description}
+                          value={bookingData?.description}
                         />
                       </Stack>
                       <Stack direction={{ xs: "column", sm: "row" }} spacing={3}>
@@ -293,7 +253,7 @@ const Page = () => {
                           InputProps={{
                             readOnly: true,
                           }}
-                          value={roomTypeData?.standard_occupant}
+                          value={bookingData?.standard_occupant}
                         />
                         <TextField
                           fullWidth
@@ -303,7 +263,7 @@ const Page = () => {
                           InputProps={{
                             readOnly: true,
                           }}
-                          value={roomTypeData?.max_children}
+                          value={bookingData?.max_children}
                         />
                         <TextField
                           fullWidth
@@ -313,7 +273,7 @@ const Page = () => {
                           InputProps={{
                             readOnly: true,
                           }}
-                          value={roomTypeData?.max_occupant}
+                          value={bookingData?.max_occupant}
                         />
                       </Stack>
                       <Stack direction={{ xs: "column", sm: "row" }} spacing={3}>
@@ -325,7 +285,7 @@ const Page = () => {
                           InputProps={{
                             readOnly: true,
                           }}
-                          value={roomTypeData?.views}
+                          value={bookingData?.views}
                         />
                         <TextField
                           fullWidth
@@ -336,7 +296,7 @@ const Page = () => {
                             readOnly: true,
                             endAdornment: <InputAdornment position="end">m&sup2;</InputAdornment>,
                           }}
-                          value={roomTypeData?.area}
+                          value={bookingData?.area}
                         />
                       </Stack>
 
@@ -348,7 +308,7 @@ const Page = () => {
                             sx={{ width: { xs: "100%", md: "50%" } }}
                             label="Thời gian tạo"
                             name="created_at"
-                            value={dayjs(roomTypeData?.created_at)}
+                            value={dayjs(bookingData?.created_at)}
                           />
                         </LocalizationProvider>
 
@@ -359,7 +319,7 @@ const Page = () => {
                             sx={{ width: { xs: "100%", md: "50%" } }}
                             label="Cập nhật gần nhất"
                             name="updated_at"
-                            value={dayjs(roomTypeData?.updated_at)}
+                            value={dayjs(bookingData?.updated_at)}
                           />
                         </LocalizationProvider>
                       </Stack>
@@ -375,176 +335,25 @@ const Page = () => {
                         <Button
                           variant="contained"
                           sx={{ mr: 2 }}
-                          onClick={() => setIsModalUpdateRoomType(true)}
+                          onClick={() => setIsModalUpdateBooking(true)}
                         >
                           Chỉnh sửa
-                        </Button>
-                        <Button
-                          variant="contained"
-                          color="error"
-                          sx={{ mr: 2 }}
-                          onClick={() => {
-                            setConfirmDeleteRoomType(true);
-                          }}
-                        >
-                          Xóa
                         </Button>
                       </Stack>
                     </Stack>
                   </Stack>
                 </Box>
-
-                {roomTypeData?.roomImages && roomTypeData?.roomImages.length > 0 && (
-                  <Box
-                    sx={{
-                      width: "100%",
-                      height: "100%",
-                      overflowY: "auto",
-                      maxHeight: 460,
-                    }}
-                  >
-                    <ImageList variant="quilted" cols={4} gap={8} rowHeight={160}>
-                      {roomTypeData?.roomImages.map((image, index) => (
-                        <ImageListItem
-                          key={image.id}
-                          cols={index === 0 ? 2 : 1}
-                          rows={index === 0 ? 2 : 1}
-                        >
-                          <div
-                            style={{
-                              width: "100%",
-                              height: "100%",
-                              position: "relative",
-                            }}
-                          >
-                            <Image
-                              fill
-                              priority
-                              // loading="lazy"
-                              // loader={() => image.url}
-                              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                              src={image.url}
-                              alt={image.caption}
-                              style={{
-                                borderRadius: "8px",
-                                objectFit: "cover",
-                              }}
-                            />
-                          </div>
-                          <ImageListItemBar
-                            sx={{
-                              background:
-                                "linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, " +
-                                "rgba(0,0,0,0.3) 70%, rgba(0,0,0,0) 100%)",
-                            }}
-                            title={image.caption}
-                            position="bottom"
-                            actionIcon={
-                              <IconButton
-                                sx={{ color: "white" }}
-                                aria-label={`star ${image.caption}`}
-                              >
-                                <StarBorderIcon />
-                              </IconButton>
-                            }
-                            actionPosition="left"
-                          />
-                        </ImageListItem>
-                      ))}
-                    </ImageList>
-                    <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        endIcon={<ImageIcon />}
-                        onClick={() => setOpenPopupAddImages(true)}
-                      >
-                        Sửa đổi ảnh
-                      </Button>
-                    </Box>
-                  </Box>
-                )}
-
-                <RoomTypeBeds roomTypeId={parseInt(roomTypeData?.id)} beds={roomTypeData?.beds} />
-
-                <Stack p={2}>
-                  <Stack
-                    direction={{ xs: "column", sm: "row" }}
-                    spacing={2}
-                    alignItems="center"
-                    justifyContent="space-between"
-                  >
-                    <Typography variant="h6" py={2} ref={listRoomsRef}>
-                      Các phòng thuộc loại phòng {roomTypeData?.name}
-                    </Typography>
-                    <Button
-                      startIcon={
-                        <SvgIcon fontSize="small">
-                          <PlusIcon />
-                        </SvgIcon>
-                      }
-                      variant="contained"
-                      color="success"
-                      onClick={handleOpenModalCreate}
-                    >
-                      Thêm phòng mới
-                    </Button>
-                  </Stack>
-                  <RoomTable
-                    hotelId={hotelId}
-                    roomTypeId={roomTypeData?.id}
-                    items={roomTypeData?.rooms}
-                    // loading={loading}
-                    onRefresh={fetchData}
-                  />
-                </Stack>
-
-                <RoomTypeAmenities
-                  roomTypeId={parseInt(roomTypeData?.id)}
-                  amenities={roomTypeData?.roomTypeAmenities}
-                />
-
-                <RoomTypePromotions
-                  roomTypeId={parseInt(roomTypeData?.id)}
-                  roomTypeData={roomTypeData}
-                />
               </Card>
             )}
           </Stack>
         </Container>
       </Box>
 
-      {roomTypeData?.id && isModalUpdateRoomType && (
-        <UpdateRoomType
-          isModalUpdateRoomType={isModalUpdateRoomType}
-          setIsModalUpdateRoomType={setIsModalUpdateRoomType}
-          roomTypeData={roomTypeData}
-          onRefresh={fetchData}
-        />
-      )}
-
-      <DeleteRoomType
-        confirmDeleteRoomType={confirmDeleteRoomType}
-        setConfirmDeleteRoomType={setConfirmDeleteRoomType}
-        hotelId={parseInt(hotelId)}
-        currentId={parseInt(roomTypeId)}
-      />
-
-      {openPopupAddImages && roomTypeData && (
-        <UpdateRoomTypeImage
-          onRefresh={fetchData}
-          openPopupAddImages={openPopupAddImages}
-          setOpenPopupAddImages={setOpenPopupAddImages}
-          roomTypeData={roomTypeData}
-          roomTypeId={roomTypeData?.id}
-        />
-      )}
-
-      {roomTypeData?.id && (
-        <CreateRoom
-          isModalCreateRoom={isModalCreateRoom}
-          setIsModalCreateRoom={setIsModalCreateRoom}
-          roomTypeId={roomTypeData?.id}
+      {bookingData?.id && isModalUpdateBooking && (
+        <UpdateBooking
+          isModalUpdateBooking={isModalUpdateBooking}
+          setIsModalUpdateBooking={setIsModalUpdateBooking}
+          bookingData={bookingData}
           onRefresh={fetchData}
         />
       )}

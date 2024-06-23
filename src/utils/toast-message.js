@@ -1,5 +1,5 @@
-import { TOAST_KIND } from "../constant/constants";
-import { showAlert } from "../redux/create-actions/alert-action";
+import { TOAST_KIND } from "src/constant/constants";
+import { showAlert } from "src/redux/create-actions/alert-action";
 
 // Common Toast Message
 export const toastMessage = (status, message) => {
