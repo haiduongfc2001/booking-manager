@@ -11,11 +11,18 @@ import {
   Card,
   Grid,
   TextField,
-  InputAdornment,
   Avatar,
+  Pagination,
+  Chip,
 } from "@mui/material";
 import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
-import { HOTEL_ID_FAKE, STATUS_CODE, TOAST_KIND, TOAST_MESSAGE } from "src/constant/constants";
+import {
+  HOTEL_ID_FAKE,
+  PAGINATION,
+  STATUS_CODE,
+  TOAST_KIND,
+  TOAST_MESSAGE,
+} from "src/constant/constants";
 import * as BookingService from "src/services/booking-service";
 import { API } from "src/constant/constants";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -31,10 +38,6 @@ import { getInitials } from "src/utils/get-initials";
 import { showCommonAlert } from "src/utils/toast-message";
 import FormatCurrency from "src/utils/format-currency";
 import { SearchBooking } from "src/sections/manager/booking/search-booking";
-import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
-import AlternateEmailIcon from "@mui/icons-material/AlternateEmail";
-import PhoneAndroidIcon from "@mui/icons-material/PhoneAndroid";
-import { SeverityPill } from "src/components/severity-pill";
 import {
   getBookingStatusColor,
   getPaymentStatusColor,
@@ -43,9 +46,13 @@ import {
 
 const Page = () => {
   const [hotelId, setHotelId] = useState(HOTEL_ID_FAKE);
-  const [bookingId, setBookingId] = useState(null);
   const [bookingsData, setBookingsData] = useState([]);
   const [numBookings, setNumBookings] = useState(0);
+  const [page, setPage] = useState(PAGINATION.INITIAL_PAGE);
+
+  const handleChange = (event, value) => {
+    setPage(value);
+  };
 
   const inputRef = useRef(null);
   const router = useRouter();
@@ -63,6 +70,8 @@ const Page = () => {
 
       const response = await BookingService[API.BOOKING.GET_ALL_BOOKINGS_BY_HOTEL_ID]({
         hotel_id: hotelId,
+        page,
+        size: PAGINATION.PAGE_SIZE,
       });
 
       if (response?.status !== STATUS_CODE.UNAUTHORIZED) {
@@ -78,9 +87,20 @@ const Page = () => {
     }
   };
 
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
+
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [page]);
+
+  useEffect(() => {
+    scrollToTop();
+  }, [page]);
 
   const handleBookingClick = (bookingId) => {
     router.push(`/manager/booking/detail/${bookingId}`);
@@ -156,7 +176,7 @@ const Page = () => {
                   (roomType?.roomImages?.length > 0
                     ? roomType?.roomImages[0]?.url
                     : "/assets/no_image_available.png");
-                const totals = booking.roomBookings.reduce(
+                const totals = booking?.roomBookings.reduce(
                   (acc, roomBooking) => {
                     acc.num_adults += roomBooking.num_adults;
                     acc.num_children += roomBooking.num_children;
@@ -167,15 +187,15 @@ const Page = () => {
                 );
 
                 return (
-                  <Card key={booking.id} sx={{ p: 2, mb: 2 }}>
+                  <Card key={booking?.id} sx={{ p: 2, mb: 2 }}>
                     <Stack
-                      direction={"row"}
+                      direction={{ xs: "column", sm: "row" }}
                       spacing={2}
                       alignItems="center"
                       justifyContent="space-between"
                     >
                       <Stack
-                        direction={{ xs: "column", md: "row" }}
+                        direction={{ xs: "column", sm: "row" }}
                         alignItems="center"
                         spacing={2}
                       >
@@ -201,23 +221,35 @@ const Page = () => {
                             <ArrowForwardIcon />
                           </SvgIcon>
                         }
-                        onClick={() => handleBookingClick(booking.id)}
+                        onClick={() => handleBookingClick(booking?.id)}
                       >
                         Xem chi tiết
                       </Button>
                     </Stack>
 
                     <Stack spacing={2} mt={2}>
-                      <Stack spacing={2} direction={{ xs: "column" }}>
-                        <SeverityPill color={"primary"} width={{ xs: "100%", md: "50%" }}>
-                          Mã đơn đặt phòng: {booking.code}
-                        </SeverityPill>
-                        <SeverityPill
+                      <Stack
+                        spacing={2}
+                        direction={{ xs: "column", md: "row" }}
+                        justifyContent="space-between"
+                      >
+                        <Chip
+                          label={`Mã đơn đặt phòng: ${booking?.code}`}
+                          color={"info"}
+                          sx={{
+                            width: "auto",
+                            fontWeight: 700,
+                          }}
+                        />
+
+                        <Chip
+                          label={`Trạng thái: ${booking?.translateStatus}`}
                           color={getBookingStatusColor(booking?.status)}
-                          width={{ xs: "100%", md: "50%" }}
-                        >
-                          Trạng thái: {booking.translateStatus}
-                        </SeverityPill>
+                          sx={{
+                            width: "auto",
+                            fontWeight: 700,
+                          }}
+                        />
                       </Stack>
 
                       <Stack spacing={2} direction={{ xs: "column", sm: "row" }}>
@@ -228,7 +260,7 @@ const Page = () => {
                             sx={{ width: "100%" }}
                             label="Check-in"
                             name="check_in"
-                            value={dayjs(booking.check_in)}
+                            value={dayjs(booking?.check_in)}
                           />
                         </LocalizationProvider>
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -238,7 +270,7 @@ const Page = () => {
                             sx={{ width: "100%" }}
                             label="Check-out"
                             name="check_out"
-                            value={dayjs(booking.check_out)}
+                            value={dayjs(booking?.check_out)}
                           />
                         </LocalizationProvider>
                       </Stack>
@@ -251,7 +283,7 @@ const Page = () => {
                           InputProps={{
                             readOnly: true,
                           }}
-                          value={FormatCurrency(booking.total_room_price)}
+                          value={FormatCurrency(booking?.total_room_price)}
                         />
                         <TextField
                           fullWidth
@@ -261,7 +293,7 @@ const Page = () => {
                           InputProps={{
                             readOnly: true,
                           }}
-                          value={FormatCurrency(booking.tax_and_fee)}
+                          value={FormatCurrency(booking?.tax_and_fee)}
                         />
                         <TextField
                           fullWidth
@@ -271,7 +303,7 @@ const Page = () => {
                           InputProps={{
                             readOnly: true,
                           }}
-                          value={FormatCurrency(booking.totalPrice)}
+                          value={FormatCurrency(booking?.totalPrice)}
                         />
                       </Stack>
                       <Stack spacing={2} direction={{ xs: "column", sm: "row" }}>
@@ -354,6 +386,21 @@ const Page = () => {
                 );
               })}
           </Stack>
+
+          {bookingsData?.length > 0 && (
+            <Stack spacing={2} my={2} direction="row" justifyContent="center">
+              <Pagination
+                showFirstButton
+                showLastButton
+                defaultPage={Math.min(1, Math.ceil(numBookings / PAGINATION.PAGE_SIZE))}
+                boundaryCount={2}
+                count={Math.ceil(numBookings / PAGINATION.PAGE_SIZE)} // Sử dụng Math.ceil để làm tròn lên
+                color="primary"
+                page={page}
+                onChange={handleChange}
+              />
+            </Stack>
+          )}
         </Container>
       </Box>
     </>

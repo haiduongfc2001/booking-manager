@@ -485,6 +485,7 @@ const Page = () => {
                       }
                       variant="contained"
                       color="success"
+                      sx={{ mb: { xs: 2 } }}
                       onClick={handleOpenModalCreate}
                     >
                       Thêm phòng mới

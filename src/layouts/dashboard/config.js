@@ -93,6 +93,15 @@ export const items = [
     ),
   },
   {
+    title: "Đánh giá",
+    path: "/manager/review",
+    icon: (
+      <SvgIcon fontSize="small">
+        <PolicyIcon />
+      </SvgIcon>
+    ),
+  },
+  {
     title: "Tài khoản",
     path: "/account",
     icon: (

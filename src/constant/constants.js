@@ -146,6 +146,18 @@ export const API = {
     DELETE_BOOKING: "DeleteBooking",
     UPDATE_BOOKING: "UpdateBooking",
   },
+  REVIEW: {
+    GET_ALL_REVIEWS: "GetAllReviews",
+    GET_HOTEL_REVIEWS: "GetHotelReviews",
+    GET_ALL_REVIEWS_BY_HOTEL_ID: "GetAllReviewsByHotelId",
+    GET_REVIEW_BY_ID: "GetReviewById",
+    CREATE_REVIEW: "CreateReview",
+    CREATE_REPLY_REVIEW: "CreateReplyReview",
+    DELETE_REVIEW: "DeleteReview",
+    UPDATE_REVIEW: "UpdateReview",
+    UPDATE_REPLY_REVIEW: "UpdateReplyReview",
+    DELETE_REPLY_REVIEW: "DeleteReplyReview",
+  },
 };
 
 /**
@@ -168,6 +180,11 @@ export const DATAGRID_OPTIONS = {
   PAGE_SIZE_OPTIONS: [5, 10, 25],
   ROW_HEIGHT: 60,
   TABLE_HEIGHT: 420,
+};
+
+export const PAGINATION = {
+  INITIAL_PAGE: 1,
+  PAGE_SIZE: 10,
 };
 
 /**
@@ -239,4 +256,12 @@ export const REFUND_STATUS = {
   PENDING: "PENDING",
   COMPLETED: "COMPLETED",
   FAILED: "FAILED",
+};
+
+export const RATING_CATEGORIES = {
+  AMAZING: "Tuyệt vời",
+  VERY_GOOD: "Rất tốt",
+  GOOD: "Tốt",
+  SATISFIED: "Hài lòng",
+  UNSATISFIED: "Không hài lòng",
 };
