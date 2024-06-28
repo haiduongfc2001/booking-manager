@@ -6,7 +6,7 @@ import { Box, Button, Container, SvgIcon, Typography } from "@mui/material";
 const Page = () => (
   <>
     <Head>
-      <title>404 | DHD</title>
+      <title>403 | DHD</title>
     </Head>
     <Box
       component="main"
@@ -42,11 +42,11 @@ const Page = () => (
             />
           </Box>
           <Typography align="center" sx={{ mb: 3 }} variant="h3">
-            404: Trang bạn đang tìm kiếm không có ở đây
+            404: Bạn không có quyền truy cập vào trang này
           </Typography>
           <Typography align="center" color="text.secondary" variant="body1">
-            Bạn đã thử một số tuyến đường mờ ám hoặc bạn đã đến đây một cách tình cờ. Dù là gì, hãy
-            thử sử dụng điều hướng
+            Bạn không có đủ quyền hạn để truy cập vào trang này. Nếu bạn nghĩ rằng đây là lỗi, hãy
+            thử đăng nhập bằng tài khoản khác hoặc liên hệ với quản trị viên.
           </Typography>
           <Button
             component={NextLink}

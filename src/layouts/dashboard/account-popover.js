@@ -3,15 +3,19 @@ import { useRouter } from "next/navigation";
 import PropTypes from "prop-types";
 import { Box, Divider, MenuItem, MenuList, Popover, Typography } from "@mui/material";
 import { useAuth } from "src/hooks/use-auth";
+import { logout } from "src/redux/create-actions/auth-action";
+import { useDispatch } from "react-redux";
 
 export const AccountPopover = (props) => {
   const { anchorEl, onClose, open } = props;
   const router = useRouter();
   const auth = useAuth();
+  const dispatch = useDispatch();
 
   const handleSignOut = useCallback(() => {
     onClose?.();
     auth.signOut();
+    dispatch(logout());
     router.push("/auth/login");
   }, [onClose, auth, router]);
 
@@ -32,9 +36,9 @@ export const AccountPopover = (props) => {
           px: 2,
         }}
       >
-        <Typography variant="overline">Account</Typography>
+        <Typography variant="overline">Tài khoản</Typography>
         <Typography color="text.secondary" variant="body2">
-          Anika Visser
+          Đỗ Hải Dương
         </Typography>
       </Box>
       <Divider />
@@ -48,7 +52,7 @@ export const AccountPopover = (props) => {
           },
         }}
       >
-        <MenuItem onClick={handleSignOut}>Sign out</MenuItem>
+        <MenuItem onClick={handleSignOut}>Đăng xuất</MenuItem>
       </MenuList>
     </Popover>
   );

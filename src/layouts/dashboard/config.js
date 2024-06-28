@@ -9,6 +9,8 @@ import { SvgIcon } from "@mui/material";
 import HotelIcon from "@mui/icons-material/Hotel";
 import SensorDoorIcon from "@mui/icons-material/SensorDoor";
 import PolicyIcon from "@mui/icons-material/Policy";
+import RateReviewIcon from "@mui/icons-material/RateReview";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 
 export const items = [
   {
@@ -19,6 +21,7 @@ export const items = [
         <ChartBarIcon />
       </SvgIcon>
     ),
+    roles: ["ADMIN", "MANAGER", "RECEPTIONIST"], // Các vai trò có thể xem mục này
   },
   {
     title: "Khách hàng",
@@ -28,6 +31,7 @@ export const items = [
         <UsersIcon />
       </SvgIcon>
     ),
+    roles: ["ADMIN"],
   },
   {
     title: "Nhân viên khách sạn",
@@ -37,6 +41,7 @@ export const items = [
         <UserIcon />
       </SvgIcon>
     ),
+    roles: ["ADMIN"],
   },
   {
     title: "Khách sạn",
@@ -46,6 +51,7 @@ export const items = [
         <HotelIcon />
       </SvgIcon>
     ),
+    roles: ["ADMIN"],
   },
   {
     title: "Khách sạn của tôi",
@@ -55,6 +61,7 @@ export const items = [
         <HotelIcon />
       </SvgIcon>
     ),
+    roles: ["MANAGER"],
   },
   {
     title: "Phòng",
@@ -64,6 +71,7 @@ export const items = [
         <SensorDoorIcon />
       </SvgIcon>
     ),
+    roles: ["MANAGER"],
   },
   {
     title: "Nhân viên của tôi",
@@ -73,6 +81,7 @@ export const items = [
         <UserIcon />
       </SvgIcon>
     ),
+    roles: ["MANAGER"],
   },
   {
     title: "Chính sách",
@@ -82,24 +91,27 @@ export const items = [
         <PolicyIcon />
       </SvgIcon>
     ),
+    roles: ["MANAGER"],
   },
   {
     title: "Đơn đặt phòng",
     path: "/manager/booking",
     icon: (
       <SvgIcon fontSize="small">
-        <PolicyIcon />
+        <ShoppingCartIcon />
       </SvgIcon>
     ),
+    roles: ["MANAGER"],
   },
   {
     title: "Đánh giá",
     path: "/manager/review",
     icon: (
       <SvgIcon fontSize="small">
-        <PolicyIcon />
+        <RateReviewIcon />
       </SvgIcon>
     ),
+    roles: ["MANAGER"],
   },
   {
     title: "Tài khoản",
@@ -109,6 +121,7 @@ export const items = [
         <UserIcon />
       </SvgIcon>
     ),
+    roles: ["ADMIN", "MANAGER", "RECEPTIONIST"],
   },
   {
     title: "Cài đặt",
@@ -118,6 +131,7 @@ export const items = [
         <CogIcon />
       </SvgIcon>
     ),
+    roles: ["ADMIN", "MANAGER", "RECEPTIONIST"],
   },
   {
     title: "Đăng nhập",
@@ -127,6 +141,7 @@ export const items = [
         <LockClosedIcon />
       </SvgIcon>
     ),
+    roles: ["ADMIN", "MANAGER", "RECEPTIONIST"],
   },
   {
     title: "Đăng ký",
@@ -136,6 +151,7 @@ export const items = [
         <UserPlusIcon />
       </SvgIcon>
     ),
+    roles: ["ADMIN", "MANAGER", "RECEPTIONIST"],
   },
   {
     title: "Error",
@@ -145,5 +161,6 @@ export const items = [
         <XCircleIcon />
       </SvgIcon>
     ),
+    roles: ["ADMIN", "MANAGER", "RECEPTIONIST"],
   },
 ];

@@ -45,8 +45,7 @@ export const SCREEN_TITLE = {};
 export const API = {
   LOGIN: {
     ADMIN: "AdminLogin",
-    MANAGER: "ManagerLogin",
-    RECEPTIONIST: "ReceptionistLogin",
+    STAFF: "StaffLogin",
   },
   CUSTOMER: {
     GET_ALL_CUSTOMERS: "GetAllCustomers",

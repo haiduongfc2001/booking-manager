@@ -6,7 +6,6 @@ import {
   Alert,
   Box,
   Button,
-  Link,
   Stack,
   TextField,
   Typography,
@@ -28,6 +27,8 @@ import { useDispatch } from "react-redux";
 import * as LoginService from "src/services/auth-service";
 import { API, ROLE, STATUS_CODE, TOAST_KIND } from "src/constant/constants";
 import { showCommonAlert } from "src/utils/toast-message";
+import { login } from "src/redux/create-actions/auth-action";
+import Cookies from "js-cookie";
 
 const Page = () => {
   const router = useRouter();
@@ -63,10 +64,12 @@ const Page = () => {
       try {
         dispatch(openLoadingApi());
 
+        const role = values.role;
+
         const body = {
           email: values.email,
           password: values.password,
-          role: values.role,
+          role,
         };
 
         let response;
@@ -76,16 +79,16 @@ const Page = () => {
             response = await LoginService[API.LOGIN.ADMIN](body);
             break;
           case ROLE.MANAGER:
-            response = await LoginService[API.LOGIN.MANAGER](body);
-            break;
           case ROLE.RECEPTIONIST:
-            response = await LoginService[API.LOGIN.RECEPTIONIST](body);
+            response = await LoginService[API.LOGIN.STAFF](body);
             break;
           default:
             throw new Error("Vai trò không hợp lệ");
         }
 
         if (response && response.status === STATUS_CODE.OK) {
+          Cookies.set("role", values.role, { expires: 1 });
+          dispatch(login(role));
           await auth.signIn(values.email, values.password);
           router.push("/");
           dispatch(showCommonAlert(TOAST_KIND.SUCCESS, response.message));

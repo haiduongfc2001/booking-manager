@@ -10,6 +10,7 @@ import { items } from "./config";
 import { SideNavItem } from "./side-nav-item";
 import { useRouter } from "next/router";
 import { useAuth } from "src/hooks/use-auth";
+import { useSelector } from "react-redux";
 
 export const SideNav = (props) => {
   const { open, onClose } = props;
@@ -17,6 +18,9 @@ export const SideNav = (props) => {
   const router = useRouter();
   const pathname = usePathname();
   const lgUp = useMediaQuery((theme) => theme.breakpoints.up("lg"));
+
+  const role = useSelector((state) => state.auth.role);
+  const filteredItems = items.filter((item) => item.roles.includes(role));
 
   const handleSignOut = () => {
     router.push("/auth/login");
@@ -96,7 +100,7 @@ export const SideNav = (props) => {
               m: 0,
             }}
           >
-            {items?.map((item) => {
+            {filteredItems?.map((item) => {
               const active = item.path ? pathname === item.path : false;
 
               return (
