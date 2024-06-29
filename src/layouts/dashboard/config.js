@@ -123,44 +123,44 @@ export const items = [
     ),
     roles: ["ADMIN", "MANAGER", "RECEPTIONIST"],
   },
-  {
-    title: "Cài đặt",
-    path: "/settings",
-    icon: (
-      <SvgIcon fontSize="small">
-        <CogIcon />
-      </SvgIcon>
-    ),
-    roles: ["ADMIN", "MANAGER", "RECEPTIONIST"],
-  },
-  {
-    title: "Đăng nhập",
-    path: "/auth/login",
-    icon: (
-      <SvgIcon fontSize="small">
-        <LockClosedIcon />
-      </SvgIcon>
-    ),
-    roles: ["ADMIN", "MANAGER", "RECEPTIONIST"],
-  },
-  {
-    title: "Đăng ký",
-    path: "/auth/register",
-    icon: (
-      <SvgIcon fontSize="small">
-        <UserPlusIcon />
-      </SvgIcon>
-    ),
-    roles: ["ADMIN", "MANAGER", "RECEPTIONIST"],
-  },
-  {
-    title: "Error",
-    path: "/404",
-    icon: (
-      <SvgIcon fontSize="small">
-        <XCircleIcon />
-      </SvgIcon>
-    ),
-    roles: ["ADMIN", "MANAGER", "RECEPTIONIST"],
-  },
+  // {
+  //   title: "Cài đặt",
+  //   path: "/settings",
+  //   icon: (
+  //     <SvgIcon fontSize="small">
+  //       <CogIcon />
+  //     </SvgIcon>
+  //   ),
+  //   roles: ["ADMIN", "MANAGER", "RECEPTIONIST"],
+  // },
+  // {
+  //   title: "Đăng nhập",
+  //   path: "/auth/login",
+  //   icon: (
+  //     <SvgIcon fontSize="small">
+  //       <LockClosedIcon />
+  //     </SvgIcon>
+  //   ),
+  //   roles: ["ADMIN", "MANAGER", "RECEPTIONIST"],
+  // },
+  // {
+  //   title: "Đăng ký",
+  //   path: "/auth/register",
+  //   icon: (
+  //     <SvgIcon fontSize="small">
+  //       <UserPlusIcon />
+  //     </SvgIcon>
+  //   ),
+  //   roles: ["ADMIN", "MANAGER", "RECEPTIONIST"],
+  // },
+  // {
+  //   title: "Error",
+  //   path: "/404",
+  //   icon: (
+  //     <SvgIcon fontSize="small">
+  //       <XCircleIcon />
+  //     </SvgIcon>
+  //   ),
+  //   roles: ["ADMIN", "MANAGER", "RECEPTIONIST"],
+  // },
 ];

@@ -8,6 +8,7 @@ import { Scrollbar } from "src/components/scroll-bar";
 import { columns } from "./columns";
 import CustomDataGrid from "src/components/data-grid/custom-data-grid";
 import { ErrorOutline } from "@mui/icons-material";
+import { DATAGRID_OPTIONS } from "src/constant/constants";
 
 // The table displays the list of hotels
 export const HotelTable = (props) => {
@@ -53,6 +54,7 @@ export const HotelTable = (props) => {
                   handleOpenModalUpdate,
                 })}
                 onRowClick={handleRowClick}
+                height={DATAGRID_OPTIONS.TABLE_HEIGHT_10_ITEMS}
               />
             ) : (
               <Box

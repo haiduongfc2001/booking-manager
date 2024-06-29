@@ -8,14 +8,14 @@ import { API, STATUS_CODE, TOAST_KIND, TOAST_MESSAGE } from "src/constant/consta
 import { useDispatch } from "react-redux";
 import { showCommonAlert } from "src/utils/toast-message";
 import { useEffect, useState } from "react";
-import * as CustomerService from "src/services/customer-service";
+import * as BookingService from "src/services/booking-service";
 import { useRouter } from "next/navigation";
 
-export const OverviewTotalCustomers = (props) => {
+export const OverviewTotalBookings = (props) => {
   const { sx, tabIndex = 0 } = props;
-  const [overviewTotalCustomers, setOverviewTotalCustomers] = useState({
+  const [overviewTotalBookings, setOverviewTotalBookings] = useState({
     positive: false,
-    totalCustomers: 0,
+    totalBookings: 0,
     currentMonthCount: 0,
     percentageChange: 0,
   });
@@ -23,25 +23,25 @@ export const OverviewTotalCustomers = (props) => {
   const dispatch = useDispatch();
   const router = useRouter();
 
-  const getCustomerStats = async () => {
-    if (getCustomerStats.current) {
+  const getBookingStats = async () => {
+    if (getBookingStats.current) {
       return;
     }
 
-    getCustomerStats.current = true;
+    getBookingStats.current = true;
     try {
       dispatch(openLoadingApi());
 
-      const response = await CustomerService[API.CUSTOMER.GET_CUSTOMER_STATS]();
+      const response = await BookingService[API.BOOKING.GET_BOOKING_STATS]();
 
       if (response?.status === STATUS_CODE.OK) {
         const data = response.data;
         const percentageChange = data.percentageChange || 0;
         const positive = percentageChange >= 0;
 
-        setOverviewTotalCustomers({
-          ...overviewTotalCustomers,
-          totalCustomers: data.totalCustomers,
+        setOverviewTotalBookings({
+          ...overviewTotalBookings,
+          totalBookings: data.totalBookings,
           currentMonthCount: data.currentMonthCount,
           percentageChange: Math.abs(percentageChange || 0),
           positive,
@@ -57,18 +57,18 @@ export const OverviewTotalCustomers = (props) => {
   };
 
   useEffect(() => {
-    getCustomerStats();
+    getBookingStats();
   }, []);
 
   return (
-    <Card sx={sx} tabIndex={tabIndex} onClick={() => router.push("/admin/customer")}>
+    <Card sx={sx} tabIndex={tabIndex} onClick={() => router.push("/admin/booking")}>
       <CardContent>
         <Stack alignItems="flex-start" direction="row" justifyContent="space-between" spacing={3}>
           <Stack spacing={1}>
             <Typography color="text.secondary" variant="overline">
-              Khách hàng
+              Đơn đặt phòng
             </Typography>
-            <Typography variant="h4">{overviewTotalCustomers?.totalCustomers}</Typography>
+            <Typography variant="h4">{overviewTotalBookings?.totalBookings}</Typography>
           </Stack>
           <Avatar
             sx={{
@@ -82,20 +82,20 @@ export const OverviewTotalCustomers = (props) => {
             </SvgIcon>
           </Avatar>
         </Stack>
-        {overviewTotalCustomers?.percentageChange && (
+        {overviewTotalBookings?.percentageChange && (
           <Stack alignItems="center" direction="row" spacing={2} sx={{ mt: 2 }}>
             <Stack alignItems="center" direction="row" spacing={0.5}>
               <SvgIcon
-                color={overviewTotalCustomers?.positive ? "success" : "error"}
+                color={overviewTotalBookings?.positive ? "success" : "error"}
                 fontSize="small"
               >
-                {overviewTotalCustomers?.positive ? <ArrowUpIcon /> : <ArrowDownIcon />}
+                {overviewTotalBookings?.positive ? <ArrowUpIcon /> : <ArrowDownIcon />}
               </SvgIcon>
               <Typography
-                color={overviewTotalCustomers?.positive ? "success.main" : "error.main"}
+                color={overviewTotalBookings?.positive ? "success.main" : "error.main"}
                 variant="body2"
               >
-                {overviewTotalCustomers?.percentageChange}%
+                {overviewTotalBookings?.percentageChange}%
               </Typography>
             </Stack>
             <Typography color="text.secondary" variant="caption">
@@ -108,7 +108,7 @@ export const OverviewTotalCustomers = (props) => {
   );
 };
 
-OverviewTotalCustomers.propTypes = {
+OverviewTotalBookings.propTypes = {
   difference: PropTypes.number,
   positive: PropTypes.bool,
   value: PropTypes.string.isRequired,

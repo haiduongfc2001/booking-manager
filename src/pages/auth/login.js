@@ -20,7 +20,7 @@ import {
 } from "@mui/material";
 import { useAuth } from "src/hooks/use-auth";
 import { Layout as AuthLayout } from "src/layouts/auth/layout";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { closeLoadingApi, openLoadingApi } from "src/redux/create-actions/loading-action";
 import { useDispatch } from "react-redux";
@@ -105,6 +105,17 @@ const Page = () => {
       }
     },
   });
+
+  // Sử dụng useEffect để cập nhật giá trị email sau khi formik được khởi tạo
+  useEffect(() => {
+    if (formik.values.role === ROLE.ADMIN) {
+      formik.setFieldValue("email", "admin@gmail.com");
+    } else if (formik.values.role === ROLE.MANAGER) {
+      formik.setFieldValue("email", "manager@gmail.com");
+    } else if (formik.values.role === ROLE.RECEPTIONIST) {
+      formik.setFieldValue("email", "receptionist@gmail.com");
+    }
+  }, [formik.values.role]);
 
   return (
     <>

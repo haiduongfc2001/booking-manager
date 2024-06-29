@@ -12,6 +12,20 @@ import {
 } from "@mui/material";
 import { alpha, useTheme } from "@mui/material/styles";
 import { Chart } from "src/components/chart";
+import { closeLoadingApi, openLoadingApi } from "src/redux/create-actions/loading-action";
+import {
+  API,
+  HOTEL_ID_FAKE,
+  ROLE,
+  STATUS_CODE,
+  TOAST_KIND,
+  TOAST_MESSAGE,
+} from "src/constant/constants";
+import { useDispatch, useSelector } from "react-redux";
+import { showCommonAlert } from "src/utils/toast-message";
+import { useEffect, useState } from "react";
+import * as BookingService from "src/services/booking-service";
+import FormatCurrency from "src/utils/format-currency";
 
 const useChartOptions = () => {
   const theme = useTheme();
@@ -72,18 +86,18 @@ const useChartOptions = () => {
         show: true,
       },
       categories: [
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-        "Oct",
-        "Nov",
-        "Dec",
+        "Tháng 1",
+        "Tháng 2",
+        "Tháng 3",
+        "Tháng 4",
+        "Tháng 5",
+        "Tháng 6",
+        "Tháng 7",
+        "Tháng 8",
+        "Tháng 9",
+        "Tháng 10",
+        "Tháng 11",
+        "Tháng 12",
       ],
       labels: {
         offsetY: 5,
@@ -94,7 +108,7 @@ const useChartOptions = () => {
     },
     yaxis: {
       labels: {
-        formatter: (value) => (value > 0 ? `${value}K` : `${value}`),
+        formatter: (value) => (value > 0 ? `${FormatCurrency(value)}` : `${value}`),
         offsetX: -10,
         style: {
           colors: theme.palette.text.secondary,
@@ -105,15 +119,63 @@ const useChartOptions = () => {
 };
 
 export const OverviewSales = (props) => {
-  const { chartSeries, sx } = props;
+  const { sx } = props;
   const chartOptions = useChartOptions();
+  const [hotelId, setHotelId] = useState(HOTEL_ID_FAKE);
+  const [chartSeries, setChartSeries] = useState([]);
+
+  const role = useSelector((state) => state.auth.role);
+
+  const dispatch = useDispatch();
+
+  const getBookingStats = async () => {
+    if (getBookingStats.current) {
+      return;
+    }
+
+    getBookingStats.current = true;
+    try {
+      dispatch(openLoadingApi());
+
+      let response;
+
+      switch (role) {
+        case ROLE.ADMIN:
+          response = await BookingService[API.BOOKING.GET_MONTH_BOOKING_REVENUE]();
+          break;
+        case ROLE.MANAGER:
+        case ROLE.RECEPTIONIST:
+          response = await BookingService[API.BOOKING.GET_MONTH_BOOKING_REVENUE_BY_HOTEL_ID]({
+            hotel_id: hotelId,
+          });
+          break;
+        default:
+          return;
+      }
+
+      if (response?.status === STATUS_CODE.OK) {
+        setChartSeries(response.data);
+      } else {
+        dispatch(showCommonAlert(TOAST_KIND.ERROR, response.data.message));
+      }
+    } catch (error) {
+      dispatch(showCommonAlert(TOAST_KIND.ERROR, TOAST_MESSAGE.SERVER_ERROR));
+    } finally {
+      dispatch(closeLoadingApi());
+    }
+  };
+
+  useEffect(() => {
+    getBookingStats();
+  }, []);
 
   return (
     <Card sx={sx}>
       <CardHeader
         action={
           <Button
-            color="inherit"
+            variant="contained"
+            color="secondary"
             size="small"
             startIcon={
               <SvgIcon fontSize="small">
@@ -121,10 +183,10 @@ export const OverviewSales = (props) => {
               </SvgIcon>
             }
           >
-            Sync
+            Đồng bộ
           </Button>
         }
-        title="Sales"
+        title="Doanh thu"
       />
       <CardContent>
         <Chart height={350} options={chartOptions} series={chartSeries} type="bar" width="100%" />
@@ -140,7 +202,7 @@ export const OverviewSales = (props) => {
           }
           size="small"
         >
-          Overview
+          Tổng quan
         </Button>
       </CardActions>
     </Card>

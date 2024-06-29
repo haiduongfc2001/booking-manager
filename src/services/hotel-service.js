@@ -6,6 +6,10 @@ export const GetAllHotels = async () => {
   return CommonService.getRequest(`${prePath}/getAllHotels`);
 };
 
+export const GetTotalHotels = async () => {
+  return CommonService.getRequest(`${prePath}/getTotalHotels`);
+};
+
 export const GetHotelList = async () => {
   return CommonService.getRequest(`${prePath}/getHotelList`);
 };

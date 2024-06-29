@@ -58,3 +58,7 @@ export const UpdateCustomer = async ({
     dob,
   });
 };
+
+export const GetCustomerStats = async () => {
+  return CommonService.getRequest(`${prePath}/getCustomerStats`);
+};

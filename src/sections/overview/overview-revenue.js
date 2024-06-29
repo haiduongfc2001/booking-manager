@@ -1,47 +1,72 @@
 import PropTypes from "prop-types";
 import ArrowDownIcon from "@heroicons/react/24/solid/ArrowDownIcon";
 import ArrowUpIcon from "@heroicons/react/24/solid/ArrowUpIcon";
-import UsersIcon from "@heroicons/react/24/solid/UsersIcon";
+import CurrencyDollarIcon from "@heroicons/react/24/solid/CurrencyDollarIcon";
 import { Avatar, Card, CardContent, Stack, SvgIcon, Typography } from "@mui/material";
 import { closeLoadingApi, openLoadingApi } from "src/redux/create-actions/loading-action";
-import { API, STATUS_CODE, TOAST_KIND, TOAST_MESSAGE } from "src/constant/constants";
-import { useDispatch } from "react-redux";
+import {
+  API,
+  HOTEL_ID_FAKE,
+  ROLE,
+  STATUS_CODE,
+  TOAST_KIND,
+  TOAST_MESSAGE,
+} from "src/constant/constants";
+import { useDispatch, useSelector } from "react-redux";
 import { showCommonAlert } from "src/utils/toast-message";
 import { useEffect, useState } from "react";
-import * as CustomerService from "src/services/customer-service";
+import * as BookingService from "src/services/booking-service";
 import { useRouter } from "next/navigation";
+import FormatCurrency from "src/utils/format-currency";
 
-export const OverviewTotalCustomers = (props) => {
-  const { sx, tabIndex = 0 } = props;
-  const [overviewTotalCustomers, setOverviewTotalCustomers] = useState({
+export const OverviewRevenue = (props) => {
+  const { sx } = props;
+  const [overviewRevenue, setOverviewRevenue] = useState({
     positive: false,
-    totalCustomers: 0,
+    totalRevenue: 0,
     currentMonthCount: 0,
     percentageChange: 0,
   });
+  const [hotelId, setHotelId] = useState(HOTEL_ID_FAKE);
+
+  const role = useSelector((state) => state.auth.role);
 
   const dispatch = useDispatch();
   const router = useRouter();
 
-  const getCustomerStats = async () => {
-    if (getCustomerStats.current) {
+  const getRevenueStats = async () => {
+    if (getRevenueStats.current) {
       return;
     }
 
-    getCustomerStats.current = true;
+    getRevenueStats.current = true;
     try {
       dispatch(openLoadingApi());
 
-      const response = await CustomerService[API.CUSTOMER.GET_CUSTOMER_STATS]();
+      let response;
+
+      switch (role) {
+        case ROLE.ADMIN:
+          response = await BookingService[API.BOOKING.GET_TOTAL_BOOKING_REVENUE]();
+          break;
+        case ROLE.MANAGER:
+        case ROLE.RECEPTIONIST:
+          response = await BookingService[API.BOOKING.GET_TOTAL_BOOKING_REVENUE_BY_HOTEL_ID]({
+            hotel_id: hotelId,
+          });
+          break;
+        default:
+          return;
+      }
 
       if (response?.status === STATUS_CODE.OK) {
         const data = response.data;
         const percentageChange = data.percentageChange || 0;
         const positive = percentageChange >= 0;
 
-        setOverviewTotalCustomers({
-          ...overviewTotalCustomers,
-          totalCustomers: data.totalCustomers,
+        setOverviewRevenue({
+          ...overviewRevenue,
+          totalRevenue: data.totalRevenue,
           currentMonthCount: data.currentMonthCount,
           percentageChange: Math.abs(percentageChange || 0),
           positive,
@@ -57,45 +82,42 @@ export const OverviewTotalCustomers = (props) => {
   };
 
   useEffect(() => {
-    getCustomerStats();
+    getRevenueStats();
   }, []);
 
   return (
-    <Card sx={sx} tabIndex={tabIndex} onClick={() => router.push("/admin/customer")}>
+    <Card sx={sx}>
       <CardContent>
         <Stack alignItems="flex-start" direction="row" justifyContent="space-between" spacing={3}>
           <Stack spacing={1}>
             <Typography color="text.secondary" variant="overline">
-              Khách hàng
+              Doanh thu
             </Typography>
-            <Typography variant="h4">{overviewTotalCustomers?.totalCustomers}</Typography>
+            <Typography variant="h5">{FormatCurrency(overviewRevenue.totalRevenue)}</Typography>
           </Stack>
           <Avatar
             sx={{
-              backgroundColor: "success.main",
+              backgroundColor: "error.main",
               height: 56,
               width: 56,
             }}
           >
             <SvgIcon>
-              <UsersIcon />
+              <CurrencyDollarIcon />
             </SvgIcon>
           </Avatar>
         </Stack>
-        {overviewTotalCustomers?.percentageChange && (
+        {overviewRevenue?.percentageChange && (
           <Stack alignItems="center" direction="row" spacing={2} sx={{ mt: 2 }}>
             <Stack alignItems="center" direction="row" spacing={0.5}>
-              <SvgIcon
-                color={overviewTotalCustomers?.positive ? "success" : "error"}
-                fontSize="small"
-              >
-                {overviewTotalCustomers?.positive ? <ArrowUpIcon /> : <ArrowDownIcon />}
+              <SvgIcon color={overviewRevenue?.positive ? "success" : "error"} fontSize="small">
+                {overviewRevenue?.positive ? <ArrowUpIcon /> : <ArrowDownIcon />}
               </SvgIcon>
               <Typography
-                color={overviewTotalCustomers?.positive ? "success.main" : "error.main"}
+                color={overviewRevenue?.positive ? "success.main" : "error.main"}
                 variant="body2"
               >
-                {overviewTotalCustomers?.percentageChange}%
+                {overviewRevenue?.percentageChange}%
               </Typography>
             </Stack>
             <Typography color="text.secondary" variant="caption">
@@ -108,9 +130,9 @@ export const OverviewTotalCustomers = (props) => {
   );
 };
 
-OverviewTotalCustomers.propTypes = {
+OverviewRevenue.prototypes = {
   difference: PropTypes.number,
   positive: PropTypes.bool,
-  value: PropTypes.string.isRequired,
   sx: PropTypes.object,
+  value: PropTypes.string.isRequired,
 };

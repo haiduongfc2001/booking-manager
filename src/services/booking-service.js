@@ -57,3 +57,23 @@ export const UpdateBooking = async ({
 export const DeleteBooking = async ({ booking_id }) => {
   return CommonService.deleteRequest(`${prePath}/${booking_id}/deleteBooking`, {});
 };
+
+export const GetBookingStats = async () => {
+  return CommonService.getRequest(`${prePath}/getBookingStats`);
+};
+
+export const GetTotalBookingRevenue = async () => {
+  return CommonService.getRequest(`${prePath}/getTotalBookingRevenue`);
+};
+
+export const GetTotalBookingRevenueByHotelId = async ({ hotel_id }) => {
+  return CommonService.getRequest(`${prePath}/getTotalBookingRevenueByHotelId/${hotel_id}`);
+};
+
+export const GetMonthlyBookingRevenue = async () => {
+  return CommonService.getRequest(`${prePath}/getMonthlyBookingRevenue`);
+};
+
+export const GetMonthlyBookingRevenueByHotelId = async ({ hotel_id }) => {
+  return CommonService.getRequest(`${prePath}/getMonthlyBookingRevenueByHotelId/${hotel_id}`);
+};

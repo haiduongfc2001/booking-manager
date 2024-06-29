@@ -396,7 +396,13 @@ const Page = () => {
                             <>
                               {roomBookings?.length > 0 &&
                                 roomBookings.map((roomBooking, index) => (
-                                  <Stack bgcolor="#f2f3ff" m={1} p={2} borderRadius={"20px"}>
+                                  <Stack
+                                    key={index}
+                                    bgcolor="#f2f3ff"
+                                    m={1}
+                                    p={2}
+                                    borderRadius={"20px"}
+                                  >
                                     <Typography variant="subtitle1">Phòng {index + 1}</Typography>
                                     <Stack
                                       key={roomBooking.id}

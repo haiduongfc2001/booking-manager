@@ -3,7 +3,12 @@ import { DATAGRID_OPTIONS } from "src/constant/constants";
 import { StyledDataGrid } from "./styled-data-grid";
 import { viVN } from "@mui/x-data-grid/locales";
 
-const CustomDataGrid = ({ rows = [], columns = [], onRowClick }) => {
+const CustomDataGrid = ({
+  rows = [],
+  columns = [],
+  onRowClick,
+  height = DATAGRID_OPTIONS.TABLE_HEIGHT_5_ITEMS,
+}) => {
   const handleRowClick = (params) => {
     if (onRowClick) {
       onRowClick(params.row);
@@ -29,7 +34,7 @@ const CustomDataGrid = ({ rows = [], columns = [], onRowClick }) => {
       pageSizeOptions={DATAGRID_OPTIONS.PAGE_SIZE_OPTIONS}
       rowHeight={DATAGRID_OPTIONS.ROW_HEIGHT}
       sx={{
-        height: DATAGRID_OPTIONS.TABLE_HEIGHT,
+        height,
         width: "100%",
         "& .super-app-theme--header": {
           backgroundColor: "neutral.200",

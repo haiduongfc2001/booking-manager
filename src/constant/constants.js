@@ -53,9 +53,11 @@ export const API = {
     CREATE_CUSTOMER: "CreateCustomer",
     DELETE_CUSTOMER: "DeleteCustomer",
     UPDATE_CUSTOMER: "UpdateCustomer",
+    GET_CUSTOMER_STATS: "GetCustomerStats",
   },
   HOTEL: {
     GET_ALL_HOTELS: "GetAllHotels",
+    GET_TOTAL_HOTELS: "GetTotalHotels",
     GET_HOTEL_LIST: "GetHotelList",
     GET_HOTEL_BY_ID: "GetHotelById",
     CREATE_HOTEL: "CreateHotel",
@@ -141,6 +143,11 @@ export const API = {
     GET_ALL_BOOKINGS: "GetAllBookings",
     GET_ALL_BOOKINGS_BY_HOTEL_ID: "GetAllBookingsByHotelId",
     GET_BOOKING_BY_ID: "GetBookingById",
+    GET_BOOKING_STATS: "GetBookingStats",
+    GET_TOTAL_BOOKING_REVENUE: "GetTotalBookingRevenue",
+    GET_TOTAL_BOOKING_REVENUE_BY_HOTEL_ID: "GetTotalBookingRevenueByHotelId",
+    GET_MONTH_BOOKING_REVENUE: "GetMonthlyBookingRevenue",
+    GET_MONTH_BOOKING_REVENUE_BY_HOTEL_ID: "GetMonthlyBookingRevenueByHotelId",
     CREATE_BOOKING: "CreateBooking",
     DELETE_BOOKING: "DeleteBooking",
     UPDATE_BOOKING: "UpdateBooking",
@@ -178,7 +185,8 @@ export const DATAGRID_OPTIONS = {
   PAGE_SIZE: 10,
   PAGE_SIZE_OPTIONS: [5, 10, 25],
   ROW_HEIGHT: 60,
-  TABLE_HEIGHT: 420,
+  TABLE_HEIGHT_5_ITEMS: 420,
+  TABLE_HEIGHT_10_ITEMS: 720,
 };
 
 export const PAGINATION = {
