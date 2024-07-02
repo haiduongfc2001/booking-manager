@@ -109,8 +109,5 @@ export const OverviewTotalBookings = (props) => {
 };
 
 OverviewTotalBookings.propTypes = {
-  difference: PropTypes.number,
-  positive: PropTypes.bool,
-  value: PropTypes.string.isRequired,
   sx: PropTypes.object,
 };

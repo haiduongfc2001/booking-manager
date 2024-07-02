@@ -1,21 +1,19 @@
 import PropTypes from "prop-types";
-import BellIcon from "@heroicons/react/24/solid/BellIcon";
-import UsersIcon from "@heroicons/react/24/solid/UsersIcon";
 import Bars3Icon from "@heroicons/react/24/solid/Bars3Icon";
-import MagnifyingGlassIcon from "@heroicons/react/24/solid/MagnifyingGlassIcon";
 import {
   Avatar,
   Badge,
   Box,
+  Button,
   IconButton,
   Stack,
   SvgIcon,
-  Tooltip,
   useMediaQuery,
 } from "@mui/material";
 import { alpha } from "@mui/material/styles";
 import { usePopover } from "src/hooks/use-popover";
 import { AccountPopover } from "./account-popover";
+import { useSelector } from "react-redux";
 
 const SIDE_NAV_WIDTH = 280;
 const TOP_NAV_HEIGHT = 64;
@@ -24,6 +22,8 @@ export const TopNav = (props) => {
   const { onNavOpen, onClose, open } = props;
   const lgUp = useMediaQuery((theme) => theme.breakpoints.up("lg"));
   const accountPopover = usePopover();
+
+  const { email, avatar } = useSelector((state) => state.auth);
 
   return (
     <>
@@ -67,7 +67,7 @@ export const TopNav = (props) => {
               </IconButton>
             </Tooltip> */}
           </Stack>
-          <Stack alignItems="center" direction="row" spacing={2}>
+          <Stack alignItems="center" direction="row" spacing={2} paddingRight={2}>
             {/* <Tooltip title="Contacts">
               <IconButton>
                 <SvgIcon fontSize="small">
@@ -84,6 +84,22 @@ export const TopNav = (props) => {
                 </Badge>
               </IconButton>
             </Tooltip> */}
+            <Button
+              variant="text"
+              size="medium"
+              sx={{
+                width: "fit-content",
+                height: "fit-content",
+                color: "neutral.900",
+                "&:hover": {
+                  color: "primary.main",
+                  cursor: "pointer",
+                },
+              }}
+              onClick={() => router.push("/account")}
+            >
+              {email}
+            </Button>
             <Avatar
               onClick={accountPopover.handleOpen}
               ref={accountPopover.anchorRef}
@@ -92,7 +108,8 @@ export const TopNav = (props) => {
                 height: 40,
                 width: 40,
               }}
-              src="/assets/no_image_available.png"
+              alt={email}
+              src={avatar}
             />
           </Stack>
         </Stack>

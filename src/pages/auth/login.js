@@ -34,6 +34,7 @@ const Page = () => {
   const router = useRouter();
   const auth = useAuth();
   const dispatch = useDispatch();
+  dispatch(closeLoadingApi());
 
   const [showPassword, setShowPassword] = useState(false);
 
@@ -86,9 +87,19 @@ const Page = () => {
             throw new Error("Vai trò không hợp lệ");
         }
 
-        if (response && response.status === STATUS_CODE.OK) {
+        if (response?.status === STATUS_CODE.OK) {
           Cookies.set("role", values.role, { expires: 1 });
-          dispatch(login(role));
+          const { email, id, avatar } = response.admin ? response.admin : response.staff;
+
+          dispatch(
+            login({
+              role,
+              user_id: id,
+              email,
+              avatar,
+            })
+          );
+
           await auth.signIn(values.email, values.password);
           router.push("/");
           dispatch(showCommonAlert(TOAST_KIND.SUCCESS, response.message));
