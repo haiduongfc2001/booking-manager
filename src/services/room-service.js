@@ -199,3 +199,22 @@ export const DeletePromotion = async ({ room_type_id, promotion_id }) => {
     {}
   );
 };
+
+export const GetAllAvailableRoomTypesByHotelId = async ({
+  check_in,
+  check_out,
+  num_adults,
+  num_children,
+  num_rooms,
+  children_ages,
+  hotel_id,
+}) => {
+  return CommonService.postRequest(`${prePath}/${hotel_id}/getAllAvailableRoomTypesByHotelId`, {
+    check_in,
+    check_out,
+    num_adults,
+    num_children,
+    num_rooms,
+    children_ages,
+  });
+};

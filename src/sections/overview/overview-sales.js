@@ -13,14 +13,7 @@ import {
 import { alpha, useTheme } from "@mui/material/styles";
 import { Chart } from "src/components/chart";
 import { closeLoadingApi, openLoadingApi } from "src/redux/create-actions/loading-action";
-import {
-  API,
-  HOTEL_ID_FAKE,
-  ROLE,
-  STATUS_CODE,
-  TOAST_KIND,
-  TOAST_MESSAGE,
-} from "src/constant/constants";
+import { API, ROLE, STATUS_CODE, TOAST_KIND, TOAST_MESSAGE } from "src/constant/constants";
 import { useDispatch, useSelector } from "react-redux";
 import { showCommonAlert } from "src/utils/toast-message";
 import { useEffect, useState } from "react";
@@ -121,10 +114,10 @@ const useChartOptions = () => {
 export const OverviewSales = (props) => {
   const { sx } = props;
   const chartOptions = useChartOptions();
-  const [hotelId, setHotelId] = useState(HOTEL_ID_FAKE);
   const [chartSeries, setChartSeries] = useState([]);
 
   const role = useSelector((state) => state.auth.role);
+  const hotel_id = useSelector((state) => state.auth.hotel_id);
 
   const dispatch = useDispatch();
 
@@ -146,7 +139,7 @@ export const OverviewSales = (props) => {
         case ROLE.MANAGER:
         case ROLE.RECEPTIONIST:
           response = await BookingService[API.BOOKING.GET_MONTH_BOOKING_REVENUE_BY_HOTEL_ID]({
-            hotel_id: hotelId,
+            hotel_id,
           });
           break;
         default:

@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Button,
   Dialog,
@@ -10,24 +10,40 @@ import {
   Typography,
   Stack,
   TextField,
+  Autocomplete,
+  Box,
+  Avatar,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import * as HotelService from "src/services/hotel-service";
+import * as AddressService from "src/services/address-service";
 import { API, STATUS_CODE, TOAST_KIND } from "src/constant/constants";
 import { useDispatch } from "react-redux";
 import { showCommonAlert } from "src/utils/toast-message";
+import { closeLoadingApi, openLoadingApi } from "src/redux/create-actions/loading-action";
 
 const initialData = {
   name: "",
-  address: "",
+  street: "",
+  ward: "",
+  wardName: "",
+  district: "",
+  districtName: "",
+  province: "",
+  provinceName: "",
   description: "",
   contact: "",
 };
 
 const CreateHotel = (props) => {
   const { isModalCreateHotel, setIsModalCreateHotel, onRefresh } = props;
+
+  const [provinces, setProvinces] = useState([]);
+  const [districts, setDistricts] = useState([]);
+  const [wards, setWards] = useState([]);
 
   const dispatch = useDispatch();
 
@@ -36,6 +52,32 @@ const CreateHotel = (props) => {
     formik.resetForm();
   };
 
+  const fetchProvinces = async () => {
+    const response = await AddressService[API.ADDRESS.GET_ALL_PROVINCES]();
+    const data = await response.data;
+    setProvinces(data);
+  };
+
+  const fetchDistricts = async (provinceId) => {
+    const response = await AddressService[API.ADDRESS.GET_ALL_DISTRICTS_BY_PROVINCE_ID]({
+      province_id: provinceId,
+    });
+    const data = await response.data;
+    setDistricts(data);
+  };
+
+  const fetchWards = async (districtId) => {
+    const response = await AddressService[API.ADDRESS.GET_ALL_WARDS_BY_DISTRICT_ID]({
+      district_id: districtId,
+    });
+    const data = await response.data;
+    setWards(data);
+  };
+
+  useEffect(() => {
+    fetchProvinces();
+  }, []);
+
   const formik = useFormik({
     initialValues: {
       ...initialData,
@@ -43,7 +85,10 @@ const CreateHotel = (props) => {
     },
     validationSchema: Yup.object({
       name: Yup.string().max(255).required("Vui lòng nhập tên khách sạn!"),
-      address: Yup.string().required("Vui lòng nhập địa chỉ khách sạn!"),
+      province: Yup.string().required("Vui lòng nhập tỉnh/thành phố!"),
+      district: Yup.string().required("Vui lòng nhập quận/huyện khách sạn!"),
+      ward: Yup.string().required("Vui lòng nhập phường/xã khách sạn!"),
+      street: Yup.string().required("Vui lòng nhập số nhà/tên đường khách sạn!"),
       description: Yup.string()
         .min(10, "Mô tả quá ngắn!")
         .required("Vui lòng nhập mô tả về khách sạn!"),
@@ -54,14 +99,19 @@ const CreateHotel = (props) => {
 
     onSubmit: async (values, helpers) => {
       try {
+        dispatch(openLoadingApi());
         const response = await HotelService[API.HOTEL.CREATE_HOTEL]({
           name: values.name.trim(),
-          address: values.address.trim(),
+          street: values.street.trim(),
+          ward: values.wardName.trim(),
+          district: values.districtName.trim(),
+          province: values.provinceName.trim(),
           description: values.description.trim(),
           contact: values.contact.trim(),
         });
 
         if (response?.status === STATUS_CODE.CREATED) {
+          handleCloseModalCreate();
           onRefresh();
           dispatch(showCommonAlert(TOAST_KIND.SUCCESS, response.message));
         } else {
@@ -72,12 +122,27 @@ const CreateHotel = (props) => {
         helpers.setErrors({ submit: err.message });
         helpers.setSubmitting(false);
       } finally {
-        handleCloseModalCreate();
+        dispatch(closeLoadingApi());
       }
     },
     enableReinitialize: true,
     validateOnBlur: false,
   });
+
+  useEffect(() => {
+    if (formik.values.province) {
+      fetchDistricts(formik.values.province);
+      formik.setFieldValue("district", "");
+      formik.setFieldValue("ward", "");
+    }
+  }, [formik.values.province]);
+
+  useEffect(() => {
+    if (formik.values.district) {
+      fetchWards(formik.values.district);
+      formik.setFieldValue("ward", "");
+    }
+  }, [formik.values.district]);
 
   const descriptionElementRef = useRef(null);
   useEffect(() => {
@@ -151,20 +216,81 @@ const CreateHotel = (props) => {
                 />
               </Stack>
 
-              <Stack direction="row" spacing={3}>
-                <TextField
+              <Stack direction={{ xs: "column", sm: "row" }} spacing={3}>
+                <Autocomplete
+                  id="province"
+                  autoHighlight
                   fullWidth
-                  required
-                  label="Địa chỉ"
-                  name="address"
-                  type="text"
-                  onBlur={formik.handleBlur}
-                  value={formik.values.address}
-                  onChange={formik.handleChange}
-                  error={!!(formik.touched.address && formik.errors.address)}
-                  helperText={formik.touched.address && formik.errors.address}
+                  options={provinces}
+                  getOptionLabel={(option) => option.name}
+                  value={provinces.find((opt) => opt.id === formik.values.province) || null}
+                  onChange={(event, newValue) => {
+                    formik.setFieldValue("province", newValue?.id || "");
+                    formik.setFieldValue("provinceName", newValue?.name || "");
+                  }}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Tỉnh/Thành phố"
+                      error={!!(formik.touched.province && formik.errors.province)}
+                      helperText={formik.touched.province && formik.errors.province}
+                    />
+                  )}
+                />
+                <Autocomplete
+                  id="district"
+                  autoHighlight
+                  fullWidth
+                  options={districts}
+                  getOptionLabel={(option) => option.name}
+                  value={districts.find((opt) => opt.id === formik.values.district) || null}
+                  onChange={(event, newValue) => {
+                    formik.setFieldValue("district", newValue?.id || "");
+                    formik.setFieldValue("districtName", newValue?.name || "");
+                  }}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Quận/Huyện"
+                      error={!!(formik.touched.district && formik.errors.district)}
+                      helperText={formik.touched.district && formik.errors.district}
+                    />
+                  )}
+                />
+                <Autocomplete
+                  id="ward"
+                  autoHighlight
+                  fullWidth
+                  options={wards}
+                  getOptionLabel={(option) => option.name}
+                  value={wards.find((opt) => opt.id === formik.values.ward) || null}
+                  onChange={(event, newValue) => {
+                    formik.setFieldValue("ward", newValue?.id || "");
+                    formik.setFieldValue("wardName", newValue?.name || "");
+                  }}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Phường/Xã"
+                      error={!!(formik.touched.ward && formik.errors.ward)}
+                      helperText={formik.touched.ward && formik.errors.ward}
+                    />
+                  )}
                 />
               </Stack>
+
+              <TextField
+                fullWidth
+                required
+                label="Tên đường"
+                name="street"
+                type="text"
+                onBlur={formik.handleBlur}
+                value={formik.values.street}
+                onChange={formik.handleChange}
+                error={!!(formik.touched.street && formik.errors.street)}
+                helperText={formik.touched.street && formik.errors.street}
+              />
 
               <Stack direction="row" spacing={3}>
                 <TextField

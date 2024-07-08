@@ -18,11 +18,11 @@ import {
 } from "@mui/material";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { API, HOTEL_ID_FAKE, STATUS_CODE, TOAST_KIND, TOAST_MESSAGE } from "src/constant/constants";
+import { API, STATUS_CODE, TOAST_KIND, TOAST_MESSAGE } from "src/constant/constants";
 import * as HotelService from "src/services/hotel-service";
 import * as AddressService from "src/services/address-service";
 import { showCommonAlert } from "src/utils/toast-message";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { neutral } from "src/theme/colors";
 import { getInitials } from "src/utils/get-initials";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -46,7 +46,6 @@ import HotelAmenities from "src/sections/manager/hotel/hotel-amenity";
 import { closeLoadingApi, openLoadingApi } from "src/redux/create-actions/loading-action";
 
 const Page = () => {
-  const [hotelId, setHotelId] = useState(HOTEL_ID_FAKE);
   const [hotelData, setHotelData] = useState({});
   const [isUpdating, setIsUpdating] = useState(false);
 
@@ -58,6 +57,7 @@ const Page = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   const inputRef = useRef(null);
+  const hotel_id = useSelector((state) => state.auth.hotel_id);
 
   const getHotel = async () => {
     if (getHotel.current) {
@@ -70,7 +70,7 @@ const Page = () => {
       dispatch(openLoadingApi());
 
       const response = await HotelService[API.HOTEL.GET_HOTEL_BY_ID]({
-        hotel_id: hotelId,
+        hotel_id,
       });
 
       if (response?.status === STATUS_CODE.OK) {
@@ -88,7 +88,9 @@ const Page = () => {
   };
 
   useEffect(() => {
-    getHotel();
+    if (hotel_id) {
+      getHotel();
+    }
   }, []);
 
   const fetchProvinces = async () => {
@@ -181,7 +183,7 @@ const Page = () => {
         const selectedDistrict = districts.find((district) => district.id === values.district);
 
         const response = await HotelService[API.HOTEL.UPDATE_HOTEL]({
-          hotel_id: hotelId,
+          hotel_id,
           name: values.name.trim(),
           contact: values.contact.trim(),
           description: values.description.trim(),

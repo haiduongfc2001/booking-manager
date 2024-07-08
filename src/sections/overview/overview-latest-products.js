@@ -16,25 +16,81 @@ import {
   ListItemText,
   SvgIcon,
 } from "@mui/material";
+import { useEffect, useState } from "react";
+import * as StaffService from "src/services/staff-service";
+import { API, ROLE, STATUS_CODE } from "src/constant/constants";
+import { useDispatch, useSelector } from "react-redux";
+import { showCommonAlert } from "src/utils/toast-message";
+import { getStaffStatusColor } from "src/utils/get-status-color";
+import { useRouter } from "next/router";
 
 export const OverviewLatestProducts = (props) => {
-  const { products = [], sx } = props;
+  const { sx } = props;
+  const [staffs, setStaffs] = useState([]);
+
+  const role = useSelector((state) => state.auth.role);
+  const hotel_id = useSelector((state) => state.auth.hotel_id);
+  const router = useRouter();
+  const dispatch = useDispatch();
+
+  const fetchStaffs = async () => {
+    try {
+      let response;
+
+      if (role === ROLE.ADMIN) {
+        response = await StaffService[API.HOTEL.STAFF.GET_ALL_STAFFS]();
+      } else if (role === ROLE.MANAGER || role === ROLE.RECEPTIONIST) {
+        response = await StaffService[API.HOTEL.STAFF.GET_ALL_STAFFS_BY_HOTEL_ID]({
+          hotel_id,
+        });
+      } else {
+        return;
+      }
+
+      if (response?.status === STATUS_CODE.OK) {
+        setStaffs(response.data);
+      } else {
+        dispatch(showCommonAlert("error", "Failed to fetch staffs"));
+      }
+    } catch (error) {
+      console.error("Failed to fetch staffs", error);
+      dispatch(showCommonAlert("error", "Failed to fetch staffs"));
+    }
+  };
+
+  useEffect(() => {
+    fetchStaffs();
+  }, [role]);
+
+  const handleViewAll = () => {
+    switch (role) {
+      case ROLE.ADMIN:
+        router.push("/admin/staff");
+        break;
+      case ROLE.MANAGER:
+        router.push("/manager/staff");
+        break;
+      default:
+        dispatch(showCommonAlert("error", "Bạn không có quyền truy cập vào tài nguyên ngày!"));
+        break;
+    }
+  };
 
   return (
     <Card sx={sx}>
-      <CardHeader title="Latest Products" />
+      <CardHeader title="Nhân viên khách sạn" />
       <List>
-        {products.map((product, index) => {
-          const hasDivider = index < products.length - 1;
-          const ago = formatDistanceToNow(product.updated_at);
+        {staffs?.map((staff, index) => {
+          const hasDivider = index < staffs?.length - 1;
+          // const ago = formatDistanceToNow(staff?.updated_at);
 
           return (
-            <ListItem divider={hasDivider} key={product.id}>
+            <ListItem divider={hasDivider} key={staff?.id}>
               <ListItemAvatar>
-                {product.image ? (
+                {staff?.avatar ? (
                   <Box
                     component="img"
-                    src={product.image}
+                    src={staff?.avatar}
                     sx={{
                       borderRadius: 1,
                       height: 48,
@@ -53,9 +109,9 @@ export const OverviewLatestProducts = (props) => {
                 )}
               </ListItemAvatar>
               <ListItemText
-                primary={product.name}
+                primary={staff?.full_name}
                 primaryTypographyProps={{ variant: "subtitle1" }}
-                secondary={`Updated ${ago} ago`}
+                secondary={`${staff?.email}`}
                 secondaryTypographyProps={{ variant: "body2" }}
               />
               <IconButton edge="end">
@@ -78,8 +134,9 @@ export const OverviewLatestProducts = (props) => {
           }
           size="small"
           variant="text"
+          onClick={handleViewAll}
         >
-          View all
+          Xem tất cả
         </Button>
       </CardActions>
     </Card>
@@ -87,6 +144,6 @@ export const OverviewLatestProducts = (props) => {
 };
 
 OverviewLatestProducts.propTypes = {
-  products: PropTypes.array,
+  staffs: PropTypes.array,
   sx: PropTypes.object,
 };

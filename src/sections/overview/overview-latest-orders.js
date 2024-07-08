@@ -17,41 +17,105 @@ import {
 } from "@mui/material";
 import { Scrollbar } from "src/components/scroll-bar";
 import { SeverityPill } from "src/components/severity-pill";
+import { useEffect, useState } from "react";
+import * as BookingService from "src/services/booking-service";
+import { API, ROLE, STATUS_CODE } from "src/constant/constants";
+import { useDispatch, useSelector } from "react-redux";
+import { showCommonAlert } from "src/utils/toast-message";
+import { useRouter } from "next/router";
+import dayjs from "dayjs";
 
 const StatusMap = {
-  pending: "warning",
-  delivered: "success",
-  refunded: "error",
+  PENDING: "warning",
+  CONFIRMED: "success",
+  CANCELLED: "error",
 };
 
 export const OverviewLatestOrders = (props) => {
-  const { orders = [], sx } = props;
+  const { sx } = props;
+  const [bookings, setBookings] = useState([]);
+
+  const role = useSelector((state) => state.auth.role);
+  const hotel_id = useSelector((state) => state.auth.hotel_id);
+  const router = useRouter();
+  const dispatch = useDispatch();
+
+  const fetchBookings = async () => {
+    try {
+      let response;
+
+      if (role === ROLE.ADMIN) {
+        response = await BookingService[API.BOOKING.GET_ALL_BOOKINGS]();
+      } else if (role === ROLE.MANAGER || role === ROLE.RECEPTIONIST) {
+        response = await BookingService[API.BOOKING.GET_ALL_BOOKINGS_BY_HOTEL_ID]({
+          hotel_id,
+          page: 1,
+          size: 10,
+        });
+      } else {
+        // Handle other roles if needed
+        return;
+      }
+
+      if (response?.status === STATUS_CODE.OK) {
+        setBookings(response.data);
+      } else {
+        dispatch(showCommonAlert("error", "Failed to fetch bookings"));
+      }
+    } catch (error) {
+      console.error("Failed to fetch bookings", error);
+      dispatch(showCommonAlert("error", "Failed to fetch bookings"));
+    }
+  };
+
+  useEffect(() => {
+    fetchBookings();
+  }, [role]);
+
+  const handleViewAll = () => {
+    // Xử lý khi click vào nút Xem tất cả
+    switch (role) {
+      case ROLE.ADMIN:
+        router.push("/admin/booking");
+        break;
+      case ROLE.MANAGER:
+      case ROLE.RECEPTIONIST:
+        router.push("/manager/booking");
+        break;
+      // Thêm xử lý cho các role khác nếu cần
+      default:
+        dispatch(showCommonAlert("error", "Unauthorized access"));
+        break;
+    }
+  };
 
   return (
     <Card sx={sx}>
-      <CardHeader title="Latest Orders" />
+      <CardHeader title="Đơn đặt phòng" />
       <Scrollbar sx={{ flexGrow: 1 }}>
         <Box sx={{ width: "100%" }}>
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>Order</TableCell>
-                <TableCell>Customer</TableCell>
-                <TableCell sortDirection="desc">Date</TableCell>
-                <TableCell>Status</TableCell>
+                <TableCell>Mã đặt phòng</TableCell>
+                <TableCell>Khách hàng</TableCell>
+                <TableCell sortDirection="desc">Ngày đặt</TableCell>
+                <TableCell>Trạng thái</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {orders.map((order) => {
-                const created_at = format(order.created_at, "dd/MM/yyyy");
+              {bookings?.map((booking) => {
+                const created_at = dayjs(booking?.created_at).format("DD/MM/YYYY");
 
                 return (
-                  <TableRow hover key={order.id}>
-                    <TableCell>{order.ref}</TableCell>
-                    <TableCell>{order.customer.name}</TableCell>
+                  <TableRow hover key={booking?.id}>
+                    <TableCell>{booking?.code}</TableCell>
+                    <TableCell>{booking?.customer?.full_name}</TableCell>
                     <TableCell>{created_at}</TableCell>
                     <TableCell>
-                      <SeverityPill color={StatusMap[order.status]}>{order.status}</SeverityPill>
+                      <SeverityPill color={StatusMap[booking?.status]}>
+                        {booking?.status}
+                      </SeverityPill>
                     </TableCell>
                   </TableRow>
                 );
@@ -71,8 +135,9 @@ export const OverviewLatestOrders = (props) => {
           }
           size="small"
           variant="text"
+          onClick={handleViewAll}
         >
-          View all
+          Xem tất cả
         </Button>
       </CardActions>
     </Card>
@@ -80,6 +145,5 @@ export const OverviewLatestOrders = (props) => {
 };
 
 OverviewLatestOrders.prototype = {
-  orders: PropTypes.array,
   sx: PropTypes.object,
 };

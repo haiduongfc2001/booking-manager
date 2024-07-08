@@ -77,7 +77,6 @@ const UpdateCustomer = (props) => {
   const initialValues = useMemo(
     () => ({
       email: customerData?.email || "",
-      username: customerData?.username || "",
       full_name: customerData?.full_name || "",
       gender: customerData?.gender || "",
       phone: customerData?.phone || "",
@@ -92,7 +91,6 @@ const UpdateCustomer = (props) => {
       customerData?.full_name,
       customerData?.gender,
       customerData?.phone,
-      customerData?.username,
     ]
   );
 
@@ -103,7 +101,6 @@ const UpdateCustomer = (props) => {
         .email("Vui lòng nhập địa chỉ email hợp lệ!")
         .max(255)
         .required("Vui lòng nhập địa chỉ email!"),
-      username: Yup.string().max(20).required("Vui lòng nhập tên người dùng!"),
       full_name: Yup.string().max(20).required("Vui lòng nhập tên!"),
       gender: Yup.mixed()
         .oneOf([GENDER.MALE, GENDER.FEMALE, GENDER.OTHER])
@@ -119,7 +116,6 @@ const UpdateCustomer = (props) => {
         const response = await CustomerService[API.CUSTOMER.UPDATE_CUSTOMER]({
           customerId: String(currentId).trim(),
           email: values.email.trim(),
-          username: values.username.trim(),
           full_name: values.full_name.trim(),
           gender: values.gender.trim(),
           phone: values.phone.trim(),
@@ -227,19 +223,6 @@ const UpdateCustomer = (props) => {
                   <TextField
                     fullWidth
                     required
-                    label="Tên người dùng"
-                    name="username"
-                    type="text"
-                    onBlur={formik.handleBlur}
-                    value={formik.values.username}
-                    onChange={formik.handleChange}
-                    error={!!(formik.touched.username && formik.errors.username)}
-                    helperText={formik.touched.username && formik.errors.username}
-                  />
-
-                  <TextField
-                    fullWidth
-                    required
                     label="Họ và tên"
                     name="full_name"
                     type="text"
@@ -260,7 +243,7 @@ const UpdateCustomer = (props) => {
                     <RadioGroup
                       row
                       aria-labelledby="radio-gender"
-                      defaultValue=""
+                      defaultValue={customerData?.gender}
                       name="gender"
                       onBlur={formik.handleBlur}
                       value={formik.values.gender}

@@ -71,28 +71,6 @@ const Page = () => {
             <Stack direction="row" justifyContent="space-between" spacing={4}>
               <Stack spacing={1}>
                 <Typography variant="h4">Khách sạn</Typography>
-                {/* <Stack alignItems="center" direction="row" spacing={1}>
-                  <Button
-                    color="inherit"
-                    startIcon={
-                      <SvgIcon fontSize="small">
-                        <ArrowUpOnSquareIcon />
-                      </SvgIcon>
-                    }
-                  >
-                    Import
-                  </Button>
-                  <Button
-                    color="inherit"
-                    startIcon={
-                      <SvgIcon fontSize="small">
-                        <ArrowDownOnSquareIcon />
-                      </SvgIcon>
-                    }
-                  >
-                    Export
-                  </Button>
-                </Stack> */}
               </Stack>
             </Stack>
             <Card sx={{ p: 2 }}>
@@ -102,7 +80,7 @@ const Page = () => {
                 alignItems="center"
                 justifyContent="space-between"
               >
-                <SearchHotel />
+                {/* <SearchHotel /> */}
                 <Button
                   startIcon={
                     <SvgIcon fontSize="small">

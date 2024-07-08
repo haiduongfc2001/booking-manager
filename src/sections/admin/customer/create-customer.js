@@ -15,6 +15,10 @@ import {
   FormControl,
   InputLabel,
   FormHelperText,
+  FormLabel,
+  RadioGroup,
+  FormControlLabel,
+  Radio,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { useFormik } from "formik";
@@ -30,7 +34,6 @@ import dayjs from "dayjs";
 
 const initialData = {
   email: "",
-  username: "",
   full_name: "",
   gender: "",
   phone: "",
@@ -59,7 +62,6 @@ const CreateCustomer = (props) => {
         .email("Vui lòng nhập địa chỉ email hợp lệ!")
         .max(255)
         .required("Vui lòng nhập địa chỉ email!"),
-      username: Yup.string().max(20).required("Vui lòng nhập tên người dùng!"),
       full_name: Yup.string().max(20).required("Vui lòng nhập họ và tên!"),
       gender: Yup.mixed()
         .oneOf([GENDER.MALE, GENDER.FEMALE, GENDER.OTHER])
@@ -79,7 +81,6 @@ const CreateCustomer = (props) => {
         const dobValue = values.dob ? dayjs(values.dob).format("YYYY-MM-DD") : null;
         const response = await CustomerService[API.CUSTOMER.CREATE_CUSTOMER]({
           email: values.email.trim(),
-          username: values.username.trim(),
           full_name: values.full_name.trim(),
           gender: values.gender.trim(),
           phone: values.phone.trim(),
@@ -169,19 +170,6 @@ const CreateCustomer = (props) => {
                 <TextField
                   fullWidth
                   required
-                  label="Tên người dùng"
-                  name="username"
-                  type="text"
-                  onBlur={formik.handleBlur}
-                  value={formik.values.username}
-                  onChange={formik.handleChange}
-                  error={!!(formik.touched.username && formik.errors.username)}
-                  helperText={formik.touched.username && formik.errors.username}
-                />
-
-                <TextField
-                  fullWidth
-                  required
                   label="Họ và tên"
                   name="full_name"
                   type="text"
@@ -195,24 +183,23 @@ const CreateCustomer = (props) => {
 
               <Stack direction="row" spacing={3}>
                 <FormControl
-                  fullWidth
-                  variant="filled"
-                  sx={{ m: 1, minWidth: 120 }}
+                  sx={{ width: "100%", m: 1, minWidth: 120 }}
                   error={!!(formik.touched.gender && formik.errors.gender)}
                 >
-                  <InputLabel id="gender-label">Giới tính *</InputLabel>
-                  <Select
-                    required
-                    labelId="gender-label"
+                  <FormLabel id="radio-gender">Giới tính</FormLabel>
+                  <RadioGroup
+                    row
+                    aria-labelledby="radio-gender"
+                    defaultValue=""
                     name="gender"
                     onBlur={formik.handleBlur}
                     value={formik.values.gender}
                     onChange={formik.handleChange}
                   >
-                    <MenuItem value={GENDER.MALE}>Nam</MenuItem>
-                    <MenuItem value={GENDER.FEMALE}>Nữ</MenuItem>
-                    <MenuItem value={GENDER.OTHER}>Khác</MenuItem>
-                  </Select>
+                    <FormControlLabel value={GENDER.MALE} control={<Radio />} label="Nam" />
+                    <FormControlLabel value={GENDER.FEMALE} control={<Radio />} label="Nữ" />
+                    <FormControlLabel value={GENDER.OTHER} control={<Radio />} label="Khác" />
+                  </RadioGroup>
                   {formik.touched.gender && formik.errors.gender && (
                     <FormHelperText>{formik.errors.gender}</FormHelperText>
                   )}

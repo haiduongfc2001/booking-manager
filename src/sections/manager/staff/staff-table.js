@@ -8,16 +8,18 @@ import { Scrollbar } from "src/components/scroll-bar";
 import { columns } from "./columns";
 import CustomDataGrid from "src/components/data-grid/custom-data-grid";
 import { ErrorOutline } from "@mui/icons-material";
-import { HOTEL_ID_FAKE } from "src/constant/constants";
+import { useSelector } from "react-redux";
 
 export const StaffTable = (props) => {
   const { items = [], onRefresh = () => {} } = props;
 
   const [currentId, setCurrentId] = useState("");
-  const [hotelId, setHotelId] = useState(HOTEL_ID_FAKE);
   const [isModalDeleteStaff, setIsModalDeleteStaff] = useState(false);
   const [isModalUpdateStaff, setIsModalUpdateStaff] = useState(false);
   const [isModalDetailStaff, setIsModalDetailStaff] = useState(false);
+
+  const hotel_id = useSelector((state) => state.auth.hotel_id);
+  const staff_id = useSelector((state) => state.auth.user_id);
 
   const handleRowClick = (params) => {
     const clickedItem = items?.find((item) => item.id === params.id);
@@ -52,6 +54,7 @@ export const StaffTable = (props) => {
                   handleOpenModalDetail,
                   handleOpenModalDelete,
                   handleOpenModalUpdate,
+                  staff_id,
                 })}
                 onRowClick={handleRowClick}
               />
@@ -78,21 +81,21 @@ export const StaffTable = (props) => {
       <DeleteStaff
         isModalDeleteStaff={isModalDeleteStaff}
         setIsModalDeleteStaff={setIsModalDeleteStaff}
-        hotelId={parseInt(hotelId)}
+        hotelId={parseInt(hotel_id)}
         currentId={parseInt(currentId)}
         onRefresh={onRefresh}
       />
       <UpdateStaff
         isModalUpdateStaff={isModalUpdateStaff}
         setIsModalUpdateStaff={setIsModalUpdateStaff}
-        hotelId={parseInt(hotelId)}
+        hotelId={parseInt(hotel_id)}
         currentId={parseInt(currentId)}
         onRefresh={onRefresh}
       />
       <DetailStaff
         isModalDetailStaff={isModalDetailStaff}
         setIsModalDetailStaff={setIsModalDetailStaff}
-        hotelId={parseInt(hotelId)}
+        hotelId={parseInt(hotel_id)}
         currentId={parseInt(currentId)}
       />
     </>

@@ -17,14 +17,7 @@ import {
   IconButton,
 } from "@mui/material";
 import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
-import {
-  HOTEL_ID_FAKE,
-  MANAGER_ID_FAKE,
-  PAGINATION,
-  STATUS_CODE,
-  TOAST_KIND,
-  TOAST_MESSAGE,
-} from "src/constant/constants";
+import { PAGINATION, STATUS_CODE, TOAST_KIND, TOAST_MESSAGE } from "src/constant/constants";
 import * as ReviewService from "src/services/review-service";
 import { API } from "src/constant/constants";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -33,7 +26,7 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
 import { useRouter } from "next/navigation";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { closeLoadingApi, openLoadingApi } from "src/redux/create-actions/loading-action";
 import { neutral } from "src/theme/colors";
 import { getInitials } from "src/utils/get-initials";
@@ -52,8 +45,6 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 
 const Page = () => {
-  const [hotelId, setHotelId] = useState(HOTEL_ID_FAKE);
-  const [staffId, setStaffId] = useState(MANAGER_ID_FAKE);
   const [reviewsData, setReviewsData] = useState([]);
   const [averageRatings, setAverageRatings] = useState({});
   const [countByRatingLevel, setCountByRatingLevel] = useState({});
@@ -66,13 +57,15 @@ const Page = () => {
   const [editingReviewId, setEditingReviewId] = useState(null);
   const [editReply, setEditReply] = useState("");
 
-  const handleChange = (event, value) => {
-    setPage(value);
-  };
-
   const inputRef = useRef(null);
   const router = useRouter();
   const dispatch = useDispatch();
+  const hotel_id = useSelector((state) => state.auth.hotel_id);
+  const staff_id = useSelector((state) => state.auth.user_id);
+
+  const handleChange = (event, value) => {
+    setPage(value);
+  };
 
   const fetchData = async () => {
     if (fetchData.current) {
@@ -85,12 +78,12 @@ const Page = () => {
       dispatch(openLoadingApi());
 
       const response = await ReviewService[API.REVIEW.GET_HOTEL_REVIEWS]({
-        hotel_id: hotelId,
+        hotel_id,
         page,
         size: PAGINATION.PAGE_SIZE,
       });
 
-      if (response?.status !== STATUS_CODE.UNAUTHORIZED) {
+      if (response?.status === STATUS_CODE.OK) {
         setReviewsData(response.data.reviews);
         setAverageRatings(response.data.averageRatings);
         setCountByRatingLevel(response.data.countByRatingLevel);
@@ -106,7 +99,9 @@ const Page = () => {
   };
 
   useEffect(() => {
-    fetchData();
+    if (hotel_id) {
+      fetchData();
+    }
   }, [page]);
 
   const handleBookingClick = (bookingId) => {
@@ -119,7 +114,7 @@ const Page = () => {
 
       const response = await ReviewService[API.REVIEW.CREATE_REPLY_REVIEW]({
         review_id: reviewId,
-        staff_id: staffId,
+        staff_id,
         reply: replyReview,
       });
 
@@ -156,11 +151,12 @@ const Page = () => {
       });
 
       if (response?.status === STATUS_CODE.OK) {
-        setReviewsData((prevData) =>
-          prevData.map((review) =>
-            review?.id === reviewId ? { ...review, replyReview: null } : review
-          )
-        );
+        fetchData();
+        // setReviewsData((prevData) =>
+        //   prevData.map((review) =>
+        //     review?.id === reviewId ? { ...review, replyReview: null } : review
+        //   )
+        // );
         dispatch(showCommonAlert(TOAST_KIND.SUCCESS, response.message));
       } else {
         dispatch(showCommonAlert(TOAST_KIND.ERROR, response.data.message));
@@ -179,18 +175,19 @@ const Page = () => {
       const response = await ReviewService[API.REVIEW.UPDATE_REPLY_REVIEW]({
         reply_review_id: replyReviewId,
         review_id: editingReviewId,
-        staff_id: staffId,
+        staff_id,
         reply: editReply,
       });
 
       if (response?.status === STATUS_CODE.OK) {
-        setReviewsData((prevData) =>
-          prevData.map((review) =>
-            review?.id === replyReviewId
-              ? { ...review, replyReview: { ...review?.replyReview, reply: editReply } }
-              : review
-          )
-        );
+        fetchData();
+        // setReviewsData((prevData) =>
+        //   prevData.map((review) =>
+        //     review?.id === replyReviewId
+        //       ? { ...review, replyReview: { ...review?.replyReview, reply: editReply } }
+        //       : review
+        //   )
+        // );
         dispatch(showCommonAlert(TOAST_KIND.SUCCESS, response.message));
         setEditingReviewId(null);
       } else {
@@ -371,7 +368,7 @@ const Page = () => {
               </Card>
             )}
 
-            {reviewsData?.length > 0 &&
+            {reviewsData?.length > 0 ? (
               reviewsData.map((review) => {
                 const roomBooking = review?.booking?.roomBookings?.[0];
                 const roomType = roomBooking?.room?.roomType;
@@ -894,7 +891,14 @@ const Page = () => {
                     </Card>
                   </Card>
                 );
-              })}
+              })
+            ) : (
+              <Card display="flex" justifyContent={"center"} alignItems sx={{ p: 2 }}>
+                <Typography variant="h4" textAlign="center">
+                  Không tìm thấy đơn đặt phòng nào
+                </Typography>
+              </Card>
+            )}
           </Stack>
 
           {reviewsData?.length > 0 && (

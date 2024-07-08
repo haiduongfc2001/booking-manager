@@ -26,7 +26,11 @@ const RoomTypeBeds = ({ roomTypeId, beds = [] }) => {
 
       if (response?.status === STATUS_CODE.OK) {
         dispatch(showCommonAlert(TOAST_KIND.SUCCESS, response.message));
-        setUpdatableBeds(updatableBeds.filter((bed) => bed.id !== bed_id));
+        const updatedBeds = updatableBeds.filter((bed) => bed.id !== bed_id);
+        setUpdatableBeds(updatedBeds);
+        if (updatedBeds.length === 0) {
+          setIsAdding(true);
+        }
       } else {
         const errorMessage =
           typeof response.data.error === "string"
@@ -79,7 +83,7 @@ const RoomTypeBeds = ({ roomTypeId, beds = [] }) => {
       const response = await BedService[API.ROOM_TYPE.BED.CREATE_BED](newBed);
       if (response?.status === STATUS_CODE.CREATED) {
         dispatch(showCommonAlert(TOAST_KIND.SUCCESS, response.message));
-        setUpdatableBeds([...updatableBeds, response.data]);
+        setUpdatableBeds([...updatableBeds, response.newBed]);
         setNewBed({ room_type_id: roomTypeId, type: "", description: "", quantity: "" });
         setIsAdding(false);
       } else {
@@ -235,7 +239,10 @@ const RoomTypeBeds = ({ roomTypeId, beds = [] }) => {
               variant="contained"
               color="primary"
               sx={{ mr: 2 }}
-              onClick={() => setIsUpdateMode(!isUpdateMode)}
+              onClick={() => {
+                setIsAdding(false);
+                setIsUpdateMode(!isUpdateMode);
+              }}
             >
               {isUpdateMode ? "Hủy" : "Chỉnh sửa"}
             </Button>
@@ -244,7 +251,10 @@ const RoomTypeBeds = ({ roomTypeId, beds = [] }) => {
                 variant="contained"
                 color="success"
                 sx={{ mr: 2 }}
-                onClick={() => setIsAdding(true)}
+                onClick={() => {
+                  setIsUpdateMode(false);
+                  setIsAdding(true);
+                }}
               >
                 Thêm giường
               </Button>

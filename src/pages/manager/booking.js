@@ -14,10 +14,12 @@ import {
   Avatar,
   Pagination,
   Chip,
+  Menu,
+  MenuItem,
 } from "@mui/material";
 import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
 import {
-  HOTEL_ID_FAKE,
+  BOOKING_STATUS,
   PAGINATION,
   STATUS_CODE,
   TOAST_KIND,
@@ -31,7 +33,7 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
 import { useRouter } from "next/navigation";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { closeLoadingApi, openLoadingApi } from "src/redux/create-actions/loading-action";
 import { neutral } from "src/theme/colors";
 import { getInitials } from "src/utils/get-initials";
@@ -45,36 +47,32 @@ import {
 } from "src/utils/get-status-color";
 
 const Page = () => {
-  const [hotelId, setHotelId] = useState(HOTEL_ID_FAKE);
   const [bookingsData, setBookingsData] = useState([]);
   const [numBookings, setNumBookings] = useState(0);
   const [page, setPage] = useState(PAGINATION.INITIAL_PAGE);
+  const [selectedBookingId, setSelectedBookingId] = useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const inputRef = useRef(null);
+  const router = useRouter();
+  const dispatch = useDispatch();
+  const hotel_id = useSelector((state) => state.auth.hotel_id);
 
   const handleChange = (event, value) => {
     setPage(value);
   };
 
-  const inputRef = useRef(null);
-  const router = useRouter();
-  const dispatch = useDispatch();
-
   const fetchData = async () => {
-    if (fetchData.current) {
-      return;
-    }
-
-    fetchData.current = true;
-
     try {
       dispatch(openLoadingApi());
 
       const response = await BookingService[API.BOOKING.GET_ALL_BOOKINGS_BY_HOTEL_ID]({
-        hotel_id: hotelId,
+        hotel_id,
         page,
         size: PAGINATION.PAGE_SIZE,
       });
 
-      if (response?.status !== STATUS_CODE.UNAUTHORIZED) {
+      if (response?.status === STATUS_CODE.OK) {
         setBookingsData(response.data);
         setNumBookings(response.totalBookings);
       } else {
@@ -95,7 +93,9 @@ const Page = () => {
   };
 
   useEffect(() => {
-    fetchData();
+    if (hotel_id) {
+      fetchData();
+    }
   }, [page]);
 
   useEffect(() => {
@@ -104,6 +104,44 @@ const Page = () => {
 
   const handleBookingClick = (bookingId) => {
     router.push(`/manager/booking/detail/${bookingId}`);
+  };
+
+  const handleStatusChange = async (status) => {
+    try {
+      dispatch(openLoadingApi());
+
+      const response = await BookingService[API.BOOKING.UPDATE_BOOKING]({
+        booking_id: selectedBookingId,
+        status,
+      });
+
+      if (response?.status === STATUS_CODE.OK) {
+        fetchData();
+        const updatedBookingsData = bookingsData.map((booking) =>
+          booking.id === selectedBookingId ? { ...booking, status } : booking
+        );
+        setBookingsData(updatedBookingsData);
+        dispatch(
+          showCommonAlert(TOAST_KIND.SUCCESS, "Cập nhật trạng thái đơn đặt phòng thành công")
+        );
+      } else {
+        dispatch(showCommonAlert(TOAST_KIND.ERROR, response.data.message));
+      }
+    } catch (error) {
+      dispatch(showCommonAlert(TOAST_KIND.ERROR, TOAST_MESSAGE.SERVER_ERROR));
+    } finally {
+      dispatch(closeLoadingApi());
+      setAnchorEl(null);
+    }
+  };
+
+  const handleMenuOpen = (event, bookingId) => {
+    setSelectedBookingId(bookingId);
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
   };
 
   return (
@@ -136,7 +174,7 @@ const Page = () => {
                 alignItems="center"
                 justifyContent="space-between"
               >
-                <SearchBooking />
+                {/* <SearchBooking /> */}
               </Stack>
             </Card>
 
@@ -166,7 +204,7 @@ const Page = () => {
               </Button>
             </Grid>
 
-            {bookingsData?.length > 0 &&
+            {bookingsData?.length > 0 ? (
               bookingsData.map((booking) => {
                 const roomBooking = booking?.roomBookings?.[0];
                 const roomType = roomBooking?.room?.roomType;
@@ -213,7 +251,22 @@ const Page = () => {
                         </Avatar>
                         <Typography variant="h6">{roomTypeName}</Typography>
                       </Stack>
+
+                      {booking.status !== BOOKING_STATUS.CANCELLED && (
+                        <Button
+                          aria-controls={`booking-menu-${booking.id}`}
+                          aria-haspopup="true"
+                          onClick={(event) => handleMenuOpen(event, booking.id)}
+                          variant="contained"
+                          color="secondary"
+                        >
+                          Đổi trạng thái
+                        </Button>
+                      )}
                       <Button
+                        aria-controls={`booking-menu-${booking.id}`}
+                        aria-haspopup="true"
+                        onClick={() => handleBookingClick(booking?.id)}
                         variant="contained"
                         color="primary"
                         endIcon={
@@ -221,10 +274,29 @@ const Page = () => {
                             <ArrowForwardIcon />
                           </SvgIcon>
                         }
-                        onClick={() => handleBookingClick(booking?.id)}
                       >
                         Xem chi tiết
                       </Button>
+                      <Menu
+                        id={`booking-menu-${booking.id}`}
+                        anchorEl={anchorEl}
+                        keepMounted
+                        open={Boolean(anchorEl)}
+                        onClose={handleMenuClose}
+                      >
+                        {/* <MenuItem onClick={() => handleStatusChange(BOOKING_STATUS.CONFIRMED)}>
+                          Đặt phòng thành công
+                        </MenuItem> */}
+                        <MenuItem onClick={() => handleStatusChange(BOOKING_STATUS.CHECKED_IN)}>
+                          Đã nhận phòng
+                        </MenuItem>
+                        <MenuItem onClick={() => handleStatusChange(BOOKING_STATUS.CHECKED_OUT)}>
+                          Đã trả phòng
+                        </MenuItem>
+                        <MenuItem onClick={() => handleStatusChange(BOOKING_STATUS.CANCELLED)}>
+                          Đã hủy
+                        </MenuItem>
+                      </Menu>
                     </Stack>
 
                     <Stack spacing={2} mt={2}>
@@ -241,6 +313,26 @@ const Page = () => {
                             fontWeight: 700,
                           }}
                         />
+                        <Menu
+                          id={`booking-menu-${booking.id}`}
+                          anchorEl={anchorEl}
+                          keepMounted
+                          open={Boolean(anchorEl)}
+                          onClose={handleMenuClose}
+                        >
+                          <MenuItem onClick={() => handleStatusChange("CONFIRMED")}>
+                            Đặt phòng thành công
+                          </MenuItem>
+                          <MenuItem onClick={() => handleStatusChange("CHECKED_IN")}>
+                            Đã nhận phòng
+                          </MenuItem>
+                          <MenuItem onClick={() => handleStatusChange("CHECKED_OUT")}>
+                            Đã trả phòng
+                          </MenuItem>
+                          <MenuItem onClick={() => handleStatusChange("CANCELLED")}>
+                            Đã hủy
+                          </MenuItem>
+                        </Menu>
 
                         <Chip
                           label={`Trạng thái: ${booking?.translateStatus}`}
@@ -384,7 +476,14 @@ const Page = () => {
                     </Stack>
                   </Card>
                 );
-              })}
+              })
+            ) : (
+              <Card display="flex" justifyContent={"center"} alignItems="center" sx={{ p: 2 }}>
+                <Typography variant="h4" textAlign="center">
+                  Không tìm thấy đơn đặt phòng nào
+                </Typography>
+              </Card>
+            )}
           </Stack>
 
           {bookingsData?.length > 0 && (

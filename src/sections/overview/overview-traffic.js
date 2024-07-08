@@ -1,7 +1,6 @@
 import PropTypes from "prop-types";
 import ComputerDesktopIcon from "@heroicons/react/24/solid/ComputerDesktopIcon";
 import DeviceTabletIcon from "@heroicons/react/24/solid/DeviceTabletIcon";
-import PhoneIcon from "@heroicons/react/24/solid/PhoneIcon";
 import {
   Box,
   Card,
@@ -13,6 +12,11 @@ import {
   useTheme,
 } from "@mui/material";
 import { Chart } from "src/components/chart";
+import { useEffect, useState } from "react";
+import * as CustomerService from "src/services/customer-service";
+import { useDispatch } from "react-redux";
+import { showCommonAlert } from "src/utils/toast-message";
+import { API, STATUS_CODE, TOAST_KIND, TOAST_MESSAGE } from "src/constant/constants";
 
 const useChartOptions = (labels) => {
   const theme = useTheme();
@@ -59,30 +63,54 @@ const useChartOptions = (labels) => {
 };
 
 const iconMap = {
-  Desktop: (
+  "Đã xác thực": (
     <SvgIcon>
       <ComputerDesktopIcon />
     </SvgIcon>
   ),
-  Tablet: (
+  "Chưa xác thực": (
     <SvgIcon>
       <DeviceTabletIcon />
-    </SvgIcon>
-  ),
-  Phone: (
-    <SvgIcon>
-      <PhoneIcon />
     </SvgIcon>
   ),
 };
 
 export const OverviewTraffic = (props) => {
-  const { chartSeries, labels, sx } = props;
+  const { sx } = props;
+  const [chartSeries, setChartSeries] = useState([]);
+  const [labels, setLabels] = useState(["Đã xác thực", "Chưa xác thực"]);
+
+  const dispatch = useDispatch();
+
+  const fetchData = async () => {
+    try {
+      const response = await CustomerService[API.CUSTOMER.GET_ALL_CUSTOMERS]();
+
+      if (response?.status !== STATUS_CODE.UNAUTHORIZED) {
+        const customers = response.data;
+
+        const verifiedCount = customers.filter((customer) => customer.is_verified).length;
+        const unverifiedCount = customers.length - verifiedCount;
+
+        setChartSeries([verifiedCount, unverifiedCount]);
+      } else {
+        dispatch(showCommonAlert(TOAST_KIND.ERROR, response.data.error));
+      }
+    } catch (error) {
+      console.error("Failed to fetch customer data", error);
+      dispatch(showCommonAlert(TOAST_KIND.ERROR, TOAST_MESSAGE.SERVER_ERROR));
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
   const chartOptions = useChartOptions(labels);
 
   return (
     <Card sx={sx}>
-      <CardHeader title="Traffic Source" />
+      <CardHeader title="Khách hàng" />
       <CardContent>
         <Chart height={300} options={chartOptions} series={chartSeries} type="donut" width="100%" />
         <Stack
@@ -109,7 +137,7 @@ export const OverviewTraffic = (props) => {
                   {label}
                 </Typography>
                 <Typography color="text.secondary" variant="subtitle2">
-                  {item}%
+                  {item}
                 </Typography>
               </Box>
             );
@@ -121,7 +149,5 @@ export const OverviewTraffic = (props) => {
 };
 
 OverviewTraffic.propTypes = {
-  chartSeries: PropTypes.array.isRequired,
-  labels: PropTypes.array.isRequired,
   sx: PropTypes.object,
 };

@@ -8,19 +8,19 @@ import { Box, Button, Container, Stack, SvgIcon, Typography, Card, Grid } from "
 import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
 import { StaffTable } from "src/sections/manager/staff/staff-table";
 import { SearchStaff } from "src/sections/manager/staff/search-staff";
-import { HOTEL_ID_FAKE, STATUS_CODE } from "src/constant/constants";
+import { STATUS_CODE } from "src/constant/constants";
 import CreateStaff from "src/sections/manager/staff/create-staff";
 import * as StaffService from "src/services/staff-service";
 import { API } from "src/constant/constants";
 import { closeLoadingApi, openLoadingApi } from "src/redux/create-actions/loading-action";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 const Page = () => {
   const [staffsData, setStaffsData] = useState([]);
   const [isModalCreateStaff, setIsModalCreateStaff] = useState(false);
-  const [hotelId, setHotelId] = useState(HOTEL_ID_FAKE);
 
   const dispatch = useDispatch();
+  const hotel_id = useSelector((state) => state.auth.hotel_id);
 
   const fetchData = async () => {
     if (fetchData.current) {
@@ -33,7 +33,7 @@ const Page = () => {
       dispatch(openLoadingApi());
 
       const response = await StaffService[API.HOTEL.STAFF.GET_ALL_STAFFS_BY_HOTEL_ID]({
-        hotel_id: hotelId,
+        hotel_id,
       });
 
       if (response?.status !== STATUS_CODE.UNAUTHORIZED) {
@@ -49,7 +49,9 @@ const Page = () => {
   };
 
   useEffect(() => {
-    fetchData();
+    if (hotel_id) {
+      fetchData();
+    }
   }, []);
 
   const handleOpenModalCreate = () => {
@@ -73,28 +75,6 @@ const Page = () => {
             <Stack direction="row" justifyContent="space-between" spacing={4}>
               <Stack spacing={1}>
                 <Typography variant="h4">Nhân viên khách sạn</Typography>
-                {/* <Stack alignItems="center" direction="row" spacing={1}>
-                  <Button
-                    color="inherit"
-                    startIcon={
-                      <SvgIcon fontSize="small">
-                        <ArrowUpOnSquareIcon />
-                      </SvgIcon>
-                    }
-                  >
-                    Import
-                  </Button>
-                  <Button
-                    color="inherit"
-                    startIcon={
-                      <SvgIcon fontSize="small">
-                        <ArrowDownOnSquareIcon />
-                      </SvgIcon>
-                    }
-                  >
-                    Export
-                  </Button>
-                </Stack> */}
               </Stack>
             </Stack>
             <Card sx={{ p: 2 }}>
@@ -104,7 +84,7 @@ const Page = () => {
                 alignItems="center"
                 justifyContent="space-between"
               >
-                <SearchStaff />
+                {/* <SearchStaff /> */}
                 <Button
                   startIcon={
                     <SvgIcon fontSize="small">

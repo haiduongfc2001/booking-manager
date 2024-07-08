@@ -7,15 +7,9 @@ import {
   DialogContentText,
   DialogTitle,
 } from "@mui/material";
-import {
-  API,
-  MANAGER_ID_FAKE,
-  STATUS_CODE,
-  TOAST_KIND,
-  TOAST_MESSAGE,
-} from "src/constant/constants";
+import { API, STATUS_CODE, TOAST_KIND, TOAST_MESSAGE } from "src/constant/constants";
 import * as StaffService from "src/services/staff-service";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { showCommonAlert } from "src/utils/toast-message";
 import PropTypes from "prop-types";
 
@@ -27,6 +21,7 @@ const DeleteStaff = ({
   onRefresh,
 }) => {
   const dispatch = useDispatch();
+  const staff_id = useSelector((state) => state.auth.user_id);
 
   const handleCloseModal = () => {
     setIsModalDeleteStaff(false);
@@ -34,7 +29,7 @@ const DeleteStaff = ({
 
   const handleDelete = async () => {
     try {
-      if (currentId === MANAGER_ID_FAKE) return;
+      if (currentId === staff_id) return;
       const response = await StaffService[API.HOTEL.STAFF.DELETE_STAFF]({
         hotel_id: String(hotelId).trim(),
         staff_id: String(currentId).trim(),
@@ -61,7 +56,7 @@ const DeleteStaff = ({
       aria-describedby="dialog-description"
     >
       <DialogTitle id="dialog-title">Xóa tài khoản</DialogTitle>
-      {currentId === MANAGER_ID_FAKE ? (
+      {currentId === staff_id ? (
         <>
           <DialogContent>
             <DialogContentText id="dialog-description">

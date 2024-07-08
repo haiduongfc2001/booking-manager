@@ -17,6 +17,8 @@ import {
   RadioGroup,
   FormControlLabel,
   Radio,
+  Avatar,
+  Box,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { useFormik } from "formik";
@@ -30,6 +32,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
+import { closeLoadingApi, openLoadingApi } from "src/redux/create-actions/loading-action";
 
 const initialData = {
   email: "",
@@ -108,6 +111,7 @@ const CreateStaff = (props) => {
 
     onSubmit: async (values, helpers) => {
       try {
+        dispatch(openLoadingApi());
         const response = await StaffService[API.HOTEL.STAFF.CREATE_STAFF]({
           email: values.email.trim(),
           full_name: values.full_name.trim(),
@@ -129,6 +133,7 @@ const CreateStaff = (props) => {
         helpers.setErrors({ submit: err.message });
         helpers.setSubmitting(false);
       } finally {
+        dispatch(closeLoadingApi());
         // handleCloseModalCreate();
       }
     },
@@ -264,6 +269,17 @@ const CreateStaff = (props) => {
                     setHotelInfo(newValue);
                     formik.setFieldValue("hotel_id", newValue?.id || "");
                   }}
+                  renderOption={(props, option) => (
+                    <Box
+                      component="li"
+                      {...props}
+                      key={option.value}
+                      sx={{ display: "flex", alignItems: "center" }}
+                    >
+                      <Avatar src={option.avatar} sx={{ marginRight: 2 }} />
+                      {option.name}
+                    </Box>
+                  )}
                   renderInput={(params) => (
                     <TextField
                       {...params}

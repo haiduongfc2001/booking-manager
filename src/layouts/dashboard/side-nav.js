@@ -10,7 +10,9 @@ import { items } from "./config";
 import { SideNavItem } from "./side-nav-item";
 import { useRouter } from "next/router";
 import { useAuth } from "src/hooks/use-auth";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import Storage from "src/utils/Storage";
+import { logout } from "src/redux/create-actions/auth-action";
 
 export const SideNav = (props) => {
   const { open, onClose } = props;
@@ -18,11 +20,15 @@ export const SideNav = (props) => {
   const router = useRouter();
   const pathname = usePathname();
   const lgUp = useMediaQuery((theme) => theme.breakpoints.up("lg"));
+  const dispatch = useDispatch();
 
   const role = useSelector((state) => state.auth.role);
   const filteredItems = items.filter((item) => item.roles.includes(role));
 
   const handleSignOut = () => {
+    Storage.removeAccessToken();
+    auth.signOut();
+    dispatch(logout());
     router.push("/auth/login");
   };
 

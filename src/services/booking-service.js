@@ -3,7 +3,7 @@ import * as CommonService from "./common-service";
 const prePath = "/booking";
 
 export const GetAllBookings = async () => {
-  return CommonService.getRequest(`${prePath}/booking/getAllBookings`);
+  return CommonService.getRequest(`${prePath}/getAllBookings`);
 };
 
 export const GetAllBookingsByHotelId = async ({ hotel_id, page, size }) => {
@@ -35,22 +35,9 @@ export const GetBookingById = async ({ booking_id }) => {
   return CommonService.getRequest(`${prePath}/${booking_id}/getBookingById`);
 };
 
-export const UpdateBooking = async ({
-  booking_id,
-  code,
-  discount_type,
-  discount_value,
-  start_date,
-  end_date,
-  is_active,
-}) => {
-  return CommonService.patchRequest(`${prePath}/${booking_id}/updateBooking`, {
-    code,
-    discount_type,
-    discount_value,
-    start_date,
-    end_date,
-    is_active,
+export const UpdateBooking = async ({ booking_id, status }) => {
+  return CommonService.postRequest(`${prePath}/${booking_id}/updateBooking`, {
+    status,
   });
 };
 

@@ -107,42 +107,42 @@ const UpdatePromotion = (props) => {
 
   const formik = useFormik({
     initialValues,
-    validationSchema: Yup.object({
-      code: Yup.string()
-        .min(8, "Mã khuyến mãi phải có ít nhất 8 ký tự")
-        .max(12, "Mã khuyến mãi không được vượt quá 12 ký tự")
-        .required("Vui lòng nhập mã khuyến mãi!"),
-      discount_type: Yup.mixed()
-        .oneOf([DISCOUNT_TYPE.PERCENTAGE, DISCOUNT_TYPE.FIXED_AMOUNT], "Loại giảm giá không hợp lệ")
-        .required("Vui lòng chọn loại giảm giá!"),
-      discount_value: Yup.string()
-        .matches(/^\d+$/, "Giá trị phải là số")
-        .when("discount_type", (discount_type, schema) => {
-          return discount_type === DISCOUNT_TYPE.PERCENTAGE
-            ? schema
-                .min(1, "Giá trị giảm giá phải ít nhất là 1%")
-                .max(100, "Giá trị giảm giá không được vượt quá 100%")
-            : schema
-                .min(1, "Giá trị giảm giá phải lớn hơn 0!")
-                .max(
-                  roomTypeData?.base_price,
-                  `Giá trị giảm giá không được vượt quá ${roomTypeData?.base_price}!`
-                );
-        })
-        .required("Vui lòng nhập giá trị!"),
-      start_date: Yup.date()
-        .test(
-          "is-greater-than-now",
-          "Thời gian bắt đầu phải lớn hơn thời gian hiện tại",
-          (value) => {
-            return !value || dayjs().isBefore(dayjs(value));
-          }
-        )
-        .required("Vui lòng chọn thời gian bắt đầu!"),
-      end_date: Yup.date()
-        .min(Yup.ref("start_date"), "Thời gian kết thúc phải lớn hơn thời gian bắt đầu")
-        .required("Vui lòng chọn thời gian kết thúc!"),
-    }),
+    // validationSchema: Yup.object({
+    //   code: Yup.string()
+    //     .min(8, "Mã khuyến mãi phải có ít nhất 8 ký tự")
+    //     .max(12, "Mã khuyến mãi không được vượt quá 12 ký tự")
+    //     .required("Vui lòng nhập mã khuyến mãi!"),
+    //   discount_type: Yup.mixed()
+    //     .oneOf([DISCOUNT_TYPE.PERCENTAGE, DISCOUNT_TYPE.FIXED_AMOUNT], "Loại giảm giá không hợp lệ")
+    //     .required("Vui lòng chọn loại giảm giá!"),
+    //   discount_value: Yup.string()
+    //     .matches(/^\d+$/, "Giá trị phải là số")
+    //     .when("discount_type", (discount_type, schema) => {
+    //       return discount_type === DISCOUNT_TYPE.PERCENTAGE
+    //         ? schema
+    //             .min(1, "Giá trị giảm giá phải ít nhất là 1%")
+    //             .max(100, "Giá trị giảm giá không được vượt quá 100%")
+    //         : schema
+    //             .min(1, "Giá trị giảm giá phải lớn hơn 0!")
+    //             .max(
+    //               roomTypeData?.base_price,
+    //               `Giá trị giảm giá không được vượt quá ${roomTypeData?.base_price}!`
+    //             );
+    //     })
+    //     .required("Vui lòng nhập giá trị!"),
+    //   start_date: Yup.date()
+    //     .test(
+    //       "is-greater-than-now",
+    //       "Thời gian bắt đầu phải lớn hơn thời gian hiện tại",
+    //       (value) => {
+    //         return !value || dayjs().isBefore(dayjs(value));
+    //       }
+    //     )
+    //     .required("Vui lòng chọn thời gian bắt đầu!"),
+    //   end_date: Yup.date()
+    //     .min(Yup.ref("start_date"), "Thời gian kết thúc phải lớn hơn thời gian bắt đầu")
+    //     .required("Vui lòng chọn thời gian kết thúc!"),
+    // }),
 
     onSubmit: async (values, helpers) => {
       try {
@@ -180,7 +180,7 @@ const UpdatePromotion = (props) => {
   });
 
   const handleCreatePromotionCode = () => {
-    const length = Math.floor(Math.random() * 5) + 8; // 8 to 12
+    const length = Math.floor(Math.random() * 5) + 8;
     const code = Array(length)
       .fill(null)
       .map(() => Math.random().toString(36).charAt(2))
@@ -205,7 +205,7 @@ const UpdatePromotion = (props) => {
       }}
     >
       <DialogTitle id="scroll-dialog-title" sx={{ borderBottom: "1px solid #e0e0e0" }}>
-        Chỉnh sửa thông tin phòng
+        Chỉnh sửa khuyến mãi
         <IconButton
           aria-label="close"
           onClick={handleCloseModalUpdate}

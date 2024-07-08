@@ -102,6 +102,7 @@ export const API = {
   },
   ROOM_TYPE: {
     GET_ALL_ROOM_TYPES_BY_HOTEL_ID: "GetAllRoomTypesByHotelId",
+    GET_ALL_AVAILABLE_ROOM_TYPES_BY_HOTEL_ID: "GetAllAvailableRoomTypesByHotelId",
     GET_ROOM_TYPE_BY_ID: "GetRoomTypeById",
     CREATE_ROOM_TYPE: "CreateRoomType",
     DELETE_ROOM_TYPE: "DeleteRoomType",

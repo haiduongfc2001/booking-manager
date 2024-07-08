@@ -46,15 +46,20 @@ export const columns = ({
     {
       field: "address",
       headerName: "Địa chỉ",
-      flex: 0.125,
+      flex: 0.325,
       align: "left",
+      renderCell: (params) => (
+        <Typography variant="subtitle2">
+          {`${params.row.street}, ${params.row.ward}, ${params.row.district}, ${params.row.province}`}
+        </Typography>
+      ),
     },
-    {
-      field: "description",
-      headerName: "Mô tả",
-      flex: 0.2,
-      align: "left",
-    },
+    // {
+    //   field: "description",
+    //   headerName: "Mô tả",
+    //   flex: 0.2,
+    //   align: "left",
+    // },
     {
       field: "contact",
       headerName: "Liên hệ",

@@ -13,15 +13,8 @@ import {
   InputAdornment,
 } from "@mui/material";
 import * as HotelService from "src/services/hotel-service";
-import {
-  API,
-  HOTEL_ID_FAKE,
-  POLICY,
-  STATUS_CODE,
-  TOAST_KIND,
-  TOAST_MESSAGE,
-} from "src/constant/constants";
-import { useDispatch } from "react-redux";
+import { API, POLICY, STATUS_CODE, TOAST_KIND, TOAST_MESSAGE } from "src/constant/constants";
+import { useDispatch, useSelector } from "react-redux";
 import { showCommonAlert } from "src/utils/toast-message";
 import { closeLoadingApi, openLoadingApi } from "src/redux/create-actions/loading-action";
 import Head from "next/head";
@@ -59,12 +52,11 @@ const dayjsToTimeString = (date) => {
 };
 
 const Page = () => {
-  const [hotelId, setHotelId] = useState(HOTEL_ID_FAKE);
   const [policiesData, setPoliciesData] = useState([]);
   const [isUpdateMode, setIsUpdateMode] = useState(false);
   const [updatablePolicies, setUpdatablePolicies] = useState([]);
   const [newPolicy, setNewPolicy] = useState({
-    hotel_id: hotelId,
+    hotel_id: null,
     type: "",
     value: "",
     description: "",
@@ -74,6 +66,7 @@ const Page = () => {
 
   const dispatch = useDispatch();
   const fetchDataRef = useRef(false);
+  const hotel_id = useSelector((state) => state.auth.hotel_id);
 
   const fetchData = async () => {
     if (fetchDataRef.current) return;
@@ -83,7 +76,7 @@ const Page = () => {
       dispatch(openLoadingApi());
 
       const response = await HotelService[API.HOTEL.POLICY.GET_ALL_POLICIES_BY_HOTEL_ID]({
-        hotel_id: hotelId,
+        hotel_id,
       });
 
       if (response?.status === STATUS_CODE.OK) {
@@ -102,9 +95,11 @@ const Page = () => {
   };
 
   useEffect(() => {
-    fetchData();
+    if (hotel_id) {
+      fetchData();
+    }
     return () => {
-      fetchDataRef.current = false; // Cleanup on unmount
+      fetchDataRef.current = false;
     };
   }, []);
 
@@ -118,7 +113,7 @@ const Page = () => {
         );
       } else {
         const response = await HotelService[API.HOTEL.POLICY.DELETE_POLICY]({
-          hotel_id: hotelId,
+          hotel_id,
           policy_id,
         });
 
@@ -180,7 +175,7 @@ const Page = () => {
       if (response?.status === STATUS_CODE.CREATED) {
         dispatch(showCommonAlert(TOAST_KIND.SUCCESS, response.message));
         setUpdatablePolicies([...updatablePolicies, response.data]);
-        setNewPolicy({ hotel_id: hotelId, type: "", value: "", description: "" });
+        setNewPolicy({ hotel_id, type: "", value: "", description: "" });
         setIsAdding(false);
       } else {
         const errorMessage =
@@ -248,6 +243,37 @@ const Page = () => {
               )}
             />
           </LocalizationProvider>
+        );
+      } else if (policy.type === POLICY.SURCHARGE_RATES) {
+        const ageRanges = ["0-6", "7-12", "13-17", "18"];
+
+        return (
+          <Stack spacing={2}>
+            {/* {ageRanges.map((ageRange, index) => (
+              <TextField
+                key={index}
+                fullWidth
+                label={`Độ tuổi ${ageRange}`}
+                name={`SURCHARGE_RATES.${ageRange}`}
+                type="number"
+                InputProps={{
+                  readOnly: !isUpdateMode,
+                  endAdornment: <InputAdornment position="end">%</InputAdornment>,
+                }}
+                value={
+                  policy.value && policy.value[ageRange] !== undefined
+                    ? (policy.value[ageRange] * 100).toString()
+                    : ""
+                }
+                onChange={(e) =>
+                  handleChange(policy.id, "value", {
+                    ...policy.value,
+                    [ageRange]: parseFloat(e.target.value) / 100 || 0,
+                  })
+                }
+              />
+            ))} */}
+          </Stack>
         );
       } else {
         return (
@@ -341,6 +367,27 @@ const Page = () => {
                   là bắt buộc nên không thể bị xóa.
                 </Alert>
               )}
+
+              <Alert
+                variant="filled"
+                severity="info"
+                sx={{
+                  my: 1,
+                  "& strong": {
+                    fontWeight: "bold",
+                  },
+                  "& p": {
+                    margin: 0,
+                  },
+                }}
+              >
+                <p>
+                  <strong>Chính sách hoàn tiền:</strong> Khách hàng sẽ nhận được hoàn tiền
+                  <strong> 100% </strong> nếu hủy phòng trước 5 ngày check-in và
+                  <strong> 50% </strong> nếu hủy phòng trước 3 ngày. Sau khoảng thời gian này, khách
+                  hàng sẽ không được hoàn tiền.
+                </p>
+              </Alert>
 
               {updatablePolicies.length > 0 ? (
                 <>
@@ -573,7 +620,7 @@ const Page = () => {
 
       {/* Dialog to add mandatory policies */}
       <MandatoryPolicyDialog
-        hotelId={hotelId}
+        hotelId={hotel_id}
         showMandatoryPolicyDialog={showMandatoryPolicyDialog}
         setShowMandatoryPolicyDialog={setShowMandatoryPolicyDialog}
         onRefresh={fetchData}

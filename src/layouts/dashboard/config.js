@@ -2,6 +2,7 @@ import ChartBarIcon from "@heroicons/react/24/solid/ChartBarIcon";
 import CogIcon from "@heroicons/react/24/solid/CogIcon";
 import LockClosedIcon from "@heroicons/react/24/solid/LockClosedIcon";
 import UserIcon from "@heroicons/react/24/solid/UserIcon";
+import DocumentCheckIcon from "@heroicons/react/24/solid/DocumentCheckIcon";
 import UserPlusIcon from "@heroicons/react/24/solid/UserPlusIcon";
 import UsersIcon from "@heroicons/react/24/solid/UsersIcon";
 import XCircleIcon from "@heroicons/react/24/solid/XCircleIcon";
@@ -21,7 +22,7 @@ export const items = [
         <ChartBarIcon />
       </SvgIcon>
     ),
-    roles: ["ADMIN", "MANAGER", "RECEPTIONIST"], // Các vai trò có thể xem mục này
+    roles: ["ADMIN", "MANAGER", "RECEPTIONIST"],
   },
   {
     title: "Khách hàng",
@@ -71,7 +72,7 @@ export const items = [
         <SensorDoorIcon />
       </SvgIcon>
     ),
-    roles: ["MANAGER"],
+    roles: ["MANAGER", "RECEPTIONIST"],
   },
   {
     title: "Nhân viên của tôi",
@@ -101,7 +102,7 @@ export const items = [
         <ShoppingCartIcon />
       </SvgIcon>
     ),
-    roles: ["MANAGER"],
+    roles: ["MANAGER", "RECEPTIONIST"],
   },
   {
     title: "Đánh giá",
@@ -113,15 +114,35 @@ export const items = [
     ),
     roles: ["MANAGER"],
   },
+  // {
+  //   title: "Tài khoản",
+  //   path: "/account",
+  //   icon: (
+  //     <SvgIcon fontSize="small">
+  //       <UserIcon />
+  //     </SvgIcon>
+  //   ),
+  //   roles: ["ADMIN", "MANAGER", "RECEPTIONIST"],
+  // },
   {
-    title: "Tài khoản",
-    path: "/account",
+    title: "Phòng",
+    path: "/receptionist/room-type",
     icon: (
       <SvgIcon fontSize="small">
-        <UserIcon />
+        <SensorDoorIcon />
       </SvgIcon>
     ),
-    roles: ["ADMIN", "MANAGER", "RECEPTIONIST"],
+    roles: [],
+  },
+  {
+    title: "Kiểm tra trạng thái phòng",
+    path: "/receptionist/booking-guest",
+    icon: (
+      <SvgIcon fontSize="small">
+        <DocumentCheckIcon />
+      </SvgIcon>
+    ),
+    roles: ["RECEPTIONIST"],
   },
   // {
   //   title: "Cài đặt",

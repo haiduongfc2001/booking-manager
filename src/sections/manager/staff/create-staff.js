@@ -24,8 +24,8 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import * as StaffService from "src/services/staff-service";
 import * as HotelService from "src/services/hotel-service";
-import { API, GENDER, HOTEL_ID_FAKE, ROLE, STATUS_CODE, TOAST_KIND } from "src/constant/constants";
-import { useDispatch } from "react-redux";
+import { API, GENDER, ROLE, STATUS_CODE, TOAST_KIND } from "src/constant/constants";
+import { useDispatch, useSelector } from "react-redux";
 import { showCommonAlert } from "src/utils/toast-message";
 import dayjs from "dayjs";
 import { closeLoadingApi, openLoadingApi } from "src/redux/create-actions/loading-action";
@@ -43,7 +43,7 @@ const CreateStaff = (props) => {
 
   const [hotelList, setHotelList] = useState([]);
   const [hotelInfo, setHotelInfo] = useState(null);
-  const [hotelId, setHotelId] = useState(HOTEL_ID_FAKE);
+  const hotel_id = useSelector((state) => state.auth.hotel_id);
 
   const dispatch = useDispatch();
 
@@ -112,7 +112,7 @@ const CreateStaff = (props) => {
           full_name: values.full_name.trim(),
           gender: values.gender.trim(),
           phone: values.phone.trim(),
-          hotel_id: String(hotelId).trim(),
+          hotel_id: String(hotel_id).trim(),
           role: values.role.trim(),
         });
 

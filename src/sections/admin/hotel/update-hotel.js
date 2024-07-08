@@ -17,6 +17,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { API, STATUS_CODE, TOAST_KIND, TOAST_MESSAGE } from "src/constant/constants";
 import * as HotelService from "src/services/hotel-service";
+import * as AddressService from "src/services/address-service";
 import { showCommonAlert } from "src/utils/toast-message";
 import { useDispatch } from "react-redux";
 import { neutral } from "src/theme/colors";
@@ -28,14 +29,26 @@ import dayjs from "dayjs";
 import Box from "@mui/material/Box";
 import ImageList from "@mui/material/ImageList";
 import ImageListItem from "@mui/material/ImageListItem";
+import Autocomplete from "@mui/material/Autocomplete";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
 import { closeLoadingApi, openLoadingApi } from "src/redux/create-actions/loading-action";
 
 const UpdateHotel = (props) => {
   const { isModalUpdateHotel, setIsModalUpdateHotel, currentId, onRefresh } = props;
 
-  const [hotelData, setHotelData] = useState([]);
+  const [hotelData, setHotelData] = useState(null);
+  const [provinces, setProvinces] = useState([]);
+  const [districts, setDistricts] = useState([]);
+  const [wards, setWards] = useState([]);
 
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (isModalUpdateHotel && currentId) {
+      getHotel();
+      fetchProvinces(); // Fetch provinces on component mount
+    }
+  }, [isModalUpdateHotel, currentId]);
 
   const getHotel = async () => {
     try {
@@ -57,11 +70,30 @@ const UpdateHotel = (props) => {
     }
   };
 
-  useEffect(() => {
-    if (isModalUpdateHotel && currentId) {
-      getHotel();
-    }
-  }, [isModalUpdateHotel, currentId]);
+  const fetchProvinces = async () => {
+    // Replace this with your actual API call
+    const response = await AddressService[API.ADDRESS.GET_ALL_PROVINCES]();
+    const data = await response.data;
+    setProvinces(data);
+  };
+
+  const fetchDistricts = async (provinceId) => {
+    // Replace this with your actual API call
+    const response = await AddressService[API.ADDRESS.GET_ALL_DISTRICTS_BY_PROVINCE_ID]({
+      province_id: provinceId,
+    });
+    const data = await response.data;
+    setDistricts(data);
+  };
+
+  const fetchWards = async (districtId) => {
+    // Replace this with your actual API call
+    const response = await AddressService[API.ADDRESS.GET_ALL_WARDS_BY_DISTRICT_ID]({
+      district_id: districtId,
+    });
+    const data = await response.data;
+    setWards(data);
+  };
 
   const handleCloseModalUpdate = () => {
     setIsModalUpdateHotel(false);
@@ -73,17 +105,23 @@ const UpdateHotel = (props) => {
       name: hotelData?.name || "",
       contact: hotelData?.contact || "",
       description: hotelData?.description || "",
-      address: hotelData?.address || "",
+      street: hotelData?.street || "",
+      ward: hotelData?.ward || "",
+      district: hotelData?.district || "",
+      province: hotelData?.province || "",
       submit: null,
     }),
-    [hotelData?.address, hotelData?.contact, hotelData?.description, hotelData?.name]
+    [hotelData]
   );
 
   const formik = useFormik({
     initialValues,
     validationSchema: Yup.object({
       name: Yup.string().max(255).required("Vui lòng nhập tên khách sạn!"),
-      address: Yup.string().required("Vui lòng nhập địa chỉ khách sạn!"),
+      street: Yup.string().required("Vui lòng nhập số nhà/tên đường khách sạn!"),
+      ward: Yup.string().required("Vui lòng nhập phường/xã khách sạn!"),
+      district: Yup.string().required("Vui lòng nhập quận/huyện khách sạn!"),
+      province: Yup.string().required("Vui lòng nhập tỉnh/thành phố khách sạn!"),
       description: Yup.string()
         .min(10, "Mô tả quá ngắn!")
         .required("Vui lòng nhập mô tả về khách sạn!"),
@@ -99,7 +137,10 @@ const UpdateHotel = (props) => {
           name: values.name.trim(),
           contact: values.contact.trim(),
           description: values.description.trim(),
-          address: values.address.trim(),
+          street: values.street.trim(),
+          ward: values.ward.trim(),
+          district: values.district.trim(),
+          province: values.province.trim(),
         });
 
         if (response?.status === STATUS_CODE.OK) {
@@ -199,7 +240,9 @@ const UpdateHotel = (props) => {
                     error={!!(formik.touched.name && formik.errors.name)}
                     helperText={formik.touched.name && formik.errors.name}
                   />
+                </Stack>
 
+                <Stack direction="row" spacing={3}>
                   <TextField
                     fullWidth
                     required
@@ -218,99 +261,143 @@ const UpdateHotel = (props) => {
                   <TextField
                     fullWidth
                     required
-                    label="Địa chỉ"
-                    name="address"
+                    multiline
+                    rows={3}
+                    label="Mô tả"
+                    name="description"
                     type="text"
                     onBlur={formik.handleBlur}
-                    value={formik.values.address}
+                    value={formik.values.description}
                     onChange={formik.handleChange}
-                    error={!!(formik.touched.address && formik.errors.address)}
-                    helperText={formik.touched.address && formik.errors.address}
+                    error={!!(formik.touched.description && formik.errors.description)}
+                    helperText={formik.touched.description && formik.errors.description}
+                  />
+                </Stack>
+
+                <Stack direction="row" spacing={3}>
+                  <Autocomplete
+                    id="province"
+                    autoHighlight
+                    fullWidth
+                    options={provinces}
+                    getOptionLabel={(option) => option.name}
+                    value={
+                      provinces.find((province) => province.name === formik.values.province) || null
+                    }
+                    onChange={(e, value) => {
+                      formik.setFieldValue("province", value?.name || "");
+                      fetchDistricts(value?.id);
+                    }}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        fullWidth
+                        required
+                        label="Tỉnh/Thành phố"
+                        name="province"
+                        onBlur={formik.handleBlur}
+                        error={!!(formik.touched.province && formik.errors.province)}
+                        helperText={formik.touched.province && formik.errors.province}
+                      />
+                    )}
+                  />
+                </Stack>
+
+                <Stack direction="row" spacing={3}>
+                  <Autocomplete
+                    id="district"
+                    autoHighlight
+                    fullWidth
+                    options={districts}
+                    getOptionLabel={(option) => option.name}
+                    value={
+                      districts.find((district) => district.name === formik.values.district) || null
+                    }
+                    onChange={(e, value) => {
+                      formik.setFieldValue("district", value?.name || "");
+                      fetchWards(value?.id);
+                    }}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        fullWidth
+                        required
+                        label="Quận/Huyện"
+                        name="district"
+                        onBlur={formik.handleBlur}
+                        error={!!(formik.touched.district && formik.errors.district)}
+                        helperText={formik.touched.district && formik.errors.district}
+                      />
+                    )}
+                  />
+                </Stack>
+
+                <Stack direction="row" spacing={3}>
+                  <Autocomplete
+                    id="ward"
+                    autoHighlight
+                    fullWidth
+                    options={wards}
+                    getOptionLabel={(option) => option.name}
+                    value={wards.find((ward) => ward.name === formik.values.ward) || null}
+                    onChange={(e, value) => formik.setFieldValue("ward", value?.name || "")}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        fullWidth
+                        required
+                        label="Phường/Xã"
+                        name="ward"
+                        onBlur={formik.handleBlur}
+                        error={!!(formik.touched.ward && formik.errors.ward)}
+                        helperText={formik.touched.ward && formik.errors.ward}
+                      />
+                    )}
                   />
                 </Stack>
 
                 <Stack direction="row" spacing={3}>
                   <TextField
                     fullWidth
-                    label="Mô tả"
-                    name="description"
+                    required
+                    label="Địa chỉ"
+                    name="street"
                     type="text"
                     onBlur={formik.handleBlur}
+                    value={formik.values.street}
                     onChange={formik.handleChange}
-                    value={formik.values.description}
-                    error={!!(formik.touched.description && formik.errors.description)}
-                    helperText={formik.touched.description && formik.errors.description}
+                    error={!!(formik.touched.street && formik.errors.street)}
+                    helperText={formik.touched.street && formik.errors.street}
                   />
-                </Stack>
-
-                <Stack direction={{ xs: "column", sm: "row" }} spacing={3}>
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DatePicker
-                      readOnly
-                      format="HH:mm:ss DD/MM/YYYY"
-                      sx={{ width: { xs: "100%", md: "50%" } }}
-                      label="Thời gian tạo"
-                      name="created_at"
-                      value={dayjs(hotelData?.created_at)}
-                    />
-                  </LocalizationProvider>
-
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DatePicker
-                      readOnly
-                      format="HH:mm:ss DD/MM/YYYY"
-                      sx={{ width: { xs: "100%", md: "50%" } }}
-                      label="Cập nhật gần nhất"
-                      name="updated_at"
-                      value={dayjs(hotelData?.updated_at)}
-                    />
-                  </LocalizationProvider>
                 </Stack>
               </Stack>
             </Stack>
-
-            {hotelData?.images && hotelData?.images.length > 0 && (
-              <Box sx={{ width: "100%", height: "100%", overflowY: "scroll" }}>
-                <ImageList variant="masonry" cols={3} gap={8}>
-                  {hotelData?.images.map((item) => (
-                    <ImageListItem key={item.id}>
-                      <img srcSet={item.url} src={item.url} alt={item.id} loading="lazy" />
-                    </ImageListItem>
-                  ))}
-                </ImageList>
-              </Box>
-            )}
           </Stack>
-          {formik.errors.submit && (
-            <Typography color="error" sx={{ mt: 3 }} variant="body2">
-              {formik.errors.submit}
-            </Typography>
-          )}
         </form>
       </DialogContent>
 
-      <DialogActions sx={{ my: 3, mr: 3, display: "flex", justifyContent: "flex-end" }}>
-        <Button
-          type="submit"
-          variant="contained"
-          color="success"
-          sx={{ mr: 2 }}
-          onClick={formik.handleSubmit}
-        >
-          OK
-        </Button>
-        <Button variant="contained" color="inherit" onClick={handleCloseModalUpdate}>
+      <DialogActions>
+        <Button onClick={handleCloseModalUpdate} color="primary">
           Hủy
+        </Button>
+        <Button
+          onClick={formik.submitForm}
+          disabled={!formik.isValid || formik.isSubmitting}
+          variant="contained"
+          sx={{ bgcolor: neutral[800], color: neutral[50] }}
+        >
+          Lưu
         </Button>
       </DialogActions>
     </Dialog>
   );
 };
 
-export default UpdateHotel;
-
 UpdateHotel.propTypes = {
   isModalUpdateHotel: PropTypes.bool.isRequired,
   setIsModalUpdateHotel: PropTypes.func.isRequired,
   currentId: PropTypes.number.isRequired,
+  onRefresh: PropTypes.func.isRequired,
 };
+
+export default UpdateHotel;

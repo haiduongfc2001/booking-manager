@@ -19,8 +19,8 @@ export const columns = ({
       align: "center",
     },
     {
-      field: "fullName",
-      headerName: "Tên người dùng",
+      field: "full_name",
+      headerName: "Tên khách hàng",
       flex: 0.2,
       align: "left",
       renderCell: (params) => (

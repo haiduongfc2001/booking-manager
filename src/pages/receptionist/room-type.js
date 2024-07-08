@@ -217,7 +217,7 @@ const Page = () => {
                       mt={2}
                     >
                       <Button variant="contained" color="info" sx={{ width: "auto", mt: 1 }}>
-                        Số phòng: {roomType?.rooms?.length}
+                        Số phòng: {roomType?.totalRooms}
                       </Button>
                       <Stack spacing={2} direction="row">
                         <Button

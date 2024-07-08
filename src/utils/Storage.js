@@ -51,6 +51,9 @@ class Storage {
     localStorage.setItem("selectedMenu", selectedMenu);
   }
 
+  removeAccessToken() {
+    localStorage.removeItem("accessToken");
+  }
   // clear local storage & session storage
   clearLocal() {
     sessionStorage.clear();

@@ -5,12 +5,13 @@ import PencilIcon from "@heroicons/react/24/solid/PencilIcon";
 import { getInitials } from "src/utils/get-initials";
 import { SeverityPill } from "src/components/severity-pill";
 import { StatusMapRole } from "src/components/status-map";
-import { MANAGER_ID_FAKE, ROLE } from "src/constant/constants";
+import { ROLE } from "src/constant/constants";
 
 export const columns = ({
   handleOpenModalDetail,
   handleOpenModalDelete,
   handleOpenModalUpdate,
+  staff_id,
 }) => {
   return [
     {
@@ -100,7 +101,7 @@ export const columns = ({
             }
             size="small"
             variant="contained"
-            disabled={params.row?.role === ROLE.MANAGER && params.row?.id !== MANAGER_ID_FAKE}
+            disabled={params.row?.role === ROLE.MANAGER && params.row?.id !== staff_id}
             sx={{
               "& .MuiButton-startIcon": { m: 0 },
             }}

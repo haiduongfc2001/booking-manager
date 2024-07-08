@@ -29,6 +29,7 @@ import { API, ROLE, STATUS_CODE, TOAST_KIND } from "src/constant/constants";
 import { showCommonAlert } from "src/utils/toast-message";
 import { login } from "src/redux/create-actions/auth-action";
 import Cookies from "js-cookie";
+import Storage from "src/utils/Storage";
 
 const Page = () => {
   const router = useRouter();
@@ -88,14 +89,20 @@ const Page = () => {
         }
 
         if (response?.status === STATUS_CODE.OK) {
+          Storage.updateLocalAccessToken(response.token);
           Cookies.set("role", values.role, { expires: 1 });
           const { email, id, avatar } = response.admin ? response.admin : response.staff;
+
+          const full_name = response.admin ? "Đỗ Hải Dương" : response.staff.full_name;
+          const hotel_id = response.admin ? null : response.staff.hotel_id;
 
           dispatch(
             login({
               role,
               user_id: id,
+              hotel_id,
               email,
+              full_name,
               avatar,
             })
           );

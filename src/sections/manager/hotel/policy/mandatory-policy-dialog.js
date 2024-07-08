@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Button,
   Dialog,
@@ -22,6 +22,8 @@ import { showCommonAlert } from "src/utils/toast-message";
 import { LocalizationProvider, TimePicker, renderTimeViewClock } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
+import SurchargeRatesInput from "./surcharge-rates-input";
+import { closeLoadingApi, openLoadingApi } from "src/redux/create-actions/loading-action";
 
 const mandatoryPolicies = [
   {
@@ -84,31 +86,89 @@ const MandatoryPolicyDialog = (props) => {
   const formik = useFormik({
     initialValues: {
       ...initialData,
+      SURCHARGE_RATES: {
+        "0-6": 0,
+        "7-12": 20,
+        "13-17": 50,
+        18: 50,
+      },
       submit: null,
     },
     validationSchema: Yup.object(
       mandatoryPolicies.reduce((acc, policy) => {
-        acc[policy.type] = Yup.object({
-          value: Yup.string().required("Vui lòng nhập giá trị!"),
-          description: Yup.string().required("Vui lòng nhập mô tả!"),
-        });
+        if (policy.type === POLICY.SURCHARGE_RATES) {
+          acc[policy.type] = Yup.object().shape({
+            "0-6": Yup.number().required("Vui lòng nhập giá trị!"),
+            "7-12": Yup.number().required("Vui lòng nhập giá trị!"),
+            "13-17": Yup.number().required("Vui lòng nhập giá trị!"),
+            18: Yup.number().required("Vui lòng nhập giá trị!"),
+          });
+        } else {
+          acc[policy.type] = Yup.object({
+            value: Yup.string().required("Vui lòng nhập giá trị!"),
+            description: Yup.string().required("Vui lòng nhập mô tả!"),
+          });
+        }
         return acc;
       }, {})
     ),
     onSubmit: async (values, helpers) => {
       try {
-        const policies = mandatoryPolicies.map((policy) => ({
-          type: policy.type,
-          value: values[policy.type].value,
-          description: values[policy.type].description,
+        dispatch(openLoadingApi());
+
+        // Convert surchargeRates object to an array of objects with age and rate
+        const surchargeRatesArray = Object.entries(values.SURCHARGE_RATES).map(([age, rate]) => ({
+          age,
+          rate: rate / 100, // Assuming rate is in percentage
         }));
 
+        // Sort surchargeRatesArray by age
+        surchargeRatesArray.sort((a, b) => {
+          const ageA = a.age;
+          const ageB = b.age;
+          if (ageA < ageB) return -1;
+          if (ageA > ageB) return 1;
+          return 0;
+        });
+
+        // Convert sorted array back to an object with sorted keys
+        const formattedSurchargeRates = surchargeRatesArray.reduce((acc, current) => {
+          acc[current.age] = current.rate;
+          return acc;
+        }, {});
+
+        // Define the desired order of keys
+        const desiredOrder = ["0-6", "7-12", "13-17", "18"];
+
+        // Create a new object with keys sorted in desired order
+        const sortedSurchargeRates = {};
+        desiredOrder.forEach((key) => {
+          if (formattedSurchargeRates[key] !== undefined) {
+            sortedSurchargeRates[key] = formattedSurchargeRates[key];
+          }
+        });
+
+        const policies = mandatoryPolicies.map((policy) => {
+          if (policy.type === POLICY.SURCHARGE_RATES) {
+            return {
+              type: policy.type,
+              value: JSON.stringify(sortedSurchargeRates),
+              description: policy.description,
+            };
+          }
+          return {
+            type: policy.type,
+            value: values[policy.type].value,
+            description: values[policy.type].description,
+          };
+        });
         const response = await HotelService[API.HOTEL.POLICY.CREATE_MULTIPLE_POLICIES]({
           hotel_id: hotelId,
           policies,
         });
 
         if (response?.status === STATUS_CODE.CREATED) {
+          handleMandatoryPolicyDialogClose();
           onRefresh();
           dispatch(showCommonAlert(TOAST_KIND.SUCCESS, response.message));
         } else {
@@ -119,9 +179,10 @@ const MandatoryPolicyDialog = (props) => {
         helpers.setErrors({ submit: err.message });
         helpers.setSubmitting(false);
       } finally {
-        handleMandatoryPolicyDialogClose();
+        dispatch(closeLoadingApi());
       }
     },
+
     enableReinitialize: true,
     validateOnBlur: false,
   });
@@ -136,71 +197,92 @@ const MandatoryPolicyDialog = (props) => {
     }
   }, [showMandatoryPolicyDialog]);
 
-  const renderPolicyField = (policy) => {
-    if (
-      [
-        POLICY.CHECK_IN_TIME,
-        POLICY.CHECK_OUT_TIME,
-        POLICY.TAX,
-        POLICY.SERVICE_FEE,
-        POLICY.SURCHARGE_RATES,
-      ].includes(policy.type)
-    ) {
-      if (policy.type === POLICY.CHECK_IN_TIME || policy.type === POLICY.CHECK_OUT_TIME) {
-        return (
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <TimePicker
-              ampm={false}
-              label="Thời gian"
-              name={`${policy.type}.value`}
-              viewRenderers={{
-                hours: renderTimeViewClock,
-                minutes: renderTimeViewClock,
-              }}
-              value={timeStringToDayjs(formik.values[policy.type].value)}
-              onChange={(newValue) =>
-                formik.setFieldValue(policy.type, dayjsToTimeString(newValue))
-              }
-              error={
-                formik.touched[policy.type]?.value && Boolean(formik.errors[policy.type]?.value)
-              }
-              helperText={formik.touched[policy.type]?.value && formik.errors[policy.type]?.value}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  fullWidth
-                  sx={{
-                    flex: 1,
-                  }}
-                />
-              )}
-            />
-          </LocalizationProvider>
-        );
-      } else {
-        return (
-          <TextField
-            fullWidth
-            label="Giá trị"
-            name={`${policy.type}.value`}
-            type="text"
-            InputProps={{
-              endAdornment: (POLICY.TAX === policy.type || POLICY.SERVICE_FEE === policy.type) && (
-                <InputAdornment position="end">%</InputAdornment>
-              ),
-            }}
-            value={formik.values[policy.type].value}
-            onChange={formik.handleChange}
-            error={formik.touched[policy.type]?.value && Boolean(formik.errors[policy.type]?.value)}
-            helperText={formik.touched[policy.type]?.value && formik.errors[policy.type]?.value}
-            sx={{
-              flex: 1,
-            }}
-          />
-        );
-      }
+  const handleAddAgeRange = () => {
+    const newAgeRange = prompt("Nhập độ tuổi mới (ví dụ: 0-6, 7-12, 13-17, 18):");
+    if (newAgeRange && !formik.values.SURCHARGE_RATES[newAgeRange]) {
+      formik.setFieldValue(`SURCHARGE_RATES.${newAgeRange}`, 0);
     }
-    return null;
+  };
+
+  const handleRemoveAgeRange = (ageRange) => {
+    const updatedSurchargeRates = { ...formik.values.SURCHARGE_RATES };
+    delete updatedSurchargeRates[ageRange];
+    formik.setFieldValue("SURCHARGE_RATES", updatedSurchargeRates);
+  };
+
+  const renderPolicyField = (policy) => {
+    if (policy.type === POLICY.SURCHARGE_RATES) {
+      return (
+        <SurchargeRatesInput
+          values={formik.values}
+          handleChange={formik.handleChange}
+          handleAddAgeRange={handleAddAgeRange}
+          handleRemoveAgeRange={handleRemoveAgeRange}
+        />
+      );
+    }
+
+    if ([POLICY.CHECK_IN_TIME, POLICY.CHECK_OUT_TIME].includes(policy.type)) {
+      return (
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <TimePicker
+            ampm={false}
+            label="Thời gian"
+            name={`${policy.type}.value`}
+            viewRenderers={{
+              hours: renderTimeViewClock,
+              minutes: renderTimeViewClock,
+            }}
+            value={timeStringToDayjs(formik.values[policy.type].value)}
+            onChange={(newValue) =>
+              formik.setFieldValue(policy.type, {
+                ...formik.values[policy.type],
+                value: dayjsToTimeString(newValue),
+              })
+            }
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                required
+                fullWidth
+                error={
+                  formik.touched[policy.type]?.value && Boolean(formik.errors[policy.type]?.value)
+                }
+                helperText={formik.touched[policy.type]?.value && formik.errors[policy.type]?.value}
+                sx={{
+                  flex: 1,
+                }}
+              />
+            )}
+          />
+        </LocalizationProvider>
+      );
+    }
+
+    return (
+      <TextField
+        fullWidth
+        required
+        multiline
+        minRows={1}
+        maxRows={6}
+        label="Giá trị"
+        name={`${policy.type}.value`}
+        type="text"
+        value={formik.values[policy.type].value}
+        onChange={formik.handleChange}
+        error={formik.touched[policy.type]?.value && Boolean(formik.errors[policy.type]?.value)}
+        helperText={formik.touched[policy.type]?.value && formik.errors[policy.type]?.value}
+        sx={{
+          flex: 1,
+        }}
+        InputProps={{
+          endAdornment: (POLICY.TAX === policy.type || POLICY.SERVICE_FEE === policy.type) && (
+            <InputAdornment position="end">%</InputAdornment>
+          ),
+        }}
+      />
+    );
   };
 
   return (

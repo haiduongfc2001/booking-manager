@@ -78,7 +78,7 @@ const RoomTypeAmenities = ({ roomTypeId, amenities = [] }) => {
         Các loại tiện nghi
       </Typography>
 
-      <Stack direction="row" flexWrap="wrap" spacing={1} my={2}>
+      <Stack direction="row" flexWrap="wrap" spacing={2} my={2}>
         {updatableAmenities.map((amenity) => (
           <Chip
             key={amenity.id}
@@ -86,7 +86,7 @@ const RoomTypeAmenities = ({ roomTypeId, amenities = [] }) => {
             onDelete={() => handleDeleteAmenity(amenity.id)}
             variant="filled"
             color="info"
-            sx={{ mb: 1 }}
+            sx={{ mb: "8px !important" }}
           />
         ))}
       </Stack>
